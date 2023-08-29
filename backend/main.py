@@ -1,31 +1,14 @@
-import psycopg2
 
 from fastapi import FastAPI
-from dotenv import dotenv_values
 
 from authentication.init import authRouter
-
-config = dotenv_values(".env")
+from dbconnect import connection,cursor
 
 app = FastAPI()
 
 app.include_router(authRouter, prefix="/auth")
 
 
-
-#Connecting to Database
-try:
-    connection = psycopg2.connect(
-        database=config["DBName"],
-        user=config["DBUsername"],
-        password=config["DBPwd"],
-        host=config["DBHost"],
-        port=config["DBPort"],
-    )
-    cursor = connection.cursor()
-
-except Exception as e:
-    print(e)
 
 
 try:
