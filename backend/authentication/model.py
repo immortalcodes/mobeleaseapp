@@ -3,5 +3,6 @@ from datetime import datetime
 
 
 class credentials(BaseModel):
-    Email: str
-    Password: str
+    email: str
+    password: str
+    role : str
