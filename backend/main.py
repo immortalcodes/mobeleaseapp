@@ -3,11 +3,13 @@ from fastapi import FastAPI
 from authentication.init import authRouter
 from dbconnect import connection,cursor
 from employee.init import empRouter
+from inventory.init import invRouter
 
 app = FastAPI()
 
 app.include_router(authRouter, prefix="/auth")
 app.include_router(empRouter, prefix="/emp")
+app.include_router(invRouter, prefix="/inv")
 
 
 
