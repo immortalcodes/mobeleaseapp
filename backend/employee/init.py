@@ -16,8 +16,6 @@ async def viewallEmployee(response: Response,access_token: Union[str, None] = Co
      if token and token['role'] == 'admin':
         cursor.execute("SELECT employeeid , employeephoto, firstname , lastname,phoneno,email from employee ")
         details = cursor.fetchall()
-        x = details[1][1]
-        print(x)
         data = {}
         for emp in details:
             with open('photo.jpg', 'wb') as photo_file:
