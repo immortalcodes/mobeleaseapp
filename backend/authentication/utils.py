@@ -65,6 +65,9 @@ def correct_padding(encoded_string):
 def decodeToken(token):
     token = token[2:-1]
     corrected_string = correct_padding(token)
-    claims = jwt.decode(token, jwk)
-    return claims
+    try:
+        claims = jwt.decode(token, jwk)
+        return claims
+    except:
+        return None
 

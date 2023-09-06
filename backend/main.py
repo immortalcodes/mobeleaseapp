@@ -1,12 +1,16 @@
-
+import uvicorn
 from fastapi import FastAPI
-
 from authentication.init import authRouter
 from dbconnect import connection,cursor
+from employee.init import empRouter
+from inventory.init import invRouter
 
 app = FastAPI()
 
 app.include_router(authRouter, prefix="/auth")
+app.include_router(empRouter, prefix="/emp")
+app.include_router(invRouter, prefix="/inv")
+
 
 
 
@@ -23,4 +27,12 @@ except Exception as e:
 @app.get("/")
 async def root():
     return {"message": "Hi there , I am sweet app"}
+
+
+
+
+
+
+# if __name__=='main':
+#     uvicorn.run("main:app",reload=True)
 
