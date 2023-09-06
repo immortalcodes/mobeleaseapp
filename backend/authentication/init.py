@@ -64,7 +64,7 @@ async def verifyUser(response: Response,access_token: Union[str, None] = Cookie(
         response.status_code = status.HTTP_200_OK
         return {'data':{
           'role': res['role'],
-          'empid': res['empid'],
+          'empid': None if 'empid' not in res.keys() else res['empid'],
              }}
      else:
         response.status_code = status.HTTP_403_FORBIDDEN

@@ -8,6 +8,6 @@ class item(BaseModel):
     company: str
     devicedetail : str
     cost : str
-    storage : Optional(str) = None
-    remark : Optional(str) = None
+    storage : Optional[str] = None
+    remark : Optional[str] = None
     
