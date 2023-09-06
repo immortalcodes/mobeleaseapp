@@ -1,6 +1,5 @@
 from pydantic import BaseModel
-from datetime import datetime
-from typing import Optional
+from typing import Optional, Union , List
 
 
 class item(BaseModel):
@@ -10,4 +9,15 @@ class item(BaseModel):
     cost : str
     storage : Optional[str] = None
     remark : Optional[str] = None
+
+class inv(BaseModel):
+    deviceid : int
+    quantity : int
+
+class assign(BaseModel):
+    empid: int
+    devices : List[inv]
+
+class emp(BaseModel):
+    empid : int 
     
