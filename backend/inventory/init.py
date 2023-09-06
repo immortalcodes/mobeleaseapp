@@ -34,12 +34,25 @@ async def addItem(item : item,response: Response,access_token: Union[str, None] 
         response.status_code = status.HTTP_403_FORBIDDEN
         return {"message":"error in verifying token and permission"}
 
+@invRouter.post("/deleteitem", status_code=200)
+async def deleteItem(item :itemid,response: Response,access_token: Union[str, None] = Cookie(default=None)):
+     token = decodeToken(access_token)   
+     if token and token['role'] == 'admin':
+            cursor.execute("UPDATE  inventory SET inuse='0' WHERE deviceid = %s",(item.deviceid,))
+            response.status_code = status.HTTP_200_OK
+            return {'data': 'Deleted Successfully'}
+  
+     else:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return {"message":"error in verifying token and permission"}
+     
+
 
 @invRouter.post("/viewallitem", status_code=200)
 async def viewallItem(response: Response,access_token: Union[str, None] = Cookie(default=None)):
      token = decodeToken(access_token)   
      if token and token['role'] == 'admin':
-        cursor.execute("SELECT deviceid ,company, devicedetail, cost,storage,itemtype,remark from inventory ")
+        cursor.execute("SELECT deviceid ,company, devicedetail, cost,storage,itemtype,remark from inventory where inuse = '1' ")
         details = cursor.fetchall()
         data = {}
         for device in details:
