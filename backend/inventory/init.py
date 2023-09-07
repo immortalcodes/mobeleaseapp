@@ -111,7 +111,7 @@ async def assignInv(item:assign,response: Response,access_token: Union[str, None
 
 
 @invRouter.post("/viewassign", status_code=200)
-async def assignInv(item:emp,response: Response,access_token: Union[str, None] = Cookie(default=None)):
+async def viewInv(item:emp,response: Response,access_token: Union[str, None] = Cookie(default=None)):
      token = decodeToken(access_token)
      if token and (token['role'] == 'admin' or (token['role'] == 'employee' and token['empid'] == item.empid ) ) :
          cursor.execute("Select * from assigndevice where employeeid = %s",(item.empid,))
@@ -121,6 +121,7 @@ async def assignInv(item:emp,response: Response,access_token: Union[str, None] =
              details = {}
              cursor.execute("Select * from inventory where deviceid = %s",(device[2],))
              specs = cursor.fetchone()
+             details['quantity'] = device[3]
              details['quantity'] = device[3]
              details['deviceid'] = device[2]
              details['company'] = specs[1]
@@ -136,8 +137,31 @@ async def assignInv(item:emp,response: Response,access_token: Union[str, None] =
         return {"message":"error in verifying token and permission"}
          
 
+@invRouter.post("/editassign", status_code=200)
+async def editInv(item:assign,response: Response,access_token: Union[str, None] = Cookie(default=None)):
+    token = decodeToken(access_token) 
+    if token and token['role'] == 'admin':
+        cursor.execute("DELETE FROM assigndevice  WHERE employeeid = %s",(item.empid,))
+        connection.commit()
+        try:
+            connection.autocommit = False
+            for device in item.devices:
+                india_dt = datetime.now(tz=ZoneInfo(config["TimeZone"]))
+                cursor.execute("INSERT INTO assigndevice (employeeid,deviceid,quantity,timestamp) VALUES (%s, %s,%s, %s)",(item.empid,device.deviceid,device.quantity,india_dt))
+            connection.commit()
+            response.status_code = status.HTTP_200_OK
+            return {'data' : "Assign Edited Successfully"}
+        except:
+            connection.rollback()
+        finally:
+            connection.autocommit = True
+    
+    else:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return {"message":"error in verifying token and permission"}
 
+         
+ 
 
          
 
-        
