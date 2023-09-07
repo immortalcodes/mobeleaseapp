@@ -16,6 +16,6 @@ try:
         port=config["DBPort"],
     )
     cursor = connection.cursor()
-
+    connection.autocommit = True
 except Exception as e:
     print(e)
