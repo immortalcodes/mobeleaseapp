@@ -22,5 +22,5 @@ class emp(BaseModel):
     empid : int 
 
 class itemid(BaseModel):
-    deviceid = int
+    deviceid : int
     
