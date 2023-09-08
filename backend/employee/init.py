@@ -46,6 +46,7 @@ async def viewallEmployee(item:employeeid,response: Response,access_token: Union
      token = decodeToken(access_token)   
      if token and token['role'] == 'admin':
         try:
+            print('f1')
             cursor.execute("SELECT employeeid , employeephoto, firstname , lastname,phoneno,email from employee where employeeid = %s",(item.empid,))
             emp = cursor.fetchone()
             data = {}
