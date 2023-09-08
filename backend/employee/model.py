@@ -8,7 +8,7 @@ class employeeid(BaseModel):
 
 class employee(BaseModel):
     empid : Optional[int] = None
-    name : str
+    firstname : str
     lastname : str
     phoneno : Optional[str] = None
     email : str
