@@ -49,16 +49,27 @@ async def viewallEmployee(item:employeeid,response: Response,access_token: Union
             print('f1')
             cursor.execute("SELECT employeeid , employeephoto, firstname , lastname,phoneno,email from employee where employeeid = %s",(item.empid,))
             emp = cursor.fetchone()
-            data = {}
-            data[emp[0]] = {'empphoto':emp[1],
-                            'firstname':emp[2],
-                            'lastname':emp[3],
-                            'phoneno':emp[4],
-                            'email':emp[5],
-                            }
+            if emp:
+                with open('photo.jpg', 'wb') as photo_file:
+                    if emp[1]:
+                        photo_file.write(emp[1])
+                if emp[1]:
+                    with open('photo.jpg', 'rb') as photo_file:
+                        photodata = photo_file.read()
+                else:
+                    photodata = None
+                data = {}
+                data[emp[0]] = {'empphoto':photodata,
+                                'firstname':emp[2],
+                                'lastname':emp[3],
+                                'phoneno':emp[4],
+                                'email':emp[5],
+                                }
 
-            response.status_code = status.HTTP_200_OK
-            return {'data':data}
+                response.status_code = status.HTTP_200_OK
+                return {'data' : data }
+            else:
+                return {'message':'does not exists'}
         except Exception as e:
             print(e)
             response.status_code = status.HTTP_400_BAD_REQUEST
