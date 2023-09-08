@@ -75,7 +75,7 @@ async def createEmployee(item:employee,response: Response,access_token: Union[st
      token = decodeToken(access_token)   
      if token and token['role'] == 'admin':
         try:
-            cursor.execute("INSERT INTO employee (firstname, lastname, phoneno,password,email,employeephoto) VALUES (%s, %s,%s, %s,%s, %s)",(item.name,item.lastname,item.phoneno,item.email,item.password,item.employeephoto))
+            cursor.execute("INSERT INTO employee (firstname, lastname, phoneno,password,email,employeephoto) VALUES (%s, %s,%s, %s,%s, %s)",(item.firstname,item.lastname,item.phoneno,item.email,item.password,item.employeephoto))
             emp = connection.commit()
 
             response.status_code = status.HTTP_200_OK
