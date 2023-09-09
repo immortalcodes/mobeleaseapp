@@ -86,7 +86,7 @@ async def createEmployee(item:employee,response: Response,access_token: Union[st
      token = decodeToken(access_token)   
      if token and token['role'] == 'admin':
         try:
-            cursor.execute("INSERT INTO employee (firstname, lastname, phoneno,password,email,employeephoto) VALUES (%s, %s,%s, %s,%s, %s)",(item.name,item.lastname,item.phoneno,item.email,item.password,item.employeephoto))
+            cursor.execute("INSERT INTO employee (firstname, lastname, phoneno,password,email,employeephoto) VALUES (%s, %s,%s, %s,%s, %s)",(item.firstname,item.lastname,item.phoneno,item.email,item.password,item.employeephoto))
             emp = connection.commit()
 
             response.status_code = status.HTTP_200_OK
@@ -112,13 +112,13 @@ async def editEmployee(item:employee,response: Response,access_token: Union[str,
 
             try:
                 if item.password == None:
-                    cursor.execute("UPDATE employee SET firstname=%s, lastname=%s, phoneno=%s,email=%s,employeephoto=%s where employeeid = %s",(item.name,item.lastname,item.phoneno,item.email,item.employeephoto,item.empid))
+                    cursor.execute("UPDATE employee SET firstname=%s, lastname=%s, phoneno=%s,email=%s,employeephoto=%s where employeeid = %s",(item.firstname,item.lastname,item.phoneno,item.email,item.employeephoto,item.empid))
                     connection.commit()
 
                     response.status_code = status.HTTP_200_OK
                     return {'data':'Employee Edited Successfully'}
                 else:
-                    cursor.execute("UPDATE employee SET firstname=%s, lastname=%s, password=%s, phoneno=%s,email=%s,employeephoto=%s where employeeid = %s",(item.name,item.lastname,item.password,item.phoneno,item.email,item.employeephoto,item.empid))
+                    cursor.execute("UPDATE employee SET firstname=%s, lastname=%s, password=%s, phoneno=%s,email=%s,employeephoto=%s where employeeid = %s",(item.firstname,item.lastname,item.password,item.phoneno,item.email,item.employeephoto,item.empid))
                     connection.commit()
 
                     response.status_code = status.HTTP_200_OK
