@@ -4,12 +4,14 @@ from authentication.init import authRouter
 from dbconnect import connection,cursor
 from employee.init import empRouter
 from inventory.init import invRouter
+from sale.init import saleRouter
 
 app = FastAPI()
 
 app.include_router(authRouter, prefix="/auth")
 app.include_router(empRouter, prefix="/emp")
 app.include_router(invRouter, prefix="/inv")
+app.include_router(saleRouter, prefix="/sale")
 
 
 

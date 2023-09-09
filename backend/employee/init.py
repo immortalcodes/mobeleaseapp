@@ -109,12 +109,20 @@ async def editEmployee(item:employee,response: Response,access_token: Union[str,
      if token and token['role'] == 'admin':
         
         if item.empid:
-            try:
-                cursor.execute("UPDATE employee SET firstname=%s, lastname=%s, phoneno=%s,password=%s,email=%s,employeephoto=%s where employeeid = %s",(item.name,item.lastname,item.phoneno,item.password,item.email,item.employeephoto,item.empid))
-                emp = connection.commit()
 
-                response.status_code = status.HTTP_200_OK
-                return {'data':'Employee Edited Successfully'}
+            try:
+                if item.password == None:
+                    cursor.execute("UPDATE employee SET firstname=%s, lastname=%s, phoneno=%s,email=%s,employeephoto=%s where employeeid = %s",(item.firstname,item.lastname,item.phoneno,item.email,item.employeephoto,item.empid))
+                    connection.commit()
+
+                    response.status_code = status.HTTP_200_OK
+                    return {'data':'Employee Edited Successfully'}
+                else:
+                    cursor.execute("UPDATE employee SET firstname=%s, lastname=%s, password=%s, phoneno=%s,email=%s,employeephoto=%s where employeeid = %s",(item.firstname,item.lastname,item.password,item.phoneno,item.email,item.employeephoto,item.empid))
+                    connection.commit()
+
+                    response.status_code = status.HTTP_200_OK
+                    return {'data':'Employee Edited Successfully'}
             except Exception as e:
                 connection.rollback()
                 print(e)
