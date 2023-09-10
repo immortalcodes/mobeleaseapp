@@ -15,3 +15,5 @@ COPY ./ /code/
 
 # 
 CMD ["uvicorn","main:app","--reload"]
+
+
