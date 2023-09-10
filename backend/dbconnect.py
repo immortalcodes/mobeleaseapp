@@ -1,7 +1,5 @@
 
 import psycopg2
-import dotenv
-
 from dotenv import dotenv_values
 
 

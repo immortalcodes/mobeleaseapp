@@ -15,7 +15,7 @@ saleRouter = APIRouter()
 
 #adding device to the main inventory
 @saleRouter.post("/additem", status_code=200)
-async def addItem(item : item,response: Response,access_token: Union[str, None] = Cookie(default=None)):
+async def addItem(response: Response,access_token: Union[str, None] = Cookie(default=None)):
      token = decodeToken(access_token)   
      if token and token['role'] == 'admin':
           pass

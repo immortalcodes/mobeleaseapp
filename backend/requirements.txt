@@ -1,0 +1,9 @@
+fastapi
+typing
+python-dotenv
+psycopg2-binary
+pydantic
+datetime
+uvicorn
+requests
+authlib
