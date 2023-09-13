@@ -39,10 +39,37 @@ async def addFarm(item:farm ,response: Response,access_token: Union[str, None] =
 async def addFarmUnit(item:farmunit ,response: Response,access_token: Union[str, None] = Cookie(default=None)):
      token = decodeToken(access_token)   
      if token :
-          cursor.execute("INSERT into farmunit (farm) VALUES (%s)"(item.farmname,))
+          cursor.execute("INSERT into farmunit (farmname,unitname) VALUES (%s,%s)"(item.farmname,item.unitname))
           connection.commit()
           response.status_code = status.HTTP_200_OK
-          return {'data':'Farm added Successfully'}
+          return {'data':'Farm and Unit added Successfully'}
+  
+     else:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return {"message":"error in verifying token and permission"}
+     
+
+@saleRouter.post("/viewfarm", status_code=200)
+async def viewFarm(response: Response,access_token: Union[str, None] = Cookie(default=None)):
+     token = decodeToken(access_token)   
+     if token :
+          cursor.execute("SELECT farmname from farm")
+          farm_list = cursor.fetchall()
+          response.status_code = status.HTTP_200_OK
+          return {'data': farm_list}
+  
+     else:
+        response.status_code = status.HTTP_403_FORBIDDEN
+        return {"message":"error in verifying token and permission"}
+     
+@saleRouter.post("/viewfarmunit", status_code=200)
+async def viewFarmUnit(item:farm, response: Response,access_token: Union[str, None] = Cookie(default=None)):
+     token = decodeToken(access_token)   
+     if token :
+          cursor.execute("SELECT unitname from farmunit where farmname = %s",(item.farmname))
+          unit_list = cursor.fetchall()
+          response.status_code = status.HTTP_200_OK
+          return {'data': unit_list}
   
      else:
         response.status_code = status.HTTP_403_FORBIDDEN
@@ -85,6 +112,14 @@ async def makesale(item:saleobject,response: Response,access_token: Union[str, N
           response.status_code = status.HTTP_403_FORBIDDEN
           return {"message":"error in verifying token and permission"}
 
+
+
+
+@saleRouter.post("/addinstallment", status_code=200)
+async def addinstallment(item:saleobject,response: Response,access_token: Union[str, None] = Cookie(default=None)):
+     token = decodeToken(access_token) 
+     if token and token['role'] == 'emp':
+          pass
 
 
 
