@@ -66,14 +66,25 @@ async def makesale(item:saleobject,response: Response,access_token: Union[str, N
           try :
                if item.type == "cash":
                     current_dt = datetime.now(tz=ZoneInfo(config["TimeZone"]))
-                    cursor.execute("INSERT into devicesale (type,employeeid,unit,farm,itemarray,totalcost,totalsale,remark,timestamp,status,amountleft,paymentalert) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(item.type, empid, item.unit,item.farm,Json(item.itemarray),totalcost,totalsale,item.remark,current_dt,'paid',0,0))
+                    cursor.execute("INSERT into devicesale (saletype,employeeid,unit,farm,itemarray,totalcost,totalsale,remark,timestamp,status,amountleft,paymentalert) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(item.type, empid, item.unit,item.farm,Json(item.itemarray),totalcost,totalsale,item.remark,current_dt,'paid',0,0))
+                    response.status_code = status.HTTP_200_OK
+                    return {'data':'Cash Sale Completed Successfully'}
+               elif item.type == "credit":
+                    current_dt = datetime.now(tz=ZoneInfo(config["TimeZone"]))
+                    cursor.execute("INSERT into devicesale (saletype,employeeid,customername,customeridimage,phoneno,langauge,unit,farm,itemarray,totalcost,totalsale,remark,timestamp,status,amountleft,paymentalert) VALUES  (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(item.type, empid,item.customername,item.customeridimage,item.phoneno, item.language,item.unit,item.farm,Json(item.itemarray),totalcost,totalsale,item.remark,current_dt,'due',totalsale,1))
+                    response.status_code = status.HTTP_200_OK
+                    return {'data':'Credit Sale Completed Successfully'}
+                    
+          except :
+            
+               connection.rollback()
+               response.status_code = status.HTTP_400_BAD_REQUEST
+               return {"message":"Error in making Sale"}
+          
+     else:
+          response.status_code = status.HTTP_403_FORBIDDEN
+          return {"message":"error in verifying token and permission"}
 
 
 
 
-
-
- cursor.execute("INSERT into devicesale (type,employeeid,customername,custome
-                                   ridimage,phoneno,langauge,unit,farn,itemarray,
-                                   totalcost,totalsale,remark,timestamp,status,amountleft,paymentalert) VALUES (%s,)",(item.type, empid, 'NULL',bytes('Null', 'utf-8'),'Null'
-"NULL",)) 
