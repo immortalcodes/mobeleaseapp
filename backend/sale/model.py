@@ -23,3 +23,11 @@ class farm(BaseModel):
 class farmunit(BaseModel):
     farmid : int
     unitname : str
+
+
+class viewsale(BaseModel):
+    starttime : str
+    endtime : str
+    status : Optional[str] = None
+    empid : Optional[str] = None
+    saletype : Optional[str] = None
