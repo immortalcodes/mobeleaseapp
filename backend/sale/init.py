@@ -114,6 +114,82 @@ async def makesale(item:saleobject,response: Response,access_token: Union[str, N
 
 
 
+@saleRouter.post("/viewallsale", status_code=200)
+async def viewallsale(item:viewsale,response: Response,access_token: Union[str, None] = Cookie(default=None)):
+     token = decodeToken(access_token) 
+     if token and token['role'] == 'emp':
+          empid  = token['empid']
+          cursor.execute("SELECT saleid,saletype,employeeid,customername,customeridimage,phoneno,langauge,unit,farm,itemarray,totalsale,remark,timestamp,status,amountleft,paymentalert from devicesale where (%s = Null or status = %s) and (%s = Null or saletype = %s) and employeeid = %s  and timestamp between %s and %s';",(item.status,item.status,item.saletype,item.saletype,empid,item.starttime,item.endtime))
+          sales = cursor.fetchall()
+          data = {}
+          for sale in sales:
+               with open('photocustomer.jpg', 'wb') as photo_file:
+                    if sale[4]:
+                        photo_file.write(sale[4])
+               if sale[4]:
+                    with open('photocustomer.jpg', 'rb') as photo_file:
+                        photodata = photo_file.read()
+               else:
+                    photodata = None
+               data[sale[0]] = {
+                    'saletype':sale[1],
+                    'employeeid':sale[2],
+                    'customername':sale[3],
+                    'customeridimage':photodata,
+                    'phoneno':sale[5],
+                    'langauge':sale[6],
+                    'unit':sale[7],
+                    'farm':sale[8],
+                    'itemarray':sale[9],
+                    'totalsale':sale[10],
+                    'remark':sale[11],
+                    'timestamp':sale[12],
+                    'status':sale[13],
+                    'amountleft':sale[14],
+                    'paymentalert':sale[15],
+               }
+          response.status_code = status.HTTP_200_OK
+          return {'data':data}
+
+     elif token and token['role'] == 'admin':
+          cursor.execute("SELECT saleid,saletype,employeeid,customername,customeridimage,phoneno,langauge,unit,farm,itemarray,totalsale,remark,timestamp,status,amountleft,paymentalert from devicesale where (%s = Null or employeeid = %s) and (%s = Null or status = %s) and (%s = Null or saletype = %s) and employeeid = %s  and timestamp between %s and %s';",(item.empid,item.empid,item.status,item.status,item.saletype,item.saletype,empid,item.starttime,item.endtime))
+          sales = cursor.fetchall()
+          data = {}
+          for sale in sales:
+               with open('photocustomer.jpg', 'wb') as photo_file:
+                    if sale[4]:
+                        photo_file.write(sale[4])
+               if sale[4]:
+                    with open('photocustomer.jpg', 'rb') as photo_file:
+                        photodata = photo_file.read()
+               else:
+                    photodata = None
+               data[sale[0]] = {
+                    'saletype':sale[1],
+                    'employeeid':sale[2],
+                    'customername':sale[3],
+                    'customeridimage':photodata,
+                    'phoneno':sale[5],
+                    'langauge':sale[6],
+                    'unit':sale[7],
+                    'farm':sale[8],
+                    'itemarray':sale[9],
+                    'totalsale':sale[10],
+                    'remark':sale[11],
+                    'timestamp':sale[12],
+                    'status':sale[13],
+                    'amountleft':sale[14],
+                    'paymentalert':sale[15],
+               }
+          response.status_code = status.HTTP_200_OK
+          return {'data':data}
+     
+     else:
+          response.status_code = status.HTTP_403_FORBIDDEN
+          return {"message":"error in verifying token and permission"}
+
+
+
 
 @saleRouter.post("/addinstallment", status_code=200)
 async def addinstallment(item:saleobject,response: Response,access_token: Union[str, None] = Cookie(default=None)):
