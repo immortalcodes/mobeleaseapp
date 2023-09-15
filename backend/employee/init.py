@@ -42,9 +42,9 @@ async def viewallEmployee(response: Response,access_token: Union[str, None] = Co
 
 
 @empRouter.post("/singleemployee", status_code=200)
-async def viewallEmployee(item:employeeid,response: Response,access_token: Union[str, None] = Cookie(default=None)):
+async def viewsingleEmployee(item:employeeid,response: Response,access_token: Union[str, None] = Cookie(default=None)):
      token = decodeToken(access_token)   
-     if token and token['role'] == 'admin':
+     if token and (token['role'] == 'admin' or (token['role'] == 'employee' and item.empid == token['empid'])):
         try:
             print('f1')
             cursor.execute("SELECT employeeid , employeephoto, firstname , lastname,phoneno,email from employee where employeeid = %s",(item.empid,))
