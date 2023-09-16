@@ -21,10 +21,16 @@ class Notifications extends StatelessWidget {
                       width: 99.0,
                       height: 55.0,
                     ),
-                      CircleAvatar(
-                          radius: 16,
-                          backgroundColor: Colors.grey[400],
-                          child: IconButton(onPressed: (){}, icon: Icon(Icons.close, size: 17, color: Colors.black)))
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.pop(context);
+                      },
+                      child: CircleAvatar(
+                        radius: 12.0,
+                        backgroundColor: Colors.grey[300],
+                        child: Icon(Icons.close, color: Colors.black,),
+                      ),
+                    ),
                   ],
                     ),
                   ),

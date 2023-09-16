@@ -226,7 +226,9 @@ class _EmployeePersonalState extends State<EditEmployee> {
                               ],
                             ),
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushNamed(context, "/Assign");
+                              },
                               child: Row(
                                 children: [
                                   Text(
@@ -251,7 +253,9 @@ class _EmployeePersonalState extends State<EditEmployee> {
                         Column(
                           children: [
                             IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
                                 icon: Icon(
                                   Icons.arrow_back,
                                   size: 25.0,
@@ -380,7 +384,7 @@ class _EmployeePersonalState extends State<EditEmployee> {
           },
         )
       ),
-      bottomNavigationBar: bottomAppBar(),
+      bottomNavigationBar: bottomAppBar(index: 0),
     );
   }
 }

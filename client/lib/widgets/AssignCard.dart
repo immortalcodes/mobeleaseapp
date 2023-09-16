@@ -3,36 +3,46 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class AssignCard extends StatefulWidget {
   late String model;
-  late int cost;
-  AssignCard({required this.model, required this.cost});
+  late String storage;
+  final ValueChanged<int> onQuantityChanged;
+  AssignCard({required this.model, required this.storage,required this.onQuantityChanged});
   @override
   _AssignCardState createState() => _AssignCardState();
 }
 class _AssignCardState extends State<AssignCard> {
 
 
-  var _count=0;
+  var _count=1;
 
   // String get model => "model";
   void _incrementCounter() {
     setState(() {
       _count++;
+      widget.onQuantityChanged(_count);
     });
   }
 
   void _decrementCounter() {
     setState(() {
       _count--;
+      widget.onQuantityChanged(_count);
     });
   }
 
   @override
-  Container build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Container(
       height: 47.0,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8.0)
+        borderRadius: BorderRadius.circular(8.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 8.0,
+            offset: Offset(0,8),
+          ),
+        ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -43,9 +53,9 @@ class _AssignCardState extends State<AssignCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text("Cost Price", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),),
-              SizedBox(width: 5.0,),
-              Text("\$${widget.cost}", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),),
+              Text("Cost:", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),),
+              SizedBox(width: 2.50,),
+              Text("\$${widget.storage}", style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),),
               SizedBox(width: 5.0,),
               GestureDetector(
                 onTap: (){

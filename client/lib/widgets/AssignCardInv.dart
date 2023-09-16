@@ -3,8 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class AssignCardInv extends StatelessWidget {
   late String model;
-  late int cost;
-  AssignCardInv({required this.model, required this.cost});
+  late String cost;
+  final Function onDelete;
+  final int deviceId;
+  AssignCardInv({required this.model, required this.cost,required this.onDelete,required this.deviceId});
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +15,13 @@ class AssignCardInv extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 8.0,
+            offset: Offset(0,8),
+          ),
+        ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -29,6 +38,7 @@ class AssignCardInv extends StatelessWidget {
               SizedBox(width: 5.0,),
               GestureDetector(
                 onTap: (){
+                  onDelete(deviceId);
                 },
                 child: Icon(Icons.delete, color: Color(0xffE96E2B),),
               ),

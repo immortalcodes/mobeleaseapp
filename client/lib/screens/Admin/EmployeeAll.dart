@@ -93,7 +93,7 @@ class _EmployeeAllState extends State<EmployeeAll> {
                           fontSize: 20.0)),
                   GestureDetector(
                     onTap: () {
-                      getEmployee();
+                      Navigator.pop(context);
                     },
                     child: CircleAvatar(
                       radius: 12.0,
@@ -179,7 +179,7 @@ class _EmployeeAllState extends State<EmployeeAll> {
           ],
         ),
       ),
-      bottomNavigationBar: bottomAppBar(),
+      bottomNavigationBar: bottomAppBar(index:0),
     );
   }
 }

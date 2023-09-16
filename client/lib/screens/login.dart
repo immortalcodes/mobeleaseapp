@@ -78,7 +78,7 @@ class _LoginState extends State<Login> {
                         GestureDetector(
                           child: const Icon(Icons.arrow_back),
                           onTap: () {
-                            Navigator.pushNamed(context, '/home');
+                            Navigator.pop(context);
                           },
                         ),
                       ],
