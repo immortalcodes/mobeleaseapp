@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mobelease/controllers/employee_controller.dart';
+import 'package:mobelease/screens/Admin/AssigningPage.dart';
+import 'package:mobelease/screens/Employee/Emp_home.dart';
 import 'package:mobelease/screens/Inventory/AddDevice.dart';
 import 'package:mobelease/screens/Admin/Employee.dart';
 import 'package:mobelease/screens/Remarks.dart';
-// import 'package:mobelease/screens/add_employee.dart';
+import 'controllers/Assign_Provider.dart';
 import 'package:mobelease/screens/login.dart';
-import 'screens/addEmployee.dart';
+import 'screens/Admin/addEmployee.dart';
 import 'screens/init_screen.dart';
 import 'screens/Admin/EmployeePersonal.dart';
 import 'screens/Admin/EmployeeSelect.dart';
@@ -21,14 +23,15 @@ import 'screens/Inventory/AddDevice.dart';
 void main() {
   runApp(MultiProvider(
     providers: [ChangeNotifierProvider(
-        create: (context)=>EmployeeProvider()..getEmployee())],
+        create: (context)=>EmployeeProvider()..getEmployee()),
+      ChangeNotifierProvider(create: (context)=> SelectedDevicesProvider())],
     child: MyApp(),));
   // runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
 
-  String inRoute= '/home';
+  String inRoute= '/Emp_home';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -36,19 +39,20 @@ class MyApp extends StatelessWidget {
         routes: {
           '/login': (context) => Login(loginMember: 'EMPLOYEE',),
           '/home': (context) => InitScreen(),
-          '/notifications': (context) => Notifications(),
+          '/notifications': (context) => ProtectedPage(child: Notifications()),
           '/Employee': (context) => ProtectedPage(child: Employee()),
-          '/addEmployee': (context) => addEmployee(),
+          '/addEmployee': (context) => ProtectedPage(child: addEmployee()),
           // '/Employeeuser':(context) => Employeeuser(),
-          '/EmployeePersonal': (context) => EmployeePersonal(id:1),
-          '/EmployeeSelect' : (context) => EmployeeSelect(),
-          '/Assign' : (context) => Assign(id:1),
-          // '/add_employee' : (context) => AddEmployee(),
-          '/Inventory' : (context) => Inventory(),
-          '/Remarks' : (context) => Remarks(),
-          '/Message' : (context) => Message(),
-          '/EmployeeAll': (context) => EmployeeAll(),
-          '/AddDevice' : (context) => AddDeviceDialog()
+          '/EmployeePersonal': (context) => ProtectedPage(child: EmployeePersonal(id:1)),
+          '/EmployeeSelect' : (context) => ProtectedPage(child: EmployeeSelect()),
+          '/Assign' : (context) => ProtectedPage(child: Assign(id:1)),
+          '/AssigningPage' :(context) => ProtectedPage(child: DeviceSelectionScreen()),
+          '/Inventory' : (context) => ProtectedPage(child: Inventory()),
+          '/Remarks' : (context) => ProtectedPage(child: Remarks()),
+          '/Message' : (context) => ProtectedPage(child: Message()),
+          '/EmployeeAll': (context) => ProtectedPage(child: EmployeeAll()),
+          '/AddDevice' : (context) => ProtectedPage(child: AddDeviceDialog()),
+          '/Emp_home' : (context) => Emp_home()
         },
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,

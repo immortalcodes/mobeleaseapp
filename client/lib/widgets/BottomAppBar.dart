@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class bottomAppBar extends StatefulWidget {
-  const bottomAppBar({super.key});
+  final int index ;
+  const bottomAppBar({required this.index});
 
   @override
   State<bottomAppBar> createState() => _bottomAppBarState();
@@ -9,59 +10,36 @@ class bottomAppBar extends StatefulWidget {
 
 class _bottomAppBarState extends State<bottomAppBar> {
   final PageController pageController = PageController(initialPage: 0);
-  int _selectedIndex = 0;
-  Color _setColor = Colors.grey;
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 3: Settings',
-      style: optionStyle,
-    ),
-  ];
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    switch(index){
-      case 0:
-        setState(() {
-          _selectedIndex = index;
-        });
-        Navigator.pushNamed(context, '/Employee');
-        break;
-      case 1:
-        setState(() {
-          _selectedIndex = index;
-        });
-        Navigator.pushNamed(context, '/Inventory');
-        break;
-      case 2:
-        setState(() {
-          _selectedIndex = index;
-        });
-        Navigator.pushNamed(context, '/EmployeeSelect');
-        break;
-      case 3:
-        setState(() {
-          _selectedIndex = index;
-        });
-        Navigator.pushNamed(context, '/Remarks');
-        break;
-    }
 
+  int _selectedIndex =0;
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.index; // Initialize _selectedIndex with the passed index
+  }
+  void _onItemTapped(int index) {
+    // Check if the selected index is the same as the current index
+    if (index != _selectedIndex) {
+      setState(() {
+        _selectedIndex = index;
+      });
+
+      // Perform navigation only if the index is different
+      switch (index) {
+        case 0:
+          Navigator.pushReplacementNamed(context, '/Employee');
+          break;
+        case 1:
+          Navigator.pushReplacementNamed(context, '/Inventory');
+          break;
+        case 2:
+          Navigator.pushReplacementNamed(context, '/EmployeeSelect');
+          break;
+        case 3:
+          Navigator.pushReplacementNamed(context, '/Remarks');
+          break;
+      }
+    }
   }
 
   @override

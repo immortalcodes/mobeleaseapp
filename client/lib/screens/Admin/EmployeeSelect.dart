@@ -81,7 +81,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                   Text("Select a employee to assign", style: TextStyle(color: Color(0xffE96E2B), fontWeight: FontWeight.w600, fontSize: 20.0 )),
                   GestureDetector(
                     onTap: (){
-                      Navigator.pushNamed(context, '/Employee');
+                      Navigator.pop(context);
                     },
                     child: CircleAvatar(
                       radius: 12.0,
@@ -156,7 +156,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
           ],
         ),
       ),
-      bottomNavigationBar: bottomAppBar(),
+      bottomNavigationBar: bottomAppBar(index:0),
     );
   }
 }

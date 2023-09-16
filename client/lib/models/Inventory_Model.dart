@@ -1,12 +1,13 @@
 import 'dart:typed_data';
 class ItemModel {
-  final int deviceId;
-  final String itemType;
-  final String company;
-  final String deviceDetail;
-  final String cost;
-  final String storage;
-  final String remark;
+  final int? deviceId;
+  final String? itemType;
+  final String? company;
+  final String? deviceDetail;
+  final String? cost;
+  final String? storage;
+  final String? remark;
+  final String? inuse;
 
   ItemModel({
     required this.deviceId,
@@ -16,6 +17,7 @@ class ItemModel {
     required this.cost,
     required this.storage,
     required this.remark,
+    required this.inuse,
   });
 
   factory ItemModel.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,7 @@ class ItemModel {
       cost: json['cost'],
       storage: json['storage'],
       remark: json['remark'],
+      inuse: json['inuse'],
     );
   }
 }

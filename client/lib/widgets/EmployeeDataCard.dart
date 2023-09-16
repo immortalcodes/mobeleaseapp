@@ -37,8 +37,8 @@ class _EmployeeDataCardState extends State<EmployeeDataCard> {
         borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black26,
-            blurRadius: 4.0,
+            color: Colors.black12,
+            blurRadius: 8.0,
             offset: Offset(0,8),
           ),
         ],

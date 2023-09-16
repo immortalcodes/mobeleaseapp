@@ -140,7 +140,14 @@
                                       ],
                                     ),
                                     GestureDetector(
-                                      onTap: () {},
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Assign(id: widget.id),
+                                          ),
+                                        );
+                                      },
                                       child: Row(
                                         children: [
                                           Text(
@@ -167,7 +174,9 @@
                             Column(
                               children: [
                                 IconButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
                                     icon: Icon(
                                       Icons.arrow_back,
                                       size: 25.0,
@@ -360,7 +369,7 @@
               },
           )
         ),
-        bottomNavigationBar: bottomAppBar(),
+        bottomNavigationBar: bottomAppBar(index:0),
       );
     }
   }

@@ -14,7 +14,9 @@ import '../../widgets/EmployeeDataCard.dart';
 import 'package:http/http.dart' as http;
 
 class Employee extends StatefulWidget {
-  const Employee({super.key});
+
+  const Employee({Key? key}) : super(key: key);
+
   @override
   State<Employee> createState() => _EmployeeState();
 }
@@ -35,8 +37,8 @@ class _EmployeeState extends State<Employee> {
       );
       if (response.statusCode == 200) {
 
-        final Map<String, dynamic> responseData = jsonDecode(response.body)!['data'!];
-        final List<String> sortedKeys1 = responseData.keys!.toList();
+        final Map<String, dynamic> responseData = jsonDecode(response.body)!['data'];
+        final List<String> sortedKeys1 = responseData.keys.toList();
         List<int> sortedKeys =  sortedKeys1.map((str) => int.parse(str!)).toList() ..sort();
         // print(sortedKeys);
         final List<EmployeeModel> employees = sortedKeys
@@ -45,6 +47,7 @@ class _EmployeeState extends State<Employee> {
         print(sortedKeys);
         print(employees);
         employeesList = employees;
+        // setState(() {});
         return employeesList;
         // if(mounted) {
         //   setState(() {
@@ -72,6 +75,15 @@ class _EmployeeState extends State<Employee> {
   //   employeeNo = employeesList.length - 5;
   //   items = employeesList.map((employee) => employee.firstName ?? '').toList();
   // }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //
+  //   // Call the reload method here
+  //   widget.reload();
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,7 +167,7 @@ class _EmployeeState extends State<Employee> {
 
                     else{
                       List<EmployeeModel> employeesList = snapshot.data!;
-                      employeeNo = employeesList.length - 5;
+                      employeeNo = (employeesList.length>6)?(employeesList.length - 5) : 0;
                       return Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -186,7 +198,7 @@ class _EmployeeState extends State<Employee> {
                                         ),
                                         SizedBox(
                                           height: 10.0,
-                                          width: 10.0,
+                                          width: 30.0,
                                           child: Text(
                                             employee.firstName ?? 'No First Name Available',
                                             textAlign: TextAlign.center,
@@ -197,6 +209,7 @@ class _EmployeeState extends State<Employee> {
                                     );
                                 }),
                           ),
+                    if(employeeNo!=0) ...[
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 3.0),
                             child: GestureDetector(
@@ -209,7 +222,8 @@ class _EmployeeState extends State<Employee> {
                                   ),
                                 );
                               },
-                              child: CircleAvatar(
+                              child:
+                                CircleAvatar(
                                 radius: 24.5,
                                 backgroundColor: Color(0xffE96E2B).withOpacity(0.15),
                                 foregroundColor: Color(0xffE96E2B),
@@ -220,6 +234,7 @@ class _EmployeeState extends State<Employee> {
                               ),
                             ),
                           )
+                        ]
                         ],
                       );
                     }
@@ -334,7 +349,7 @@ class _EmployeeState extends State<Employee> {
           ],
         ),
       ),
-      bottomNavigationBar: bottomAppBar(),
+      bottomNavigationBar: bottomAppBar(index:0),
     );
   }
 }
