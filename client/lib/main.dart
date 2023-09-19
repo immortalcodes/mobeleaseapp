@@ -3,7 +3,11 @@ import 'package:mobelease/controllers/employee_controller.dart';
 import 'package:mobelease/screens/Admin/AssigningPage.dart';
 import 'package:mobelease/screens/Employee/Emp_Assign_2.dart';
 import 'package:mobelease/screens/Employee/Emp_Inventory.dart';
+import 'package:mobelease/screens/Employee/Emp_Reports_1.dart';
 import 'package:mobelease/screens/Employee/Emp_home.dart';
+import 'package:mobelease/screens/Employee/PaymentCash.dart';
+import 'package:mobelease/screens/Employee/PaymentCredit.dart';
+import 'package:mobelease/screens/Employee/Reports.dart';
 import 'package:mobelease/screens/Inventory/AddDevice.dart';
 import 'package:mobelease/screens/Admin/Employee.dart';
 import 'package:mobelease/screens/Remarks.dart';
@@ -59,6 +63,10 @@ class MyApp extends StatelessWidget {
           '/Emp_Assign_1' : (context) => Emp_Assign_1(),
           '/Emp_Assign_2' : (context) => Emp_Assign_2(),
           '/Emp_Inventory' : (context) => Emp_Inventory(),
+          '/PaymentCash': (context)=> PaymentCash(),
+          '/PaymentCredit': (context)=> PaymentCredit(),
+          '/Emp_Reports_1': (context)=> Emp_Reports_1(),
+          '/Reports': (context)=> Reports(dues: false, cash: true, paid: true,)
         },
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,

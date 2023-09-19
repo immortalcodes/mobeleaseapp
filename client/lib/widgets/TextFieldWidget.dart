@@ -9,7 +9,6 @@ class TextFieldWidget extends StatelessWidget {
   TextFormField build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      autofocus: true,
       decoration: InputDecoration(
         //labelText: 'Email',
         hintText: hint,
