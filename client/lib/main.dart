@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobelease/controllers/employee_controller.dart';
 import 'package:mobelease/screens/Admin/AssigningPage.dart';
+import 'package:mobelease/screens/Employee/Emp_Assign_2.dart';
+import 'package:mobelease/screens/Employee/Emp_Inventory.dart';
 import 'package:mobelease/screens/Employee/Emp_home.dart';
 import 'package:mobelease/screens/Inventory/AddDevice.dart';
 import 'package:mobelease/screens/Admin/Employee.dart';
@@ -19,6 +21,7 @@ import 'controllers/ProtectedRoute.dart';
 import 'screens/Admin/EmployeeAll.dart';
 import 'package:provider/provider.dart';
 import 'screens/Inventory/AddDevice.dart';
+import 'screens/Employee/Emp_Assign_1.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -52,7 +55,10 @@ class MyApp extends StatelessWidget {
           '/Message' : (context) => ProtectedPage(child: Message()),
           '/EmployeeAll': (context) => ProtectedPage(child: EmployeeAll()),
           '/AddDevice' : (context) => ProtectedPage(child: AddDeviceDialog()),
-          '/Emp_home' : (context) => Emp_home()
+          '/Emp_home' : (context) => Emp_home(),
+          '/Emp_Assign_1' : (context) => Emp_Assign_1(),
+          '/Emp_Assign_2' : (context) => Emp_Assign_2(),
+          '/Emp_Inventory' : (context) => Emp_Inventory(),
         },
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,

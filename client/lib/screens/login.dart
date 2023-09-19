@@ -190,12 +190,7 @@ class _LoginState extends State<Login> {
                       padding: const EdgeInsets.all(11.0),
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Login(loginMember: "EMPLOYEE",),
-                            ),
-                          );
+                          Navigator.pushNamed(context, '/Emp_home');
                         },
                         child: const Text(
                           'Employee Login',

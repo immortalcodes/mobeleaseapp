@@ -74,8 +74,8 @@ class _EmployeeDataCardState extends State<EmployeeDataCard> {
                       Dues(),],
                   ),
                   SizedBox(
-            height: 25,
-            width: 120,
+                    width: MediaQuery.of(context).size.width* 0.4,
+                    height: MediaQuery.of(context).size.height* 0.04,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xffE96E2B),
@@ -106,8 +106,8 @@ class Cash extends StatelessWidget {
   @override
   Container build(BuildContext context) {
     return Container(
-      width: 35,
-      height: 15,
+      width: MediaQuery.of(context).size.width* 0.1,
+      height: MediaQuery.of(context).size.height* 0.025,
       decoration: BoxDecoration(
         color: Color(0xffD2FDE6),
         borderRadius: BorderRadius.circular(30),
@@ -122,8 +122,8 @@ class Credit extends StatelessWidget {
   @override
   Container build(BuildContext context) {
     return Container(
-      width: 45,
-      height: 15,
+      width: MediaQuery.of(context).size.width* 0.12,
+      height: MediaQuery.of(context).size.height* 0.025,
       decoration: BoxDecoration(
         color: Color(0xffFFF5CA),
         borderRadius: BorderRadius.circular(30),
@@ -139,8 +139,8 @@ class Paid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 45,
-      height: 15,
+      width: MediaQuery.of(context).size.width* 0.12,
+      height: MediaQuery.of(context).size.height* 0.025,
       decoration: BoxDecoration(
         color: Color(0xff8fb4e7),
         borderRadius: BorderRadius.circular(30),
@@ -164,8 +164,8 @@ class CreditsLeft extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 50,
-      height: 15,
+      width: MediaQuery.of(context).size.width* 0.21,
+      height: MediaQuery.of(context).size.height* 0.025,
       decoration: BoxDecoration(
         color: Color(0xfffdbbbb),
         borderRadius: BorderRadius.circular(30),
@@ -188,8 +188,8 @@ class NoDues extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 50,
-      height: 15,
+      width: MediaQuery.of(context).size.width* 0.16,
+      height: MediaQuery.of(context).size.height* 0.025,
       decoration: BoxDecoration(
         color: Color(0xff8fb4e7),
         borderRadius: BorderRadius.circular(30),
@@ -213,8 +213,8 @@ class Duesleft extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 70,
-      height: 15,
+      width: MediaQuery.of(context).size.width* 0.2,
+      height: MediaQuery.of(context).size.height* 0.025,
       decoration: BoxDecoration(
         color: Color(0xfffdbbbb),
         borderRadius: BorderRadius.circular(30),
