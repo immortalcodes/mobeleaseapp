@@ -143,7 +143,7 @@ class _DeviceSelectionScreenState extends State<DeviceSelectionScreen> {
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     padding: EdgeInsets.only(left: 10,bottom: 10,top: 10),
-                    height: 80,
+                    height: MediaQuery.of(context).size.height*0.1,
                     width: double.infinity,
                     color: Colors.white,
                     child: Padding(

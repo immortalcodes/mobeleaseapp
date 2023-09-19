@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobelease/widgets/Emp_bottomAppBar.dart';
 import '../../widgets/Appbar.dart';
 import '../../widgets/EmployeeDataCard.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -23,14 +24,16 @@ class _Emp_homeState extends State<Emp_home> {
               const EdgeInsets.only(top: 11.0, left: 11.0, right: 11.0),
               child: Appbar(),
             ),
-            SizedBox(height: 100,),
+            SizedBox(height: MediaQuery.of(context).size.height* 0.12,),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 36.0),
               child: GestureDetector(
-                onTap: (){},
+                onTap: (){
+                  Navigator.pushNamed(context, '/Emp_Assign_1');
+                },
                 child: Container(
-                  width: 167,
-                  height: 42,
+                  width: MediaQuery.of(context).size.width* 0.5,
+                  height: MediaQuery.of(context).size.height* 0.07,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
                     border: Border.all(color: Color(0xffE96E2B), width: 0.5),
@@ -64,13 +67,19 @@ class _Emp_homeState extends State<Emp_home> {
                 children: [
                   Text("Recent Selling", style: TextStyle(color: Color(0xffE96E2B), fontSize: 14, fontWeight: FontWeight.w600 )),
                   SizedBox(height: 8,),
-                  EmployeeDataCard(cost: 4500, date: '03/03/20232', name: "Ashwin Jaiswal", cash: true, paid: true, dues: false),
+                  Column(
+
+                    children: [
+                      EmployeeDataCard(cost: 4500, date: '03/03/20232', name: "Ashwin Jaiswal", cash: true, paid: false, dues: true),
+                    ],
+                  ),
                 ],
               ),
             ),
           ],
         ),
       ),
+      bottomNavigationBar: Emp_bottomAppBar(index: 0,),
     );
   }
 }
