@@ -1,16 +1,16 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:mobelease/screens/Admin/EmployeePersonal.dart';
+import 'package:mobelease/screens/Admin/employee_personal.dart';
+import 'package:mobelease/widgets/bottom_app_bar.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
-import '../../models/Employee_Model.dart';
-import '../../widgets/Employee_Icon.dart';
+import '../../models/employee_model.dart';
+import '../../widgets/employee_icon.dart';
 import '../../widgets/Appbar.dart';
-import '../../widgets/QuickStyle.dart';
-import '../../widgets/BottomAppBar.dart';
-import 'EmployeeAll.dart';
-import '../../widgets/EmployeeDataCard.dart';
+import '../../widgets/quick_style.dart';
+import 'employee_all.dart';
+import '../../widgets/employee_data_card.dart';
 import 'package:http/http.dart' as http;
 
 class Employee extends StatefulWidget {

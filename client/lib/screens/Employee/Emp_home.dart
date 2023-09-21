@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/Appbar.dart';
-import '../../widgets/EmployeeDataCard.dart';
+import '../../widgets/employee_data_card.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Emp_home extends StatefulWidget {

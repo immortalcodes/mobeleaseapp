@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobelease/screens/login.dart';
-import '../widgets/buttons2.dart';
+import '../widgets/buttons_second.dart';
 import '../widgets/buttons.dart';
-import '../widgets/Background.dart';
+import '../widgets/background.dart';
 
 class InitScreen extends StatelessWidget {
   const InitScreen({Key? key}) : super(key: key);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobelease/controllers/auth_controller.dart';
 import '../widgets/buttons.dart';
-import '../widgets/Background.dart';
-import '../widgets/TextFieldWidget.dart';
-import 'Admin/Employee.dart';
+import '../widgets/background.dart';
+import '../widgets/text_field_widget.dart';
+import 'Admin/employee.dart';
 import 'init_screen.dart';
 
 class Login extends StatefulWidget {

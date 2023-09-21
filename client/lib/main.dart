@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:mobelease/controllers/employee_controller.dart';
-import 'package:mobelease/screens/Admin/AssigningPage.dart';
-import 'package:mobelease/screens/Employee/Emp_home.dart';
-import 'package:mobelease/screens/Inventory/AddDevice.dart';
-import 'package:mobelease/screens/Admin/Employee.dart';
-import 'package:mobelease/screens/Remarks.dart';
-import 'controllers/Assign_Provider.dart';
+import 'package:mobelease/screens/Admin/assigning_page.dart';
+import 'package:mobelease/screens/employee/emp_home.dart';
+import 'package:mobelease/screens/inventory/add_device.dart';
+import 'package:mobelease/screens/Admin/employee.dart';
+import 'package:mobelease/screens/remarks.dart';
+import 'controllers/assign_provider.dart';
 import 'package:mobelease/screens/login.dart';
-import 'screens/Admin/addEmployee.dart';
+import 'screens/Admin/add_employee.dart';
 import 'screens/init_screen.dart';
-import 'screens/Admin/EmployeePersonal.dart';
-import 'screens/Admin/EmployeeSelect.dart';
-import 'screens/Admin/Assign.dart';
+import 'screens/Admin/employee_personal.dart';
+import 'screens/Admin/employee_select.dart';
+import 'screens/Admin/assign.dart';
 import 'screens/notifications.dart';
-import 'screens/Inventory/Inventory.dart';
-import 'screens/Message.dart';
-import 'controllers/ProtectedRoute.dart';
-import 'screens/Admin/EmployeeAll.dart';
+import 'screens/inventory/inventory.dart';
+import 'screens/message.dart';
+import 'controllers/protected_route.dart';
+import 'screens/Admin/employee_all.dart';
 import 'package:provider/provider.dart';
-import 'screens/Inventory/AddDevice.dart';
+import 'screens/inventory/add_device.dart';
+
+
 
 void main() {
   runApp(MultiProvider(
@@ -31,7 +33,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
 
-  String inRoute= '/Emp_home';
+  String inRoute= '/home';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -46,7 +48,7 @@ class MyApp extends StatelessWidget {
           '/EmployeePersonal': (context) => ProtectedPage(child: EmployeePersonal(id:1)),
           '/EmployeeSelect' : (context) => ProtectedPage(child: EmployeeSelect()),
           '/Assign' : (context) => ProtectedPage(child: Assign(id:1)),
-          '/AssigningPage' :(context) => ProtectedPage(child: DeviceSelectionScreen()),
+          // '/AssigningPage' :(context) => ProtectedPage(child: DeviceSelectionScreen()),
           '/Inventory' : (context) => ProtectedPage(child: Inventory()),
           '/Remarks' : (context) => ProtectedPage(child: Remarks()),
           '/Message' : (context) => ProtectedPage(child: Message()),
@@ -60,6 +62,6 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Color(0xffFEF9F7),
           primarySwatch: Colors.blue,
         ),
-        home: Employee());
+        home: InitScreen());
   }
 }

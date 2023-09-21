@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobelease/models/Inventory_Model.dart';
+import 'package:mobelease/models/inventory_model.dart';
 
 class SelectedDevicesProvider extends ChangeNotifier {
   List<ItemModel> _selectedDevices = [];

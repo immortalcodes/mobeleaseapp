@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mobelease/widgets/RemarkCard.dart';
+import 'package:mobelease/widgets/remark_card.dart';
 import '../widgets/Appbar.dart';
-import '../widgets/BottomAppBar.dart';
+import '../widgets/bottom_app_bar.dart';
 
 class Remarks extends StatefulWidget {
   const Remarks({super.key});

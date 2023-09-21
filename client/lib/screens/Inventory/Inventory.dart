@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
-import '../../models/Inventory_Model.dart';
+import '../../models/inventory_model.dart';
 import '../../widgets/Appbar.dart';
-import '../../widgets/BottomAppBar.dart';
+import '../../widgets/bottom_app_bar.dart';
 import '../../widgets/categories.dart';
-import '../../widgets/AssignCardInv.dart';
+import '../../widgets/assign_card_inv.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

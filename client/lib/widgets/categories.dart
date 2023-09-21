@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../models/Inventory_Model.dart';
+import '../models/inventory_model.dart';
 
 class Categories {
   late String title;

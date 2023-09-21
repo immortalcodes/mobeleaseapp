@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:core';
-import 'package:mobelease/screens/Admin/Employee.dart';
+import 'package:mobelease/screens/Admin/employee.dart';
 import '../controllers/auth_controller.dart';
 import '../globals.dart' as globals;
-import '../models/Employee_Model.dart';
+import '../models/employee_model.dart';
 import 'package:http/http.dart' as http;
 
 class EmployeeRepository{
