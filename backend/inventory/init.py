@@ -152,7 +152,6 @@ async def editInv(item:assign,response: Response,access_token: Union[str, None] 
             response.status_code = status.HTTP_200_OK
             return {'data' : "Assign Edited Successfully"}
         except:
-            
             connection.rollback()
         finally:
             connection.autocommit = True
