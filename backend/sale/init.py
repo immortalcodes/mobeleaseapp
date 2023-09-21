@@ -213,10 +213,219 @@ async def viewallsale(item:viewsale,response: Response,access_token: Union[str, 
 
 
 @saleRouter.post("/addinstallment", status_code=200)
-async def addinstallment(item:saleobject,response: Response,access_token: Union[str, None] = Cookie(default=None)):
+async def addinstallment(item:installment,response: Response,access_token: Union[str, None] = Cookie(default=None)):
      token = decodeToken(access_token) 
-     if token and token['role'] == 'emp':
-          pass
+     if token and token['role'] == 'employee':
+          empid = token["empid"]
+          cursor.execute("SELECT EXISTS (select * from devicesale where employeeid = %s and saleid = %s)",(empid,item.saleid))
+          iftrue = cursor.fetchone()
+          if  iftrue[0]:
+               if item.status == 'down':
+                    cursor.execute("INSERT into creditinstallment (saleid,paymentdate,status,amountpaid) VALUES (%s,%s,%s,%s)",(item.saleid,item.paymentdate,item.status,item.amountpaid))
+                    connection.commit()
+                    cursor.execute("SELECT amountleft from devicesale where saleid = %s",(item.saleid,))
+                    amountleft = cursor.fetchone()
+                    amountleft = int(amountleft[0]) - item.amountpaid
+                    if amountleft <= 0:
+                         cursor.execute("UPDATE devicesale SET amountleft = 0 ,paymentalert = 0 , status= 'paid' where saleid = %s",(item.saleid,))
+                    else:
+                         cursor.execute("UPDATE devicesale SET amountleft = %s  where saleid = %s",(amountleft,item.saleid))
+                    response.status_code = status.HTTP_200_OK
+                    return {'data':"Installment Added Successfully"}
+
+                    
+               elif item.status == 'topay':
+                    cursor.execute("INSERT into creditinstallment(saleid,deadline,status,promisedamount) VALUES (%s,%s,%s,%s)",(item.saleid,item.deadline,item.status,item.promisedamount))
+                    connection.commit()
+                    response.status_code = status.HTTP_200_OK
+                    return {'data':"Installment Added Successfully"}
+               elif item.status == 'paid':
+                    cursor.execute("INSERT into creditinstallment (saleid,paymentdate,status,amountpaid) VALUES (%s,%s,%s,%s)",(item.saleid,item.paymentdate,item.status,item.amountpaid))
+                    connection.commit()
+                    cursor.execute("SELECT amountleft from devicesale where saleid = %s",(item.saleid,))
+                    amountleft = cursor.fetchone()
+                    amountleft = int(amountleft[0]) - item.amountpaid
+                    if amountleft <= 0:
+                         cursor.execute("UPDATE devicesale SET amountleft = 0 , paymentalert = 0 , status= 'paid' where saleid = %s",(item.saleid,))
+                    else:
+                         cursor.execute("UPDATE devicesale SET amountleft = %s  where saleid = %s",(amountleft,item.saleid))
+                    response.status_code = status.HTTP_200_OK
+                    return {'data':"Installment Added Successfully"}
+               else :
+                    response.status_code = status.HTTP_400_BAD_REQUEST
+                    return {"message":"Invalid status provided"}
+
+          else :
+               response.status_code = status.HTTP_404_NOT_FOUND
+               return {"message":"Permission doesn't exist for this sale"}
+
+
+     else :
+          response.status_code = status.HTTP_403_FORBIDDEN
+          return {"message":"error in verifying token and permission"}
+     
 
 
 
+
+
+
+
+@saleRouter.post("/updateinstallment", status_code=200)
+async def updateinstallment(item:alterinstallment,response: Response,access_token: Union[str, None] = Cookie(default=None)):
+     token = decodeToken(access_token) 
+     if token and token['role'] == 'employee':
+          empid = token["empid"]
+          cursor.execute("SELECT EXISTS (select * from devicesale where employeeid = %s and saleid = %s)",(empid,item.saleid))
+          iftrue =  cursor.fetchone()
+          if iftrue[0]:
+               cursor.execute("SELECT status,promisedamount from creditinstallment where installmentid = %s",(item.installmentid,))
+               status0 = cursor.fetchone()
+               prom_amt = status0[1]
+               status0 = status0[0]
+               if status0 == 'delay':
+                    if item.status == 'void':
+                         cursor.execute("UPDATE creditinstallment SET status = 'delay_void' where installmentid = %s",(item.installmentid,))
+                         response.status_code = status.HTTP_200_OK
+                         return {'data':"Installment Altered Successfully"}
+                    elif item.status == 'pay':
+                         if prom_amt > item.amountpaid:
+                              cursor.execute("UPDATE creditinstallment SET status = 'delay_paidless',amountpaid = %s, paymentdate = %s  where installmentid = %s",(item.amountpaid,item.paymentdate,item.installmentid,))
+                              cursor.execute("SELECT amountleft from devicesale where saleid = %s",(item.saleid,))
+                              amountleft = cursor.fetchone()
+                              amountleft = int(amountleft[0]) - item.amountpaid
+                              if amountleft <= 0:
+                                   cursor.execute("UPDATE devicesale SET amountleft = 0 ,paymentalert = 0 , status= 'paid' where saleid = %s",(item.saleid,))
+                              else:
+                                   cursor.execute("UPDATE devicesale SET amountleft = %s  where saleid = %s",(amountleft,item.saleid))
+                              response.status_code = status.HTTP_200_OK
+                              return {'data':"Installment Altered Successfully"}
+                         else :
+                              cursor.execute("UPDATE creditinstallment SET status = 'delay_paid',amountpaid = %s, paymentdate = %s  where installmentid = %s",(item.amountpaid,item.paymentdate,item.installmentid,))
+                              cursor.execute("SELECT amountleft from devicesale where saleid = %s",(item.saleid,))
+                              amountleft = cursor.fetchone()
+                              amountleft = int(amountleft[0]) - item.amountpaid
+                              if amountleft <= 0:
+                                   cursor.execute("UPDATE devicesale SET amountleft = 0 ,paymentalert = 0 , status= 'paid' where saleid = %s",(item.saleid,))
+                              else:
+                                   cursor.execute("UPDATE devicesale SET amountleft = %s  where saleid = %s",(amountleft,item.saleid))
+                              response.status_code = status.HTTP_200_OK
+                              return {'data':"Installment Altered Successfully"}
+               elif status0 == 'topay':
+                    if item.status == 'void':
+                         cursor.execute("UPDATE creditinstallment SET status = 'void' where installmentid = %s",(item.installmentid,))
+                         response.status_code = status.HTTP_200_OK
+                         return {'data':"Installment Altered Successfully"}
+                    elif item.status == 'pay':
+                         if prom_amt > item.amountpaid:
+                              cursor.execute("UPDATE creditinstallment SET status = 'paidless',amountpaid = %s, paymentdate = %s  where installmentid = %s",(item.amountpaid,item.paymentdate,item.installmentid,))
+                              cursor.execute("SELECT amountleft from devicesale where saleid = %s",(item.saleid,))
+                              amountleft = cursor.fetchone()
+                              amountleft = int(amountleft[0]) - item.amountpaid
+                              if amountleft <= 0:
+                                   cursor.execute("UPDATE devicesale SET amountleft = 0 ,paymentalert = 0 , status= 'paid' where saleid = %s",(item.saleid,))
+                              else:
+                                   cursor.execute("UPDATE devicesale SET amountleft = %s  where saleid = %s",(amountleft,item.saleid))
+                              response.status_code = status.HTTP_200_OK
+                              return {'data':"Installment Altered Successfully"}
+                         else :
+                              cursor.execute("UPDATE creditinstallment SET status = 'paid',amountpaid = %s, paymentdate = %s  where installmentid = %s",(item.amountpaid,item.paymentdate,item.installmentid,))
+                              cursor.execute("SELECT amountleft from devicesale where saleid = %s",(item.saleid,))
+                              amountleft = cursor.fetchone()
+                              amountleft = int(amountleft[0]) - item.amountpaid
+                              if amountleft <= 0:
+                                   cursor.execute("UPDATE devicesale SET amountleft = 0 ,paymentalert = 0 , status= 'paid' where saleid = %s",(item.saleid,))
+                              else:
+                                   cursor.execute("UPDATE devicesale SET amountleft = %s  where saleid = %s",(amountleft,item.saleid))
+                              response.status_code = status.HTTP_200_OK
+                              return {'data':"Installment Altered Successfully"}
+                         
+
+          else :
+               response.status_code = status.HTTP_404_NOT_FOUND
+               return {"message":"Permission doesn't exist for this sale"}
+
+
+     else :
+          response.status_code = status.HTTP_403_FORBIDDEN
+          return {"message":"error in verifying token and permission"}
+
+@saleRouter.post("/viewinstallment", status_code=200)
+async def viewinstallment(item:saleid,response: Response,access_token: Union[str, None] = Cookie(default=None)):
+     token = decodeToken(access_token) 
+     if token :
+          empid = token["empid"]
+          cursor.execute("SELECT * from devicesale where employeeid = %s and saleid = %s",(empid,item.saleid))
+          res = cursor.fetchone()
+          if token["role"] == "employee":     
+               if res == set():
+                    response.status_code = status.HTTP_403_FORBIDDEN
+                    return {"message":"Permission not Granted"}
+               
+          cursor.execute("SELECT * from creditinstallment where  saleid = %s",(item.saleid,))
+          all_installments = cursor.fetchall()
+          data = {}
+          with open('photocustomer.jpg', 'wb') as photo_file:
+                    if res[4]:
+                        photo_file.write(res[4])
+          if res[4]:
+               with open('photocustomer.jpg', 'rb') as photo_file:
+                        photodata = photo_file.read()
+          else:
+                    photodata = None
+          if token["role"] == "admin":
+               data["saledetails"] = {
+                    'saleid': res[0],
+                    'saletype':res[1],
+                    'employeeid':res[2],
+                    'customername':res[3],
+                    'customeridimage':photodata,
+                    'phoneno':res[5],
+                    'language':res[6],
+                    'unit':res[7],
+                    'farm':res[8],
+                    'itemarray':res[9],
+                    'totalsale': res[11],
+                    'remark':res[12],
+                    'timestamp':res[13],
+                    'status':res[14],
+                    'amountleft':res[15],
+                    'paymentalert':res[16],
+                    'totalcost' : res[10],
+               }
+          else:
+               data["saledetails"] = {
+                    'saleid': res[0],
+                    'saletype':res[1],
+                    'employeeid':res[2],
+                    'customername':res[3],
+                    'customeridimage':photodata,
+                    'phoneno':res[5],
+                    'language':res[6],
+                    'unit':res[7],
+                    'farm':res[8],
+                    'itemarray':res[9],
+                    'totalsale': res[11],
+                    'remark':res[12],
+                    'timestamp':res[13],
+                    'status':res[14],
+                    'amountleft':res[15],
+                    'paymentalert':res[16],
+               }
+          installments = {}
+          for installment in all_installments:
+               installments[installment[0]] = {
+                    'saleid': installment[1],
+                    'deadline': installment[2],
+                    'paymentdate': installment[3],
+                    'status': installment[4],
+                    'promisedamount': installment[5],
+                    'amountpaid':installment[6],
+               }
+          data["installments"] = installments
+          response.status_code = status.HTTP_200_OK
+          return {'data':data}
+     else :
+          response.status_code = status.HTTP_403_FORBIDDEN
+          return {"message":"Permission not Granted"}
+          
