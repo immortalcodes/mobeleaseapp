@@ -15,3 +15,11 @@ class employee(BaseModel):
     password : str 
     employeephoto : Optional[bytes] = None
     
+class remark(BaseModel):
+    remark : str
+    empid : int = None
+
+class reply(BaseModel):
+    remarkid : int
+    reply : str
+    
