@@ -35,3 +35,24 @@ class viewsale(BaseModel):
     status : Optional[str] = '*all*'
     empid : Optional[str] = '*all*'
     saletype : Optional[str] = '*all*'
+
+
+class installment(BaseModel):
+    saleid : int
+    status : str
+    paymentdate : str = None
+    deadline : str = None
+    promisedamount : int = None
+    amountpaid : int = None
+
+
+class alterinstallment(BaseModel):
+    installmentid : int
+    saleid : int
+    status : str
+    paymentdate : str = None
+    amountpaid : int = None
+
+
+class saleid(BaseModel):
+    saleid : int
