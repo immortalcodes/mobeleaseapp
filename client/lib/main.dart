@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:mobelease/controllers/employee_controller.dart';
+<<<<<<< HEAD
 import 'package:mobelease/screens/Admin/assigning_page.dart';
 import 'package:mobelease/screens/employee/emp_home.dart';
 import 'package:mobelease/screens/inventory/add_device.dart';
 import 'package:mobelease/screens/Admin/employee.dart';
 import 'package:mobelease/screens/remarks.dart';
 import 'controllers/assign_provider.dart';
+=======
+import 'package:mobelease/screens/Admin/AssigningPage.dart';
+import 'package:mobelease/screens/Employee/Emp_Assign_2.dart';
+import 'package:mobelease/screens/Employee/Emp_Inventory.dart';
+import 'package:mobelease/screens/Employee/Emp_Reports_1.dart';
+import 'package:mobelease/screens/Employee/Emp_home.dart';
+import 'package:mobelease/screens/Employee/PaymentCash.dart';
+import 'package:mobelease/screens/Employee/PaymentCredit.dart';
+import 'package:mobelease/screens/Employee/Reports.dart';
+import 'package:mobelease/screens/Inventory/AddDevice.dart';
+import 'package:mobelease/screens/Admin/Employee.dart';
+import 'package:mobelease/screens/Remarks.dart';
+import 'controllers/Assign_Provider.dart';
+>>>>>>> 2148029c51a630b2ce2337cb01c3873c89e63580
 import 'package:mobelease/screens/login.dart';
 import 'screens/Admin/add_employee.dart';
 import 'screens/init_screen.dart';
@@ -54,7 +69,14 @@ class MyApp extends StatelessWidget {
           '/Message' : (context) => ProtectedPage(child: Message()),
           '/EmployeeAll': (context) => ProtectedPage(child: EmployeeAll()),
           '/AddDevice' : (context) => ProtectedPage(child: AddDeviceDialog()),
-          '/Emp_home' : (context) => Emp_home()
+          '/Emp_home' : (context) => Emp_home(),
+          '/Emp_Assign_1' : (context) => Emp_Assign_1(),
+          '/Emp_Assign_2' : (context) => Emp_Assign_2(),
+          '/Emp_Inventory' : (context) => Emp_Inventory(),
+          '/PaymentCash': (context)=> PaymentCash(),
+          '/PaymentCredit': (context)=> PaymentCredit(),
+          '/Emp_Reports_1': (context)=> Emp_Reports_1(),
+          '/Reports': (context)=> Reports(dues: false, cash: true, paid: true,)
         },
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
