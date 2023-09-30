@@ -20,8 +20,7 @@ class _LoginState extends State<Login> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   String _errorMessage = ' ';
-  bool passwordVisible=false;
-
+  bool passwordVisible = false;
 
   void _login() async {
     final email = _emailController.text;
@@ -34,19 +33,24 @@ class _LoginState extends State<Login> {
       return;
     }
 
-    final loginSuccess = await _authController.login(email, password,widget.loginMember.toLowerCase());
+    final loginSuccess = await _authController.login(
+        email, password, widget.loginMember.toLowerCase());
 
     if (loginSuccess) {
-      if(widget.loginMember == "ADMIN"){
+      if (widget.loginMember == "ADMIN") {
         print("Admin Login success");
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const Employee()),(Route<dynamic> route) => false);
-      }
-      else{
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const Employee()),
+            (Route<dynamic> route) => false);
+      } else {
         print("Employee Login success");
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const InitScreen()),(Route<dynamic> route) => false);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const InitScreen()),
+            (Route<dynamic> route) => false);
       }
       // Navigate to the next screen upon successful login
-
     } else {
       setState(() {
         _errorMessage = 'Login failed. Please check your credentials.';
@@ -54,10 +58,8 @@ class _LoginState extends State<Login> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -72,17 +74,6 @@ class _LoginState extends State<Login> {
                 child: Column(
                   //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          child: const Icon(Icons.arrow_back),
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
-                    ),
                     //SizedBox(height: ,),
                     Padding(
                       padding: const EdgeInsets.only(top: 20.0),
@@ -112,31 +103,39 @@ class _LoginState extends State<Login> {
                         Text(
                           "Enter your email address",
                         ),
+                        SizedBox(height: 10.0),
                         TextFieldWidget(
                             controller: _emailController,
                             hint: "Username or email Address"),
                       ],
                     ),
-                    SizedBox(height: 10.0),
+                    SizedBox(height: 15.0),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           "Enter your Password",
                         ),
+                        SizedBox(height: 10.0),
+
                         TextField(
                           controller: _passwordController,
-                          obscureText: passwordVisible,
+                          obscureText: !passwordVisible,
                           decoration: InputDecoration(
                             hintText: "Password",
                             helperText: _errorMessage,
                             helperStyle: TextStyle(color: Colors.red),
                             suffixIcon: IconButton(
-                              icon: passwordVisible?Icon(Icons.visibility,color:Color(0xffE96E2B))
-                              : Icon(Icons.visibility_off,color: Colors.grey,),
+                              icon: passwordVisible
+                                  ? Icon(Icons.visibility,
+                                      color: Color(0xffE96E2B))
+                                  : Icon(
+                                      Icons.visibility_off,
+                                      color: Colors.grey,
+                                    ),
                               onPressed: () {
                                 setState(
-                                      () {
+                                  () {
                                     passwordVisible = !passwordVisible;
                                   },
                                 );
@@ -162,9 +161,14 @@ class _LoginState extends State<Login> {
               ),
               Column(
                 children: [
-                  BlackButton(buttonText: '${widget.loginMember} LOGIN', Width: 318.0, Height: 54.0,Radius:9.0, onpress: _login)
+                  BlackButton(
+                          buttonText: '${widget.loginMember} LOGIN',
+                          Width: 318.0,
+                          Height: 54.0,
+                          Radius: 9.0,
+                          onpress: _login)
                       .buildBlackButton(),
-                  if(widget.loginMember=="EMPLOYEE") ...[
+                  if (widget.loginMember == "EMPLOYEE") ...[
                     Padding(
                       padding: const EdgeInsets.all(11.0),
                       child: GestureDetector(
@@ -172,7 +176,9 @@ class _LoginState extends State<Login> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => Login(loginMember: "ADMIN",),
+                              builder: (context) => Login(
+                                loginMember: "ADMIN",
+                              ),
                             ),
                           );
                         },
@@ -184,8 +190,7 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ),
-                  ]
-                  else ...[
+                  ] else ...[
                     Padding(
                       padding: const EdgeInsets.all(11.0),
                       child: GestureDetector(
@@ -201,7 +206,6 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ]
-
                 ],
               ),
             ],
