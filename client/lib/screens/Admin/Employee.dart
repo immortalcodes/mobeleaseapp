@@ -205,7 +205,7 @@ class _EmployeeState extends State<Employee> {
                                             },
                                             child: Employee_icon(
                                                 imagePath:
-                                                    "assets/images/image1.jpg"),
+                                                    employee.empPhoto ?? ""),
                                           ),
                                           SizedBox(
                                             height: 10.0,

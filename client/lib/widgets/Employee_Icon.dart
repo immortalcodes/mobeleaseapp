@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Employee_icon extends StatelessWidget {
-  late String imagePath;
+  String imagePath;
 
   Employee_icon({required this.imagePath});
 
@@ -16,7 +16,9 @@ class Employee_icon extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 24.5,
-              backgroundImage: AssetImage(imagePath),
+              backgroundImage: imagePath.isEmpty
+                  ? AssetImage("assets/images/image1.jpg")
+                  : NetworkImage(imagePath) as ImageProvider,
             ),
           ],
         ),

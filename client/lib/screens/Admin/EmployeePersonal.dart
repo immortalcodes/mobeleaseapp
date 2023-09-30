@@ -97,7 +97,9 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                     children: [
                       CircleAvatar(
                         radius: 49.5,
-                        backgroundImage: AssetImage('assets/images/image1.jpg'),
+                        backgroundImage: employee.empPhoto == null
+                            ? AssetImage('assets/images/image1.jpg')
+                            : NetworkImage(employee.empPhoto!) as ImageProvider,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,7 +225,8 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) => EditEmployee(
-                                                id: widget.empid ?? 1),
+                                                id: widget.empid ?? 1,
+                                                employeeData: employee),
                                           ),
                                         );
                                       },

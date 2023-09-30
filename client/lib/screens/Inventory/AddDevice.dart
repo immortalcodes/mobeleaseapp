@@ -37,7 +37,7 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
   void handleSubmit() async {
     final token = await authController.getToken();
     print(token);
-    var url = Uri.https(baseUrl, '/inv/additem');
+    var url = Uri.parse('$baseUrl/inv/additem');
     final client = http.Client();
     print(selectedValue);
     var response = await http.post(
