@@ -39,7 +39,9 @@ class _PaymentCreditState extends State<PaymentCredit> {
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 12)),
                     TextFieldWidget(
-                        hint: '\$980', controller: _EMIValController),
+                        profileField: false,
+                        hint: '\$980',
+                        controller: _EMIValController),
                   ],
                 ),
                 SizedBox(

@@ -26,7 +26,7 @@ class _InventoryState extends State<Inventory> {
   final AuthController authController = AuthController();
   Future<Map<String, List<ItemModel>>> fetchItemsFromApi() async {
     final token = await authController.getToken();
-    var url = Uri.https(baseUrl, '/inv/viewallitem');
+    var url = Uri.parse('$baseUrl/inv/viewallitem');
     final response = await http.post(
       url,
       headers: {'Cookie': token!, 'Content-Type': 'application/json'},
@@ -215,7 +215,7 @@ class _InventoryState extends State<Inventory> {
           }
         },
       ),
-      bottomNavigationBar: bottomAppBar(index:1),
+      bottomNavigationBar: bottomAppBar(index: 1),
     );
   }
 }

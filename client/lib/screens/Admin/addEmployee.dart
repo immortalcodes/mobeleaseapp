@@ -25,7 +25,6 @@ class _addEmployee extends State<addEmployee> {
   XFile? _imageFile;
 
   Future<void> _getImage() async {
-
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
@@ -36,7 +35,7 @@ class _addEmployee extends State<addEmployee> {
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final token = await authController.getToken();
-      var url = Uri.https(baseUrl, '/emp/createemployee');
+      var url = Uri.parse('$baseUrl/emp/createemployee');
       final String firstname = _firstnameController.text;
       final String lastname = _lastnameController.text;
       final String phoneno = _phoneController.text;
@@ -72,12 +71,11 @@ class _addEmployee extends State<addEmployee> {
               _imageFile = null;
             });
           } else {
-            print('Form submission failed with status code ${response
-                .statusCode}');
+            print(
+                'Form submission failed with status code ${response.statusCode}');
           }
           // return employees;
-        }
-        catch (e) {
+        } catch (e) {
           return Future.error(e.toString());
         }
       }
@@ -92,23 +90,32 @@ class _addEmployee extends State<addEmployee> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 11.0,left: 11.0,right: 11.0),
+              padding:
+                  const EdgeInsets.only(top: 11.0, left: 11.0, right: 11.0),
               child: Appbar(),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 23.0,bottom: 16.0,left: 18.0,right: 18.0),
+              padding: const EdgeInsets.only(
+                  top: 23.0, bottom: 16.0, left: 18.0, right: 18.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Add Employee", style: TextStyle(color: Color(0xffE96E2B), fontWeight: FontWeight.w600, fontSize: 20.0 )),
+                  Text("Add Employee",
+                      style: TextStyle(
+                          color: Color(0xffE96E2B),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20.0)),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       Navigator.pop(context);
                     },
                     child: CircleAvatar(
                       radius: 12.0,
                       backgroundColor: Colors.grey[300],
-                      child: Icon(Icons.close, color: Colors.black,),
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ],
@@ -124,87 +131,143 @@ class _addEmployee extends State<addEmployee> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          width: MediaQuery.of(context).size.width*0.45,
+                          width: MediaQuery.of(context).size.width * 0.45,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text("First Name"),
-                              SizedBox(height: 5,),
-                              TextFieldWidget(
-                                controller: _firstnameController,
-                                hint: 'First Name',
+                              SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                height: 44,
+                                child: TextFieldWidget(
+                                  controller: _firstnameController,
+                                  hint: 'First Name',
+                                  profileField: false,
+                                ),
                               ),
                             ],
                           ),
                         ),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width*0.45,
+                          width: MediaQuery.of(context).size.width * 0.45,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text("Last Name"),
-                              SizedBox(height: 5,),
-                              TextFieldWidget(
-                                controller: _lastnameController,
-                                hint: 'Last Name',
+                              SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                height: 44,
+                                child: TextFieldWidget(
+                                  profileField: false,
+                                  controller: _lastnameController,
+                                  hint: 'Last Name',
+                                ),
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 5,),
+                    SizedBox(
+                      height: 18,
+                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Phone Number"),
-                        SizedBox(height: 5,),
-                        TextFieldWidget(
-                          controller: _phoneController,
-                          hint:'Phone Number',
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          height: 44,
+                          child: TextFieldWidget(
+                            profileField: false,
+                            controller: _phoneController,
+                            hint: 'Phone Number',
+                          ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 5,),
+                    SizedBox(
+                      height: 18,
+                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("E-mail"),
-                        SizedBox(height: 5,),
-                        TextFieldWidget(
-                          controller: _emailController,
-                          hint:"Email",
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          height: 44,
+                          child: TextFieldWidget(
+                            profileField: false,
+                            controller: _emailController,
+                            hint: "Email",
+                          ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 5,),
+                    SizedBox(
+                      height: 18,
+                    ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Password"),
-                        SizedBox(height: 5,),
-                        TextFieldWidget(
-                          controller: _passwordController,
-                          hint:"Password",
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          height: 44,
+                          child: TextFieldWidget(
+                            profileField: false,
+                            controller: _passwordController,
+                            hint: "Password",
+                          ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 5,),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: Color(0xffE96E2B)),
-                      onPressed: _getImage,
-                      child: Text('Select Image'),
+                    SizedBox(
+                      height: 18,
+                    ),
+                    Text("Profile Photo"),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      height: 44,
+                      child: TextFieldWidget(
+                        controller: TextEditingController(),
+                        hint: "image.png",
+                        fn: _getImage,
+                        profileField: true,
+                      ),
                     ),
                     _imageFile != null
                         ? Image.file(
-                      File(_imageFile!.path),
-                      height: 150,
-                      width: 150,
-                    )
+                            File(_imageFile!.path),
+                            height: 150,
+                            width: 150,
+                          )
                         : Container(),
+                    SizedBox(
+                      height: 18,
+                    ),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: Color(0xffE96E2B)),
-                      onPressed: (){_submitForm(); Navigator.pop(context);},
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          backgroundColor: Color(0xffE96E2B)),
+                      onPressed: () {
+                        _submitForm();
+                        Navigator.pop(context);
+                      },
                       child: Text('Submit'),
                     ),
                   ],
@@ -214,7 +277,7 @@ class _addEmployee extends State<addEmployee> {
           ],
         ),
       ),
-      bottomNavigationBar: bottomAppBar(index:0),
+      bottomNavigationBar: bottomAppBar(index: 0),
     );
   }
 }

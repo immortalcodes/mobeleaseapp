@@ -54,8 +54,7 @@ class MyApp extends StatelessWidget {
           '/Employee': (context) => ProtectedPage(child: Employee()),
           '/addEmployee': (context) => ProtectedPage(child: addEmployee()),
           // '/Employeeuser':(context) => Employeeuser(),
-          '/EmployeePersonal': (context) =>
-              ProtectedPage(child: EmployeePersonal(id: 1)),
+
           '/EmployeeSelect': (context) =>
               ProtectedPage(child: EmployeeSelect()),
           '/Assign': (context) => ProtectedPage(child: Assign(id: 1)),

@@ -25,13 +25,15 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
   TextEditingController _costPriceController = TextEditingController();
   TextEditingController _storageController = TextEditingController();
   TextEditingController _remarkController = TextEditingController();
-  String selectedValue = 'watch'; // Define a variable to hold the selected value
+  String selectedValue =
+      'watch'; // Define a variable to hold the selected value
 
   void updateSelectedValue(String value) {
     setState(() {
       selectedValue = value;
     });
   }
+
   void handleSubmit() async {
     final token = await authController.getToken();
     print(token);
@@ -80,13 +82,16 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                 color: Color(0xffE96E2B)),
           ),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               Navigator.pop(context);
             },
             child: CircleAvatar(
               radius: 12.0,
               backgroundColor: Colors.grey[300],
-              child: Icon(Icons.close, color: Colors.black,),
+              child: Icon(
+                Icons.close,
+                color: Colors.black,
+              ),
             ),
           ),
         ],
@@ -117,12 +122,11 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                         child: Center(
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child:  MyDropdown(
-                            selectedValue: selectedValue,
-                            onValueChanged: updateSelectedValue,
+                            child: MyDropdown(
+                              selectedValue: selectedValue,
+                              onValueChanged: updateSelectedValue,
+                            ),
                           ),
-
-                        ),
                         ),
                       ),
                     ],
@@ -135,8 +139,9 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                         height: 5,
                       ),
                       TextFieldWidget(
+                        profileField: false,
                         hint: '',
-                        controller:  _companyController,
+                        controller: _companyController,
                       ),
                     ],
                   ),
@@ -148,6 +153,7 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                         height: 5,
                       ),
                       TextFieldWidget(
+                        profileField: false,
                         hint: '',
                         controller: _deviceNameController,
                       ),
@@ -161,6 +167,7 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                         height: 8,
                       ),
                       TextFieldWidget(
+                        profileField: false,
                         hint: '',
                         controller: _storageController,
                       ),
@@ -174,6 +181,7 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                         height: 5,
                       ),
                       TextFieldWidget(
+                        profileField: false,
                         hint: '',
                         controller: _costPriceController,
                       ),
@@ -187,6 +195,7 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                         height: 8,
                       ),
                       TextFieldWidget(
+                        profileField: false,
                         hint: '',
                         controller: _remarkController,
                       ),
@@ -219,5 +228,3 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
     );
   }
 }
-
-

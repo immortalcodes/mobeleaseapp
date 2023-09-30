@@ -23,7 +23,6 @@ class EmployeeAll extends StatefulWidget {
 }
 
 class _EmployeeAllState extends State<EmployeeAll> {
-
   List<EmployeeModel> employeesList = [];
   final AuthController authController = AuthController();
   Future<List<EmployeeModel>> getEmployee() async {
@@ -36,9 +35,11 @@ class _EmployeeAllState extends State<EmployeeAll> {
         headers: {'Cookie': token!, 'Content-Type': 'application/json'},
       );
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body)!['data'!];
+        final Map<String, dynamic> responseData =
+            jsonDecode(response.body)!['data'!];
         final List<String> sortedKeys1 = responseData.keys!.toList();
-        List<int> sortedKeys =  sortedKeys1.map((str) => int.parse(str!)).toList() ..sort();
+        List<int> sortedKeys =
+            sortedKeys1.map((str) => int.parse(str!)).toList()..sort();
         // print(sortedKeys);
         final List<EmployeeModel> employees = sortedKeys
             .map((key) => EmployeeModel.fromJson(responseData[key.toString()]))
@@ -51,17 +52,16 @@ class _EmployeeAllState extends State<EmployeeAll> {
         //
         // });
         // }
-      }
-      else {
+      } else {
         throw Exception('Failed to load employees');
       }
 
       // return employees;
-    }
-    catch (e) {
+    } catch (e) {
       return Future.error(e.toString());
     }
   }
+
   // @override
   // void initState() {
   //   super.initState();
@@ -69,7 +69,6 @@ class _EmployeeAllState extends State<EmployeeAll> {
   // }
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -127,59 +126,59 @@ class _EmployeeAllState extends State<EmployeeAll> {
               ),
             ),
             FutureBuilder(
-              future: getEmployee(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator(); // Placeholder for loading state
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-
-                else{
-                  List<EmployeeModel> employeesList = snapshot.data!;
-                  return Expanded(
-                    child: ListView.builder(
-                        itemCount: employeesList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final employee = employeesList[index];
-                          final image;
-                          if(employee.empPhoto!=null){
-
-                            // image = base64Decode(employee.empPhoto??"assets/images/image1.jpg");
-                          }
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 18.0, vertical: 5.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EmployeePersonal(id:index+1),
+                future: getEmployee(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator(); // Placeholder for loading state
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    List<EmployeeModel> employeesList = snapshot.data!;
+                    return Expanded(
+                      child: ListView.builder(
+                          itemCount: employeesList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final employee = employeesList[index];
+                            final image;
+                            if (employee.empPhoto != null) {
+                              // image = base64Decode(employee.empPhoto??"assets/images/image1.jpg");
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 18.0, vertical: 5.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          EmployeePersonal(empid: index + 1),
+                                    ),
+                                  );
+                                },
+                                child: ListTile(
+                                  leading: Employee_icon(
+                                      imagePath: "assets/images/image1.jpg"),
+                                  title: Text(
+                                    employee.firstName ??
+                                        'No First Name Available',
                                   ),
-                                );
-                              },
-                              child: ListTile(
-                                leading: Employee_icon(
-                                    imagePath: "assets/images/image1.jpg"),
-                                title: Text(employee.firstName ?? 'No First Name Available',),
-                                trailing: Icon(
-                                  Icons.arrow_right,
-                                  color: Color(0xffE96E2B),
+                                  trailing: Icon(
+                                    Icons.arrow_right,
+                                    color: Color(0xffE96E2B),
+                                  ),
+                                  tileColor: Colors.white,
                                 ),
-                                tileColor: Colors.white,
                               ),
-                            ),
-                          );
-                        }),
-                  );
-                }
-              }
-            ),
+                            );
+                          }),
+                    );
+                  }
+                }),
           ],
         ),
       ),
-      bottomNavigationBar: bottomAppBar(index:0),
+      bottomNavigationBar: bottomAppBar(index: 0),
     );
   }
 }

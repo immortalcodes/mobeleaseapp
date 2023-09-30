@@ -7,14 +7,18 @@ class QuickStyle extends StatelessWidget {
   final String Context;
   final colorhex;
 
-  QuickStyle({required this.title, required this.svgPath, required this.Context, required this.colorhex});
+  QuickStyle(
+      {required this.title,
+      required this.svgPath,
+      required this.Context,
+      required this.colorhex});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: GestureDetector(
-        onTap: (){
+        onTap: () {
           Navigator.pushNamed(context, Context);
         },
         child: Column(
@@ -23,11 +27,22 @@ class QuickStyle extends StatelessWidget {
               radius: 24.0,
               backgroundColor: Color(colorhex),
               child: SvgPicture.asset(
-                svgPath, alignment: Alignment.center,
+                svgPath,
+                alignment: Alignment.center,
               ),
             ),
-            SizedBox(height: 5.0,),
-            Text(title, textAlign: TextAlign.justify, style: TextStyle(fontSize: 11.0),)
+            SizedBox(
+              height: 5.0,
+            ),
+            SizedBox(
+              width: 54,
+              height: 27,
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w500),
+              ),
+            )
           ],
         ),
       ),

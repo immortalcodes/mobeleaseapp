@@ -24,12 +24,14 @@ class EditEmployee extends StatefulWidget {
   @override
   State<EditEmployee> createState() => _EmployeePersonalState();
 }
-String? firstName =" ";
+
+String? firstName = " ";
 String? lastName = " ";
 String? phoneNo = " ";
 String? email = " ";
 // final empPhoto = employee.empPhoto;
 EmployeeModel employee = EmployeeModel();
+
 class _EmployeePersonalState extends State<EditEmployee> {
   // EmployeeModel employee = EmployeeModel();
   EmployeeModel employee = EmployeeModel();
@@ -39,7 +41,7 @@ class _EmployeePersonalState extends State<EditEmployee> {
     print(widget.id);
     // int ids = widget.id + 1;
     final token = await authController.getToken();
-    var url = Uri.https(baseUrl, '/emp/singleemployee');
+    var url = Uri.parse('$baseUrl/emp/singleemployee');
     final client = http.Client();
     try {
       final response = await client.post(
@@ -49,25 +51,27 @@ class _EmployeePersonalState extends State<EditEmployee> {
       );
       if (response.statusCode == 200) {
         // print(response.body);
-        final Map<String, dynamic> responseData = jsonDecode(response.body)!['data'!];
+        final Map<String, dynamic> responseData =
+            jsonDecode(response.body)!['data'!];
         final List<String> sortedKeys1 = responseData.keys!.toList();
-        List<int> sortedKeys =  sortedKeys1.map((str) => int.parse(str!)).toList() ..sort();
+        List<int> sortedKeys =
+            sortedKeys1.map((str) => int.parse(str!)).toList()..sort();
         // print(sortedKeys);
         final List<EmployeeModel> employees = sortedKeys
             .map((key) => EmployeeModel.fromJson(responseData[key.toString()]))
             .toList();
 
         // setState(() {
-          //   employee = employees.first;
-          //   firstName = employee.firstName ?? " ";
-          //   lastName = employee.lastName ?? " ";
-          //   phoneNo = employee.phoneNo ?? " ";
-          //   email = employee.email ?? " ";
-          //   // print(employee.firstName);
-          // });
+        //   employee = employees.first;
+        //   firstName = employee.firstName ?? " ";
+        //   lastName = employee.lastName ?? " ";
+        //   phoneNo = employee.phoneNo ?? " ";
+        //   email = employee.email ?? " ";
+        //   // print(employee.firstName);
+        // });
         employee = employees.first;
+        print("hello ${employee.email}");
         return employee;
-
       } else {
         throw Exception('Failed to load employees');
       }
@@ -83,12 +87,9 @@ class _EmployeePersonalState extends State<EditEmployee> {
       TextEditingController(text: firstName);
   TextEditingController _lastnameController =
       TextEditingController(text: lastName);
-  TextEditingController _phoneController =
-      TextEditingController(text: phoneNo);
-  TextEditingController _emailController =
-      TextEditingController(text: email);
-  TextEditingController _passwordController =
-      TextEditingController();
+  TextEditingController _phoneController = TextEditingController(text: phoneNo);
+  TextEditingController _emailController = TextEditingController(text: email);
+  TextEditingController _passwordController = TextEditingController();
   XFile? _imageFile;
 
   Future<void> _getImage() async {
@@ -99,7 +100,7 @@ class _EmployeePersonalState extends State<EditEmployee> {
     });
   }
 
-  void _submitForm( ) async {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final token = await authController.getToken();
       var url = Uri.https(baseUrl, '/emp/editemployee');
@@ -163,227 +164,282 @@ class _EmployeePersonalState extends State<EditEmployee> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: FutureBuilder(
-          future: getEmployee(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator(); // Placeholder for loading state
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            }
-            else{
-              EmployeeModel employee = snapshot.data!;
-              return  Column(
-                children: [
-                  Padding(
-                    padding:
-                    const EdgeInsets.only(top: 11.0, left: 11.0, right: 11.0),
-                    child: Appbar(),
-                  ),
-                  Padding(
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 14.0, vertical: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          radius: 49.5,
-                          backgroundImage: AssetImage('assets/images/image1.jpg'),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  height: 25,
-                                ),
-                                Text(
-                                  employee.firstName ?? " ",
-                                  style: TextStyle(
-                                      color: Color(0xffE96E2B),
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16),
-                                ),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.phone,
-                                      color: Color(0xffE96E2B),
-                                      size: 12,
-                                    ),
-                                    Text(
-                                      employee.phoneNo ?? " ",
-                                      style: TextStyle(
-                                          color: Color(0xffE96E2B),
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushNamed(context, "/Assign");
-                              },
-                              child: Row(
+          child: FutureBuilder(
+        future: getEmployee(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator(); // Placeholder for loading state
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            EmployeeModel employee = snapshot.data!;
+
+            return Column(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.only(top: 11.0, left: 11.0, right: 11.0),
+                  child: Appbar(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 14.0, vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        radius: 49.5,
+                        backgroundImage: AssetImage('assets/images/image1.jpg'),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 25,
+                              ),
+                              Text(
+                                employee.firstName ?? " ",
+                                style: TextStyle(
+                                    color: Color(0xffE96E2B),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16),
+                              ),
+                              Row(
                                 children: [
+                                  Icon(
+                                    Icons.phone,
+                                    color: Color(0xffE96E2B),
+                                    size: 12,
+                                  ),
                                   Text(
-                                    "Assign Inventory",
+                                    employee.phoneNo ?? " ",
                                     style: TextStyle(
                                         color: Color(0xffE96E2B),
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Icon(
-                                    Icons.arrow_right_alt,
-                                    color: Color(0xffE96E2B),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.08,
-                        ),
-                        Column(
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                icon: Icon(
-                                  Icons.arrow_back,
-                                  size: 25.0,
-                                  color: Color(0xffE96E2B),
-                                )),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        color: Colors.white,
-                      ),
-                      child: Padding(
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 17.0, vertical: 8),
-                        child: Form(
-                          key: _formKey,
-                          child: ListView(
-                            padding: EdgeInsets.all(8.0),
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width*0.42,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text("First Name"),
-                                        SizedBox(height: 5,),
-                                        // TextEditingController()
-                                        TextFieldWidget(
-                                          controller: _firstnameController,
-                                          hint: 'First Name',
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width*0.42,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text("Last Name"),
-                                        SizedBox(height: 5,),
-                                        TextFieldWidget(
-                                          controller: _lastnameController,
-                                          hint: 'Last Name',
-                                        ),
-                                      ],
-                                    ),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
                                   ),
                                 ],
-                              ),
-                              SizedBox(height: 5,),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Phone Number"),
-                                  SizedBox(height: 5,),
-                                  TextFieldWidget2(
-                                    controller: _phoneController,
-                                    hint:'Phone Number',
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 5,),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("E-mail"),
-                                  SizedBox(height: 5,),
-                                  TextFieldWidget2(
-                                    controller: _emailController,
-                                    hint:"Email",
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 5,),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Password"),
-                                  SizedBox(height: 5,),
-                                  TextFieldWidget2(
-                                    controller: _passwordController,
-                                    hint:"Password",
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 5,),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(backgroundColor: Color(0xffE96E2B)),
-                                onPressed: _getImage,
-                                child: Text('Select Image'),
-                              ),
-                              _imageFile != null
-                                  ? Image.file(
-                                File(_imageFile!.path),
-                                height: 150,
-                                width: 150,
-                              )
-                                  : Container(),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(backgroundColor: Color(0xffE96E2B)),
-                                onPressed: _submitForm,
-                                child: Text('Submit'),
                               ),
                             ],
                           ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(context, "/Assign");
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  "Assign Inventory",
+                                  style: TextStyle(
+                                      color: Color(0xffE96E2B),
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Icon(
+                                  Icons.arrow_right_alt,
+                                  color: Color(0xffE96E2B),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.08,
+                      ),
+                      Column(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: Icon(
+                                Icons.arrow_back,
+                                size: 25.0,
+                                color: Color(0xffE96E2B),
+                              )),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: Colors.white,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 17.0, vertical: 8),
+                      child: Form(
+                        key: _formKey,
+                        child: ListView(
+                          padding: EdgeInsets.all(8.0),
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.42,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("First Name"),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      // TextEditingController()
+                                      SizedBox(
+                                        height: 44,
+                                        child: TextFieldWidget2(
+                                          controller: _firstnameController,
+                                          hint: 'First Name',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.42,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Last Name"),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      SizedBox(
+                                        height: 44,
+                                        child: TextFieldWidget2(
+                                          controller: _lastnameController,
+                                          hint: 'Last Name',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 18,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Phone Number"),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  height: 44,
+                                  child: TextFieldWidget2(
+                                    controller: _phoneController,
+                                    hint: 'Phone Number',
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 18,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Username or email address"),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  height: 44,
+                                  child: TextFieldWidget2(
+                                    controller: _emailController,
+                                    hint: "abc@gmail.com",
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 18,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Password (more than 8 letters)"),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  height: 44,
+                                  child: TextFieldWidget2(
+                                    controller: _passwordController,
+                                    hint: "Password",
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 18,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Profile Photo"),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  height: 44,
+                                  child: TextFieldWidget(
+                                    profileField: true,
+                                    controller: _passwordController,
+                                    hint: "image.png",
+                                    fn: _getImage,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            _imageFile != null
+                                ? Image.file(
+                                    File(_imageFile!.path),
+                                    height: 150,
+                                    width: 150,
+                                  )
+                                : Container(),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  backgroundColor: Color(0xffE96E2B)),
+                              onPressed: _submitForm,
+                              child: Text('Save'),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                ],
-              );
-            }
-
-          },
-        )
-      ),
+                ),
+              ],
+            );
+          }
+        },
+      )),
       bottomNavigationBar: bottomAppBar(index: 0),
     );
   }
