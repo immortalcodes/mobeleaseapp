@@ -116,7 +116,7 @@ async def editEmployee(item:employee,response: Response,access_token: Union[str,
         if item.empid:
 
             try:
-                if item.password == None:
+                if item.password == '**nochange**':
                     cursor.execute("UPDATE employee SET firstname=%s, lastname=%s, phoneno=%s,email=%s,employeephoto=%s where employeeid = %s",(item.firstname,item.lastname,item.phoneno,item.email,item.employeephoto,item.empid))
                     connection.commit()
 
