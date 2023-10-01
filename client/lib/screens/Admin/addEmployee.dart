@@ -61,6 +61,10 @@ class _addEmployee extends State<addEmployee> {
             headers: {'Cookie': token!, 'Content-Type': 'application/json'},
           );
           if (response.statusCode == 200) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Employee added  successfully"),
+              duration: Duration(seconds: 5),
+            ));
             print('Form submitted successfully');
             _firstnameController.clear();
             _lastnameController.clear();

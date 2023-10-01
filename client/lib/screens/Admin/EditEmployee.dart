@@ -45,7 +45,7 @@ class _EmployeePersonalState extends State<EditEmployee> {
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final token = await authController.getToken();
-
+      String? encodedImage;
       var url = Uri.parse('$baseUrl/emp/editemployee');
       final int empid = widget.id;
       final String firstname = _firstnameController.text;
@@ -56,44 +56,57 @@ class _EmployeePersonalState extends State<EditEmployee> {
       final String email = _emailController.text;
       final String password = _passwordController.text;
       print(password);
-      // final encodedImage;
+      print(lastname);
+
       if (_imageFile != null) {
         final imageBytes = await _imageFile!.readAsBytes();
-        final encodedImage = base64Encode(imageBytes);
+        encodedImage = base64Encode(imageBytes);
         print(encodedImage);
-        final client = http.Client();
-        try {
-          final response = await client.post(
-            url,
-            body: jsonEncode({
-              "empid": empid,
-              "firstname": firstname,
-              "lastname": lastname,
-              "phoneno": phoneno,
-              "email": email,
-              "password": password,
-              "employeephoto": encodedImage
-            }),
-            headers: {'Cookie': token!, 'Content-Type': 'application/json'},
-          );
-          if (response.statusCode == 200) {
-            print('Form submitted successfully');
-            _firstnameController.clear();
-            _lastnameController.clear();
-            _phoneController.clear();
-            _emailController.clear();
-            _passwordController.clear();
-            setState(() {
-              _imageFile = null;
-            });
-          } else {
-            print(
-                'Form submission failed with status code ${response.statusCode}');
-          }
-          // return employees;
-        } catch (e) {
-          return Future.error(e.toString());
+      }
+      final client = http.Client();
+
+      try {
+        final response = await client.post(
+          url,
+          body: jsonEncode({
+            "empid": empid,
+            "firstname": firstname,
+            "lastname": lastname,
+            "phoneno": phoneno,
+            "email": email,
+            "password": password,
+            "employeephoto": encodedImage
+          }),
+          headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+        );
+
+        if (response.statusCode == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Form Edited successfully"),
+            duration: Duration(seconds: 5),
+          ));
+          print('Form submitted successfully');
+          _firstnameController.clear();
+          _lastnameController.clear();
+          _phoneController.clear();
+          _emailController.clear();
+          _passwordController.clear();
+          setState(() {
+            _imageFile = null;
+          });
+
+          Navigator.of(context).pop();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Form submission failed"),
+            duration: Duration(seconds: 5),
+          ));
+          print(
+              'Form submission failed with status code ${response.statusCode}');
         }
+        // return employees;
+      } catch (e) {
+        return Future.error(e.toString());
       }
     }
   }
@@ -127,13 +140,18 @@ class _EmployeePersonalState extends State<EditEmployee> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleAvatar(
-                  radius: 49.5,
-                  backgroundImage: widget.employeeData.empPhoto == null
-                      ? AssetImage('assets/images/image1.jpg')
-                      : NetworkImage(widget.employeeData.empPhoto!)
-                          as ImageProvider,
-                ),
+                widget.employeeData.empPhoto == null
+                    ? CircleAvatar(
+                        radius: 47.5,
+                        backgroundImage:
+                            AssetImage("assets/svgs/no-profile-picture.png"),
+                      )
+                    : CircleAvatar(
+                        radius: 47.5,
+                        backgroundImage: MemoryImage(
+                          base64Decode(widget.employeeData.empPhoto!),
+                        ),
+                      ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -333,23 +351,17 @@ class _EmployeePersonalState extends State<EditEmployee> {
                       SizedBox(
                         height: 18,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Profile Photo"),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          SizedBox(
-                            height: 44,
-                            child: TextFieldWidget(
-                              profileField: true,
-                              controller: _passwordController,
-                              hint: "image.png",
-                              fn: _getImage,
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                          ),
-                        ],
+                            backgroundColor: Color(0xffE96E2B)),
+                        onPressed: _getImage,
+                        child: Text('Select Image'),
                       ),
                       _imageFile != null
                           ? Image.file(

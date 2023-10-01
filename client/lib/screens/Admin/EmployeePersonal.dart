@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobelease/screens/Admin/EditEmployee.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
@@ -95,12 +96,18 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CircleAvatar(
-                        radius: 49.5,
-                        backgroundImage: employee.empPhoto == null
-                            ? AssetImage('assets/images/image1.jpg')
-                            : NetworkImage(employee.empPhoto!) as ImageProvider,
-                      ),
+                      employee.empPhoto == null
+                          ? CircleAvatar(
+                              radius: 49.5,
+                              backgroundImage: AssetImage(
+                                  "assets/svgs/no-profile-picture.png"),
+                            )
+                          : CircleAvatar(
+                              radius: 49.5,
+                              backgroundImage: MemoryImage(
+                                base64Decode(employee.empPhoto!),
+                              ),
+                            ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

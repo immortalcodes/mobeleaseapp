@@ -140,9 +140,7 @@ class _EmployeeAllState extends State<EmployeeAll> {
                           itemBuilder: (BuildContext context, int index) {
                             final employee = employeesList[index];
                             final image;
-                            if (employee.empPhoto != null) {
-                              // image = base64Decode(employee.empPhoto??"assets/images/image1.jpg");
-                            }
+                            
                             return Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 18.0, vertical: 5.0),
@@ -158,7 +156,7 @@ class _EmployeeAllState extends State<EmployeeAll> {
                                 },
                                 child: ListTile(
                                   leading: Employee_icon(
-                                      imagePath: "assets/images/image1.jpg"),
+                                      imagePath: employee.empPhoto ?? ""),
                                   title: Text(
                                     employee.firstName ??
                                         'No First Name Available',

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class Employee_icon extends StatelessWidget {
@@ -14,12 +17,18 @@ class Employee_icon extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              radius: 24.5,
-              backgroundImage: imagePath.isEmpty
-                  ? AssetImage("assets/images/image1.jpg")
-                  : NetworkImage(imagePath) as ImageProvider,
-            ),
+            imagePath.isEmpty
+                ? CircleAvatar(
+                    radius: 24.5,
+                    backgroundImage:
+                        AssetImage("assets/svgs/no-profile-picture.png"),
+                  )
+                : CircleAvatar(
+                    radius: 24.5,
+                    backgroundImage: MemoryImage(
+                      base64Decode(imagePath),
+                    ),
+                  )
           ],
         ),
       ),

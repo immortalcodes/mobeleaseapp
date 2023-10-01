@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class Emp_bottomAppBar extends StatefulWidget {
-  final int index ;
+  final int index;
   const Emp_bottomAppBar({required this.index});
 
   @override
@@ -11,12 +12,14 @@ class Emp_bottomAppBar extends StatefulWidget {
 class _Emp_bottomAppBarState extends State<Emp_bottomAppBar> {
   final PageController pageController = PageController(initialPage: 0);
 
-  int _selectedIndex =0;
+  int _selectedIndex = 0;
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.index; // Initialize _selectedIndex with the passed index
+    _selectedIndex =
+        widget.index; // Initialize _selectedIndex with the passed index
   }
+
   void _onItemTapped(int index) {
     // Check if the selected index is the same as the current index
     if (index != _selectedIndex) {
@@ -49,7 +52,7 @@ class _Emp_bottomAppBarState extends State<Emp_bottomAppBar> {
         borderRadius: BorderRadius.only(
             topRight: Radius.circular(12), topLeft: Radius.circular(12)),
         boxShadow: [
-          BoxShadow(color: Colors.black38, spreadRadius: 0, blurRadius:4),
+          BoxShadow(color: Colors.black38, spreadRadius: 0, blurRadius: 4),
         ],
       ),
       child: ClipRRect(
@@ -58,26 +61,31 @@ class _Emp_bottomAppBarState extends State<Emp_bottomAppBar> {
           topRight: Radius.circular(12.0),
         ),
         child: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(Icons.person_2_rounded),
-                label: "Home"),
+                icon: SvgPicture.asset("assets/svgs/person.svg",
+                    color:
+                        _selectedIndex == 0 ? Color(0xffE96E2B) : Colors.grey),
+                label: "Employee"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.inventory_2_outlined),
+                icon: SvgPicture.asset("assets/svgs/inventory.svg",
+                    color:
+                        _selectedIndex == 1 ? Color(0xffE96E2B) : Colors.grey),
                 label: "Inventory"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.inventory_outlined),
+                icon: SvgPicture.asset("assets/svgs/Add.svg",
+                    color:
+                        _selectedIndex == 2 ? Color(0xffE96E2B) : Colors.grey),
                 label: "Reports"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.recommend),
+                icon: SvgPicture.asset("assets/svgs/Message.svg",
+                    color:
+                        _selectedIndex == 3 ? Color(0xffE96E2B) : Colors.grey),
                 label: "Remarks"),
           ],
-          unselectedItemColor: Colors.grey,
           currentIndex: _selectedIndex,
-          selectedItemColor: Color(0xffE96E2B),
           onTap: _onItemTapped,
           elevation: 1.2,
-
         ),
       ),
     );

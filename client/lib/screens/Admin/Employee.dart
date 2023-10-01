@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class _EmployeeState extends State<Employee> {
             jsonDecode(response.body)!['data'];
         final List<String> sortedKeys1 = responseData.keys.toList();
         List<int> sortedKeys =
-            sortedKeys1.map((str) => int.parse(str!)).toList();
+            sortedKeys1.map((str) => int.parse(str!)).toList()..sort();
         // print(sortedKeys);
         final List<EmployeeModel> employees = sortedKeys
             .map((key) => EmployeeModel.fromJson(responseData[key.toString()]))
@@ -76,13 +77,10 @@ class _EmployeeState extends State<Employee> {
   //   items = employeesList.map((employee) => employee.firstName ?? '').toList();
   // }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //
-  //   // Call the reload method here
-  //   widget.reload();
-  // }
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

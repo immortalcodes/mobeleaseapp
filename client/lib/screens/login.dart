@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobelease/controllers/auth_controller.dart';
+import 'package:mobelease/screens/Employee/Emp_home.dart';
 import '../widgets/buttons.dart';
 import '../widgets/Background.dart';
 import '../widgets/TextFieldWidget.dart';
@@ -38,16 +39,26 @@ class _LoginState extends State<Login> {
 
     if (loginSuccess) {
       if (widget.loginMember == "ADMIN") {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Admin Login successfully"),
+          duration: Duration(seconds: 5),
+        ));
         print("Admin Login success");
+        // ignore: use_build_context_synchronously
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const Employee()),
+            MaterialPageRoute(builder: (context) => Employee()),
             (Route<dynamic> route) => false);
       } else {
         print("Employee Login success");
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Employee Login successfully"),
+          duration: Duration(seconds: 5),
+        ));
+        // ignore: use_build_context_synchronously
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const InitScreen()),
+            MaterialPageRoute(builder: (context) => const Emp_home()),
             (Route<dynamic> route) => false);
       }
       // Navigate to the next screen upon successful login
@@ -196,7 +207,15 @@ class _LoginState extends State<Login> {
                       padding: const EdgeInsets.all(11.0),
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, '/Emp_home');
+                          // Navigator.pushNamed(context, '/Emp_home');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Login(
+                                loginMember: "EMPLOYEE",
+                              ),
+                            ),
+                          );
                         },
                         child: const Text(
                           'Employee Login',
