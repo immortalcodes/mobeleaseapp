@@ -25,6 +25,9 @@ class Employee extends StatefulWidget {
 class _EmployeeState extends State<Employee> {
   List<EmployeeModel> employeesList = [];
   final AuthController authController = AuthController();
+  List<EmployeeModel> filteredEmployeesList = [];
+  TextEditingController searchController = TextEditingController();
+  bool hasSearchResults = true;
 
   Future<List<EmployeeModel>> getEmployee() async {
     final token = await authController.getToken();
@@ -80,6 +83,26 @@ class _EmployeeState extends State<Employee> {
   @override
   void initState() {
     super.initState();
+    getEmployee().then((employees) {
+      setState(() {
+        employeesList = employees;
+        filteredEmployeesList = employees; // Initialize filtered list
+      });
+    });
+  }
+
+  void filterEmployees(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        filteredEmployeesList = employeesList;
+      } else {
+        filteredEmployeesList = employeesList.where((employee) {
+          final name = employee.firstName ?? '';
+          return name.toLowerCase().contains(query.toLowerCase());
+        }).toList();
+      }
+      hasSearchResults = filteredEmployeesList.isNotEmpty;
+    });
   }
 
   @override
@@ -99,6 +122,8 @@ class _EmployeeState extends State<Employee> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15.0),
               child: TextField(
+                controller: searchController, // Assign the controller
+                onChanged: filterEmployees,
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.search,
@@ -117,143 +142,158 @@ class _EmployeeState extends State<Employee> {
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 18, vertical: 4.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Employees",
-                        style: TextStyle(
-                            color: Color(0xffE96E2B),
-                            fontStyle: FontStyle.normal,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14.0),
+              child: !hasSearchResults
+                  ? Text(
+                      "No employee with this name is present",
+                      style: TextStyle(
+                        color: Colors.red,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            // Navigate to the desired page when clicked
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EmployeeAll(),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            "See all",
-                            style: TextStyle(
-                              color: Color(0xffE96E2B),
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 10.0,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  FutureBuilder(
-                    future: getEmployee(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator(); // Placeholder for loading state
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        List<EmployeeModel> employeesList = snapshot.data!;
-                        employeeNo = (employeesList.length > 6)
-                            ? (employeesList.length - 5)
-                            : 0;
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            SizedBox(
-                              height: 100,
-                              width: 275,
-                              child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: employeesList.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    print('asdf $context, $index');
-                                    final employee = employeesList[index];
-                                    print('Employee Id:, ${employee.id}');
-                                    return Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: Column(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              // Navigate to the desired page when clicked
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (
-                                                    context,
-                                                  ) =>
-                                                      EmployeePersonal(
-                                                          empid: index + 1),
-                                                ),
-                                              );
-                                            },
-                                            child: Employee_icon(
-                                                imagePath:
-                                                    employee.empPhoto ?? ""),
-                                          ),
-                                          SizedBox(
-                                            height: 10.0,
-                                            width: 30.0,
-                                            child: Text(
-                                              employee.firstName ??
-                                                  'No First Name Available',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(fontSize: 9.0),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  }),
+                            Text(
+                              "Employees",
+                              style: TextStyle(
+                                  color: Color(0xffE96E2B),
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14.0),
                             ),
-                            if (employeeNo != 0) ...[
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 3.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    // Navigate to the desired page when clicked
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => EmployeeAll(),
-                                      ),
-                                    );
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 24.5,
-                                    backgroundColor:
-                                        Color(0xffE96E2B).withOpacity(0.15),
-                                    foregroundColor: Color(0xffE96E2B),
-                                    child: Text(
-                                      '+$employeeNo',
-                                      textAlign: TextAlign.center,
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Navigate to the desired page when clicked
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EmployeeAll(),
                                     ),
+                                  );
+                                },
+                                child: Text(
+                                  "See all",
+                                  style: TextStyle(
+                                    color: Color(0xffE96E2B),
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 10.0,
                                   ),
                                 ),
-                              )
-                            ]
+                              ),
+                            )
                           ],
-                        );
-                      }
-                    },
-                  )
-                ],
-              ),
+                        ),
+                        FutureBuilder(
+                          future: getEmployee(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator(); // Placeholder for loading state
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              List<EmployeeModel> employeesList =
+                                  snapshot.data!;
+                              employeeNo = (employeesList.length > 6)
+                                  ? (employeesList.length - 5)
+                                  : 0;
+                              return Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  SizedBox(
+                                    height: 100,
+                                    width: 275,
+                                    child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: employeesList.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          print('asdf $context, $index');
+                                          final employee = employeesList[index];
+                                          print('Employee Id:, ${employee.id}');
+                                          return Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: Column(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    // Navigate to the desired page when clicked
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (
+                                                          context,
+                                                        ) =>
+                                                            EmployeePersonal(
+                                                                empid:
+                                                                    index + 1),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Employee_icon(
+                                                      imagePath:
+                                                          employee.empPhoto ??
+                                                              ""),
+                                                ),
+                                                SizedBox(
+                                                  height: 10.0,
+                                                  width: 30.0,
+                                                  child: Text(
+                                                    employee.firstName ??
+                                                        'No First Name Available',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontSize: 9.0),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                                  if (employeeNo != 0) ...[
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 3.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          // Navigate to the desired page when clicked
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EmployeeAll(),
+                                            ),
+                                          );
+                                        },
+                                        child: CircleAvatar(
+                                          radius: 24.5,
+                                          backgroundColor: Color(0xffE96E2B)
+                                              .withOpacity(0.15),
+                                          foregroundColor: Color(0xffE96E2B),
+                                          child: Text(
+                                            '+$employeeNo',
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ]
+                                ],
+                              );
+                            }
+                          },
+                        )
+                      ],
+                    ),
             ),
             Expanded(
               child: Container(

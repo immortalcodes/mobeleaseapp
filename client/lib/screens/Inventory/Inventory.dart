@@ -197,6 +197,7 @@ class _InventoryState extends State<Inventory> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: AssignCardInv(
+                                company: device.company ?? "",
                                 model: device.deviceDetail ?? "",
                                 cost: device.cost ?? "0",
                                 deviceId:
