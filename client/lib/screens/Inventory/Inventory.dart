@@ -24,6 +24,7 @@ class _InventoryState extends State<Inventory> {
   String selectedCategory = '';
   Map<String, List<ItemModel>> devicesFuture = {};
   final AuthController authController = AuthController();
+
   Future<Map<String, List<ItemModel>>> fetchItemsFromApi() async {
     final token = await authController.getToken();
     var url = Uri.parse('$baseUrl/inv/viewallitem');

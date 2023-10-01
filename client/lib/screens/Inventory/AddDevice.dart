@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mobelease/widgets/TextFieldWidget2.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
-import '../../models/Inventory_Model.dart';
 import '../../widgets/Dropdown.dart';
 import '../../widgets/TextFieldWidget.dart';
-import '../../widgets/TextFieldWidget2.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -62,6 +59,11 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
       _costPriceController.clear();
       _storageController.clear();
       _remarkController.clear();
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Form submitted successfully"),
+        duration: Duration(seconds: 5),
+      ));
     } else {
       print('Form submission failed with status code ${response.statusCode}');
     }
@@ -218,6 +220,7 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
             ),
             onPressed: () {
               handleSubmit();
+              Navigator.of(context).pop();
               // Use the selectedValue here
               print('Selected Value: $selectedValue');
               // ... rest of your code

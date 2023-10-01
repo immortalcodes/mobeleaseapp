@@ -152,7 +152,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                               },
                               child: ListTile(
                                 leading: Employee_icon(
-                                    imagePath: "assets/images/image1.jpg"),
+                                    imagePath: employee.empPhoto ?? ""),
                                 title: Text(employee.firstName ?? " "),
                                 trailing: Icon(
                                   Icons.phone,
@@ -170,7 +170,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
           ],
         ),
       ),
-      bottomNavigationBar: bottomAppBar(index: 0),
+      bottomNavigationBar: bottomAppBar(index: 2),
     );
   }
 }

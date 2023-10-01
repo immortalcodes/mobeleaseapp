@@ -27,7 +27,7 @@ class _EmployeeAllState extends State<EmployeeAll> {
   final AuthController authController = AuthController();
   Future<List<EmployeeModel>> getEmployee() async {
     final token = await authController.getToken();
-    var url = Uri.https(baseUrl, '/emp/allemployee');
+    var url = Uri.parse('$baseUrl/emp/allemployee');
     final client = http.Client();
     try {
       final response = await client.post(
