@@ -17,13 +17,14 @@ class EmployeeSelect extends StatefulWidget {
   @override
   State<EmployeeSelect> createState() => _EmployeeSelectState();
 }
-List<EmployeeModel> employeesList = [];
-class _EmployeeSelectState extends State<EmployeeSelect> {
 
+List<EmployeeModel> employeesList = [];
+
+class _EmployeeSelectState extends State<EmployeeSelect> {
   final AuthController authController = AuthController();
   Future<List<EmployeeModel>> getEmployee() async {
     final token = await authController.getToken();
-    var url = Uri.https(baseUrl, '/emp/allemployee');
+    var url = Uri.parse('$baseUrl/emp/allemployee');
     final client = http.Client();
     try {
       final response = await client.post(
@@ -31,9 +32,11 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
         headers: {'Cookie': token!, 'Content-Type': 'application/json'},
       );
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body)!['data'!];
+        final Map<String, dynamic> responseData =
+            jsonDecode(response.body)!['data'!];
         final List<String> sortedKeys1 = responseData.keys!.toList();
-        List<int> sortedKeys =  sortedKeys1.map((str) => int.parse(str!)).toList() ..sort();
+        List<int> sortedKeys =
+            sortedKeys1.map((str) => int.parse(str!)).toList()..sort();
         // print(sortedKeys);
         final List<EmployeeModel> employees = sortedKeys
             .map((key) => EmployeeModel.fromJson(responseData[key.toString()]))
@@ -46,47 +49,56 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
         //
         // });
         // }
-      }
-      else {
+      } else {
         throw Exception('Failed to load employees');
       }
 
       // return employees;
-    }
-    catch (e) {
+    } catch (e) {
       return Future.error(e.toString());
     }
   }
+
   @override
   void initState() {
     super.initState();
     getEmployee();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 11.0,left: 11.0,right: 11.0),
+              padding:
+                  const EdgeInsets.only(top: 11.0, left: 11.0, right: 11.0),
               child: Appbar(),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 23.0,bottom: 16.0,left: 18.0,right: 18.0),
+              padding: const EdgeInsets.only(
+                  top: 23.0, bottom: 16.0, left: 18.0, right: 18.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Select a employee to assign", style: TextStyle(color: Color(0xffE96E2B), fontWeight: FontWeight.w600, fontSize: 20.0 )),
+                  Text("Select a employee to assign",
+                      style: TextStyle(
+                          color: Color(0xffE96E2B),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20.0)),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       Navigator.pop(context);
                     },
                     child: CircleAvatar(
                       radius: 12.0,
                       backgroundColor: Colors.grey[300],
-                      child: Icon(Icons.close, color: Colors.black,),
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ],
@@ -94,7 +106,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
             ),
             Padding(
               padding:
-              const EdgeInsets.symmetric(horizontal: 18.0, vertical: 7.0),
+                  const EdgeInsets.symmetric(horizontal: 18.0, vertical: 7.0),
               child: TextField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(
@@ -118,8 +130,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                   return CircularProgressIndicator(); // Placeholder for loading state
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
-                }
-                else{
+                } else {
                   List<EmployeeModel> employeesList = snapshot.data!;
                   return Expanded(
                     child: ListView.builder(
@@ -127,22 +138,26 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                         itemBuilder: (BuildContext context, int index) {
                           final employee = employeesList[index];
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 5.0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 18.0, vertical: 5.0),
                             child: GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 // Navigator.pushNamed(context, '/Assign');
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => Assign(id:index +1),
+                                    builder: (context) => Assign(id: index + 1),
                                   ),
                                 );
                               },
-
                               child: ListTile(
-                                leading: Employee_icon( imagePath: "assets/images/image1.jpg"),
-                                title: Text(employee.firstName?? " "),
-                                trailing: Icon(Icons.phone, color: Color(0xffE96E2B),),
+                                leading: Employee_icon(
+                                    imagePath: employee.empPhoto ?? ""),
+                                title: Text(employee.firstName ?? " "),
+                                trailing: Icon(
+                                  Icons.phone,
+                                  color: Color(0xffE96E2B),
+                                ),
                                 tileColor: Colors.white,
                               ),
                             ),
@@ -152,11 +167,10 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                 }
               },
             ),
-
           ],
         ),
       ),
-      bottomNavigationBar: bottomAppBar(index:0),
+      bottomNavigationBar: bottomAppBar(index: 2),
     );
   }
 }

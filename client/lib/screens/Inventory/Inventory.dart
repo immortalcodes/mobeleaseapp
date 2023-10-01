@@ -24,9 +24,10 @@ class _InventoryState extends State<Inventory> {
   String selectedCategory = '';
   Map<String, List<ItemModel>> devicesFuture = {};
   final AuthController authController = AuthController();
+
   Future<Map<String, List<ItemModel>>> fetchItemsFromApi() async {
     final token = await authController.getToken();
-    var url = Uri.https(baseUrl, '/inv/viewallitem');
+    var url = Uri.parse('$baseUrl/inv/viewallitem');
     final response = await http.post(
       url,
       headers: {'Cookie': token!, 'Content-Type': 'application/json'},
@@ -196,6 +197,7 @@ class _InventoryState extends State<Inventory> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: AssignCardInv(
+                                company: device.company ?? "",
                                 model: device.deviceDetail ?? "",
                                 cost: device.cost ?? "0",
                                 deviceId:
@@ -215,7 +217,7 @@ class _InventoryState extends State<Inventory> {
           }
         },
       ),
-      bottomNavigationBar: bottomAppBar(index:1),
+      bottomNavigationBar: bottomAppBar(index: 1),
     );
   }
 }

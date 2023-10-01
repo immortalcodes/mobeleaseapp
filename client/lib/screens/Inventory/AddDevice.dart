@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mobelease/widgets/TextFieldWidget2.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
-import '../../models/Inventory_Model.dart';
 import '../../widgets/Dropdown.dart';
 import '../../widgets/TextFieldWidget.dart';
-import '../../widgets/TextFieldWidget2.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -25,17 +22,19 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
   TextEditingController _costPriceController = TextEditingController();
   TextEditingController _storageController = TextEditingController();
   TextEditingController _remarkController = TextEditingController();
-  String selectedValue = 'watch'; // Define a variable to hold the selected value
+  String selectedValue =
+      'watch'; // Define a variable to hold the selected value
 
   void updateSelectedValue(String value) {
     setState(() {
       selectedValue = value;
     });
   }
+
   void handleSubmit() async {
     final token = await authController.getToken();
     print(token);
-    var url = Uri.https(baseUrl, '/inv/additem');
+    var url = Uri.parse('$baseUrl/inv/additem');
     final client = http.Client();
     print(selectedValue);
     var response = await http.post(
@@ -60,6 +59,11 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
       _costPriceController.clear();
       _storageController.clear();
       _remarkController.clear();
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Form submitted successfully"),
+        duration: Duration(seconds: 5),
+      ));
     } else {
       print('Form submission failed with status code ${response.statusCode}');
     }
@@ -80,13 +84,16 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                 color: Color(0xffE96E2B)),
           ),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               Navigator.pop(context);
             },
             child: CircleAvatar(
               radius: 12.0,
               backgroundColor: Colors.grey[300],
-              child: Icon(Icons.close, color: Colors.black,),
+              child: Icon(
+                Icons.close,
+                color: Colors.black,
+              ),
             ),
           ),
         ],
@@ -117,12 +124,11 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                         child: Center(
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child:  MyDropdown(
-                            selectedValue: selectedValue,
-                            onValueChanged: updateSelectedValue,
+                            child: MyDropdown(
+                              selectedValue: selectedValue,
+                              onValueChanged: updateSelectedValue,
+                            ),
                           ),
-
-                        ),
                         ),
                       ),
                     ],
@@ -135,8 +141,9 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                         height: 5,
                       ),
                       TextFieldWidget(
+                        profileField: false,
                         hint: '',
-                        controller:  _companyController,
+                        controller: _companyController,
                       ),
                     ],
                   ),
@@ -148,6 +155,7 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                         height: 5,
                       ),
                       TextFieldWidget(
+                        profileField: false,
                         hint: '',
                         controller: _deviceNameController,
                       ),
@@ -161,6 +169,7 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                         height: 8,
                       ),
                       TextFieldWidget(
+                        profileField: false,
                         hint: '',
                         controller: _storageController,
                       ),
@@ -174,6 +183,7 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                         height: 5,
                       ),
                       TextFieldWidget(
+                        profileField: false,
                         hint: '',
                         controller: _costPriceController,
                       ),
@@ -187,6 +197,7 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
                         height: 8,
                       ),
                       TextFieldWidget(
+                        profileField: false,
                         hint: '',
                         controller: _remarkController,
                       ),
@@ -209,6 +220,7 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
             ),
             onPressed: () {
               handleSubmit();
+              Navigator.of(context).pop();
               // Use the selectedValue here
               print('Selected Value: $selectedValue');
               // ... rest of your code
@@ -219,5 +231,3 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
     );
   }
 }
-
-
