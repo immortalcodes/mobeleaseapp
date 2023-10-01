@@ -12,7 +12,7 @@ class employee(BaseModel):
     lastname : str
     phoneno : Optional[str] = None
     email : str
-    password : str 
+    password : str = "**nochange**"
     employeephoto : Optional[bytes] = None
     
 class remark(BaseModel):
