@@ -173,8 +173,10 @@ class _AssignState extends State<Assign> {
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 4.0),
                                   child: AssignCardMain(
+                                      empId: widget.id,
                                       model: device['Name'],
-                                      quantity: device['quantity'].toString()),
+                                      deviceId: device['deviceid'],
+                                      quantity: device['quantity']),
                                 );
                               },
                             ),
