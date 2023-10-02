@@ -121,7 +121,8 @@ async def viewInv(item:emp,response: Response,access_token: Union[str, None] = C
              details = {}
              cursor.execute("Select * from inventory where deviceid = %s",(device[2],))
              specs = cursor.fetchone()
-             details['quantity'] = device[3]
+             if token['role'] == 'admin':
+                details['cost'] = specs[3]
              details['quantity'] = device[3]
              details['deviceid'] = device[2]
              details['company'] = specs[1]
