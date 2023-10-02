@@ -1,87 +1,43 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:mobelease/widgets/AssigningPageCard.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
 import 'package:http/http.dart' as http;
 import '../../models/Employee_Model.dart';
-import '../../models/Inventory_Model.dart';
 import '../../widgets/Appbar.dart';
-import '../../widgets/AssignCardInv.dart';
 import '../../widgets/AssignCardMain.dart';
 import '../../widgets/BottomAppBar.dart';
 import '../../widgets/categories.dart';
-import '../../widgets/AssignCard.dart';
-import 'AssigningPage.dart';
 
 class Assign extends StatefulWidget {
   final int id;
-  Assign({super.key, required this.id});
+  EmployeeModel? employee;
+  Assign({super.key, required this.id, this.employee});
 
   @override
   State<Assign> createState() => _AssignState();
 }
 
 class _AssignState extends State<Assign> {
-  late EmployeeModel employee = EmployeeModel();
   final AuthController authController = AuthController();
-
-  // int get deviceid => null;
-  Future<EmployeeModel> getEmployee() async {
-    print(widget.id);
-    int ids = widget.id;
-    final token = await authController.getToken();
-    var url = Uri.https(baseUrl, '/emp/singleemployee');
-    final client = http.Client();
-    try {
-      final response = await client.post(
-        url,
-        body: jsonEncode({"empid": widget.id}),
-        headers: {'Cookie': token!, 'Content-Type': 'application/json'},
-      );
-      if (response.statusCode == 200) {
-        // print(response.body);
-        final Map<String, dynamic> responseData =
-            jsonDecode(response.body)!['data'!];
-        final List<String> sortedKeys1 = responseData.keys!.toList();
-        List<int> sortedKeys =
-            sortedKeys1.map((str) => int.parse(str!)).toList()..sort();
-        // print(sortedKeys);
-        final List<EmployeeModel> employees = sortedKeys
-            .map((key) => EmployeeModel.fromJson(responseData[key.toString()]))
-            .toList();
-        employee = employees.first;
-        // print(employee.firstName);
-        // setState(() {
-        //   employee = employees.first;
-        // });
-        return employee;
-      } else {
-        throw Exception('Failed to load employees');
-      }
-
-      // return employees;
-    } catch (e) {
-      return Future.error(e.toString());
-    }
-  }
 
   ScrollController _scrollController = ScrollController();
   String selectedCategory = '';
   Map<String, dynamic> devicesFuture = {};
-  Future<Map<String,dynamic>> fetchItemsFromApi() async {
+
+  Future<Map<String, dynamic>> fetchItemsFromApi() async {
     final token = await authController.getToken();
-    var url = Uri.https(baseUrl, '/inv/viewassign');
+    var url = Uri.parse('$baseUrl/inv/viewassign');
     final response = await http.post(
       url,
       body: jsonEncode({"empid": widget.id}),
       headers: {'Cookie': token!, 'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
-      final Map<String,dynamic> data = json.decode(response.body)['data'];
+      final Map<String, dynamic> data = json.decode(response.body)['data'];
       final List<dynamic> items = data['devices'].toList();
       final Map<String, dynamic> categorizedItems = {};
+      print("data: $data");
       print(categorizedItems.containsKey('watch'));
       for (var item in items) {
         print(item['ItemType']);
@@ -125,14 +81,6 @@ class _AssignState extends State<Assign> {
     selectedCategory = 'phone'; // Set default selected category to Phone
   }
 
-  Future<List<dynamic>> fetchAllData() async {
-    final future1 = getEmployee();
-    final future2 = fetchItemsFromApi();
-    // final future3 = editassign(deviceid);
-
-    return await Future.wait([future1, future2]);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,20 +88,14 @@ class _AssignState extends State<Assign> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: FutureBuilder(
-            future: fetchAllData(),
+            future: fetchItemsFromApi(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return CircularProgressIndicator(); // Placeholder for loading state
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                var employeeData =
-                    snapshot.data?[0]; // Assuming getEmployee is the first future
-                var inventoryData = snapshot
-                    .data?[1]; // Assuming getInventory is the second future
-                // var employeeSelectData = snapshot.data?[2]; // Assuming getEmployeeSelect is the third future
-                Map<String, dynamic> categorizedDevices =
-                    inventoryData as Map<String, dynamic>;
+                Map<String, dynamic> categorizedDevices = snapshot.data!;
                 return SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 18.0),
@@ -164,18 +106,21 @@ class _AssignState extends State<Assign> {
                           child: Appbar(),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 23.0, bottom: 16.0),
+                          padding:
+                              const EdgeInsets.only(top: 23.0, bottom: 16.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("Assign to ${employeeData.firstName ?? " "} ",
+                              Text(
+                                  "Assign to ${widget.employee!.firstName ?? " "} ",
                                   style: TextStyle(
                                       color: Color(0xffE96E2B),
                                       fontWeight: FontWeight.w600,
                                       fontSize: 20.0)),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.pushNamed(context, "/AssigningPage");
+                                  Navigator.pushNamed(
+                                      context, "/AssigningPage");
                                 },
                                 child: CircleAvatar(
                                   radius: 12.0,
@@ -206,7 +151,7 @@ class _AssignState extends State<Assign> {
                                     });
                                   },
                                   selectedCategory:
-                                  selectedCategory, // Pass selected category
+                                      selectedCategory, // Pass selected category
                                 ).buildCategories(),
                               );
                             }).toList(),
@@ -217,21 +162,24 @@ class _AssignState extends State<Assign> {
                             scrollDirection: Axis.vertical,
                             child: ListView.builder(
                               shrinkWrap: true,
-                              itemCount:
-                              categorizedDevices[selectedCategory]?.length ?? 0,
+                              itemCount: categorizedDevices[selectedCategory]
+                                      ?.length ??
+                                  0,
                               itemBuilder: (BuildContext context, int index) {
-                                final device =
-                                categorizedDevices[selectedCategory]![index];
-                                print(device);
+                                final device = categorizedDevices[
+                                    selectedCategory]![index];
+                                print("DEvice: $device");
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: AssignCardMain(model: device['Name'],quantity: device['Storage']),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 4.0),
+                                  child: AssignCardMain(
+                                      model: device['Name'],
+                                      quantity: device['quantity'].toString()),
                                 );
                               },
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),

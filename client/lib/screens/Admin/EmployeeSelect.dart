@@ -146,7 +146,10 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => Assign(id: index + 1),
+                                    builder: (context) => Assign(
+                                      id: index + 1,
+                                      employee: employee,
+                                    ),
                                   ),
                                 );
                               },

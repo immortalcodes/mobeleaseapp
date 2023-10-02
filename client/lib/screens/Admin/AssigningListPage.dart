@@ -15,7 +15,7 @@ class SecondPage extends StatelessWidget {
   final AuthController authController = AuthController();
   Future<Map<String, List<ItemModel>>> fetchItemsFromApi() async {
     final token = await authController.getToken();
-    var url = Uri.https(baseUrl, '/inv/viewallitem');
+    var url = Uri.parse('$baseUrl/inv/viewallitem');
     final response = await http.post(
       url,
       headers: {'Cookie': token!, 'Content-Type': 'application/json'},
@@ -38,6 +38,7 @@ class SecondPage extends StatelessWidget {
       throw Exception('Failed to load items');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, List<ItemModel>>>(
@@ -87,14 +88,14 @@ class SecondPage extends StatelessWidget {
                         scrollDirection: Axis.vertical,
                         child: ListView.builder(
                           shrinkWrap: true,
-                          itemCount: categorizedDevices[selectedCategory]
-                              ?.length ??
-                              0,
+                          itemCount:
+                              categorizedDevices[selectedCategory]?.length ?? 0,
                           itemBuilder: (BuildContext context, int index) {
-                            final device = categorizedDevices[
-                            selectedCategory]![index];
+                            final device =
+                                categorizedDevices[selectedCategory]![index];
                             return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 4.0),
                               child: AssigningPageCard(
                                 model: device.deviceDetail ?? "",
                                 cost: device.cost ?? "0",
@@ -117,7 +118,6 @@ class SecondPage extends StatelessWidget {
                   ],
                 ),
               );
-
             },
           );
         }

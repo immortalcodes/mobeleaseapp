@@ -172,7 +172,9 @@ class _EmployeeState extends State<Employee> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => EmployeeAll(),
+                                      builder: (context) => EmployeeAll(
+                                        employeeList: employeesList,
+                                      ),
                                     ),
                                   );
                                 },

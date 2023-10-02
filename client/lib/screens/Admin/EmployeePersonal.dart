@@ -153,8 +153,10 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          Assign(id: widget.empid!),
+                                      builder: (context) => Assign(
+                                        id: widget.empid!,
+                                        employee: employee,
+                                      ),
                                     ),
                                   );
                                 },

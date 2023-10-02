@@ -1,72 +1,29 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:http/http.dart' as http;
-import 'package:mobelease/controllers/employee_controller.dart';
+
 import 'package:mobelease/screens/Admin/EmployeePersonal.dart';
-import 'package:provider/provider.dart';
+
 import '../../controllers/auth_controller.dart';
-import '../../repository/employee_repository.dart';
+
 import '../../models/Employee_Model.dart';
 import '../../widgets/Appbar.dart';
 import '../../widgets/BottomAppBar.dart';
 import '../../widgets/Employee_Icon.dart';
 import 'package:mobelease/globals.dart';
 
-import 'Assign.dart';
-
 class EmployeeAll extends StatefulWidget {
-  const EmployeeAll({super.key});
+  List<EmployeeModel>? employeeList;
+  EmployeeAll({super.key, this.employeeList});
 
   @override
   State<EmployeeAll> createState() => _EmployeeAllState();
 }
 
 class _EmployeeAllState extends State<EmployeeAll> {
-  List<EmployeeModel> employeesList = [];
   final AuthController authController = AuthController();
-  Future<List<EmployeeModel>> getEmployee() async {
-    final token = await authController.getToken();
-    var url = Uri.parse('$baseUrl/emp/allemployee');
-    final client = http.Client();
-    try {
-      final response = await client.post(
-        url,
-        headers: {'Cookie': token!, 'Content-Type': 'application/json'},
-      );
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData =
-            jsonDecode(response.body)!['data'!];
-        final List<String> sortedKeys1 = responseData.keys!.toList();
-        List<int> sortedKeys =
-            sortedKeys1.map((str) => int.parse(str!)).toList()..sort();
-        // print(sortedKeys);
-        final List<EmployeeModel> employees = sortedKeys
-            .map((key) => EmployeeModel.fromJson(responseData[key.toString()]))
-            .toList();
-        print(responseData.values);
-        employeesList = employees;
-        return employeesList;
-        // if(mounted) {
-        //   setState(() {
-        //
-        // });
-        // }
-      } else {
-        throw Exception('Failed to load employees');
-      }
 
-      // return employees;
-    } catch (e) {
-      return Future.error(e.toString());
-    }
-  }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getEmployee();
-  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,54 +82,42 @@ class _EmployeeAllState extends State<EmployeeAll> {
                 ),
               ),
             ),
-            FutureBuilder(
-                future: getEmployee(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator(); // Placeholder for loading state
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    List<EmployeeModel> employeesList = snapshot.data!;
-                    return Expanded(
-                      child: ListView.builder(
-                          itemCount: employeesList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final employee = employeesList[index];
-                            final image;
-                            
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 18.0, vertical: 5.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          EmployeePersonal(empid: index + 1),
-                                    ),
-                                  );
-                                },
-                                child: ListTile(
-                                  leading: Employee_icon(
-                                      imagePath: employee.empPhoto ?? ""),
-                                  title: Text(
-                                    employee.firstName ??
-                                        'No First Name Available',
-                                  ),
-                                  trailing: Icon(
-                                    Icons.arrow_right,
-                                    color: Color(0xffE96E2B),
-                                  ),
-                                  tileColor: Colors.white,
-                                ),
-                              ),
-                            );
-                          }),
+            Expanded(
+              child: ListView.builder(
+                  itemCount: widget.employeeList!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final employee = widget.employeeList![index];
+                    final image;
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18.0, vertical: 5.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  EmployeePersonal(empid: index + 1),
+                            ),
+                          );
+                        },
+                        child: ListTile(
+                          leading:
+                              Employee_icon(imagePath: employee.empPhoto ?? ""),
+                          title: Text(
+                            employee.firstName ?? 'No First Name Available',
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_right,
+                            color: Color(0xffE96E2B),
+                          ),
+                          tileColor: Colors.white,
+                        ),
+                      ),
                     );
-                  }
-                }),
+                  }),
+            )
           ],
         ),
       ),
