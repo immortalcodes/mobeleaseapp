@@ -26,7 +26,7 @@ class AuthController {
         print(cookies);
         // Store the received cookie (authentication token) using SharedPreferences
         final prefs = await SharedPreferences.getInstance();
-        prefs.setString(cookieKey, cookies);
+        prefs.setString('authToken', cookies);
         return true;
       }
     }

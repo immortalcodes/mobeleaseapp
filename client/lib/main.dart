@@ -24,25 +24,38 @@ import 'screens/Message.dart';
 import 'controllers/ProtectedRoute.dart';
 import 'screens/Admin/EmployeeAll.dart';
 import 'package:provider/provider.dart';
-
 import 'screens/Employee/Emp_Assign_1.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? token = prefs.getString('authToken');
+  print("token $token");
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
           create: (context) => EmployeeProvider()..getEmployee()),
       ChangeNotifierProvider(create: (context) => SelectedDevicesProvider())
     ],
-    child: MyApp(),
+    child: MyApp(token: token!),
   ));
   // runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  String inRoute = '/login';
+  String token;
+  MyApp({required this.token});
+
+  String inRoute = "";
+
   @override
   Widget build(BuildContext context) {
+    if (token == null) {
+      inRoute = '/login';
+    } else {
+      inRoute = '/Employee';
+    }
     return MaterialApp(
         initialRoute: inRoute,
         routes: {

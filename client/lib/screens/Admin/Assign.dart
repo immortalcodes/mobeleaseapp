@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:mobelease/widgets/buttons.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
 import 'package:http/http.dart' as http;
@@ -52,6 +53,18 @@ class _AssignState extends State<Assign> {
     } else {
       throw Exception('Failed to load items');
     }
+  }
+
+  int calculateTotalPrice(Map<String, dynamic> categorizedDevices) {
+    int totalPrice = 0;
+
+    for (final device in categorizedDevices[selectedCategory] ?? []) {
+      final int price = int.parse(device['cost']) ?? 0;
+      final int quantity = device['quantity'] ?? 0;
+      totalPrice += (price * quantity);
+    }
+
+    return totalPrice;
   }
 
   void deleteDevice(int deviceId) async {
@@ -168,11 +181,12 @@ class _AssignState extends State<Assign> {
                               itemBuilder: (BuildContext context, int index) {
                                 final device = categorizedDevices[
                                     selectedCategory]![index];
-                                print("DEvice: $device");
+
                                 return Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 4.0),
                                   child: AssignCardMain(
+                                      cost: device['cost'],
                                       empId: widget.id,
                                       model: device['Name'],
                                       deviceId: device['deviceid'],
@@ -181,6 +195,54 @@ class _AssignState extends State<Assign> {
                               },
                             ),
                           ),
+                        ),
+                        Stack(
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                    left: 10, bottom: 10, top: 10),
+                                height:
+                                    MediaQuery.of(context).size.height * 0.1,
+                                width: double.infinity,
+                                color: Colors.white,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 11.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text("Total Price",
+                                              style: TextStyle(
+                                                  color: Color(0xff474747),
+                                                  fontSize: 15.0)),
+                                          Text(
+                                              "\$ ${calculateTotalPrice(categorizedDevices)}",
+                                              style: TextStyle(
+                                                  color: Color(0xffE96E2B),
+                                                  fontSize: 20.0,
+                                                  fontWeight: FontWeight.w600)),
+                                        ],
+                                      ),
+                                      BlackButton(
+                                              buttonText: "Assign",
+                                              Width: 106,
+                                              Height: 29,
+                                              Radius: 13,
+                                              onpress: () {})
+                                          .buildBlackButton()
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

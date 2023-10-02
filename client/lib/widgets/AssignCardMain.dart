@@ -10,11 +10,13 @@ class AssignCardMain extends StatefulWidget {
   late String model;
   late int quantity;
   late int deviceId;
+  late String cost;
   late int empId;
   AssignCardMain(
       {required this.model,
       required this.quantity,
       required this.deviceId,
+      required this.cost,
       required this.empId});
 
   @override
@@ -82,6 +84,17 @@ class _AssignCardMainState extends State<AssignCardMain> {
             ),
             Row(
               children: [
+                Text(
+                  "Cost price",
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(width: 5),
+                Text("₹${widget.cost}",
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey)),
+                SizedBox(width: 15),
                 GestureDetector(
                   child: CircleAvatar(
                     radius: 10.0,
@@ -100,20 +113,9 @@ class _AssignCardMainState extends State<AssignCardMain> {
                   },
                 ),
                 SizedBox(width: 5),
-                SizedBox(
-                  width: 45,
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    "Quantity:",
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
                 Text(
                   widget.quantity.toString(),
-                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(width: 5),
                 GestureDetector(
