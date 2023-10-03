@@ -12,12 +12,14 @@ class AssignCardMain extends StatefulWidget {
   late int deviceId;
   late String cost;
   late int empId;
+  late int totalPrice;
   AssignCardMain(
       {required this.model,
       required this.quantity,
       required this.deviceId,
       required this.cost,
-      required this.empId});
+      required this.empId,
+      required this.totalPrice});
 
   @override
   State<AssignCardMain> createState() => _AssignCardMainState();
@@ -107,6 +109,7 @@ class _AssignCardMainState extends State<AssignCardMain> {
                   onTap: () async {
                     setState(() {
                       widget.quantity = widget.quantity - 1;
+                      widget.totalPrice -= widget.cost as int;
                     });
 
                     await addOrremoveDevice(widget.quantity);
@@ -130,6 +133,7 @@ class _AssignCardMainState extends State<AssignCardMain> {
                   onTap: () async {
                     setState(() {
                       widget.quantity = widget.quantity + 1;
+                      widget.totalPrice += int.parse(widget.cost);
                     });
                     await addOrremoveDevice(widget.quantity);
                   },

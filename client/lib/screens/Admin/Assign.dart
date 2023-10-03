@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:mobelease/screens/Admin/AssigningPage.dart';
 import 'package:mobelease/widgets/buttons.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
@@ -25,6 +26,7 @@ class _AssignState extends State<Assign> {
   ScrollController _scrollController = ScrollController();
   String selectedCategory = '';
   Map<String, dynamic> devicesFuture = {};
+  int totalPrice = 0;
 
   Future<Map<String, dynamic>> fetchItemsFromApi() async {
     final token = await authController.getToken();
@@ -56,8 +58,6 @@ class _AssignState extends State<Assign> {
   }
 
   int calculateTotalPrice(Map<String, dynamic> categorizedDevices) {
-    int totalPrice = 0;
-
     for (final device in categorizedDevices[selectedCategory] ?? []) {
       final int price = int.parse(device['cost']) ?? 0;
       final int quantity = device['quantity'] ?? 0;
@@ -132,8 +132,13 @@ class _AssignState extends State<Assign> {
                                       fontSize: 20.0)),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.pushNamed(
-                                      context, "/AssigningPage");
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AssigningPage(
+                                              empId: widget.id,
+                                            )),
+                                  );
                                 },
                                 child: CircleAvatar(
                                   radius: 12.0,
@@ -187,6 +192,7 @@ class _AssignState extends State<Assign> {
                                       const EdgeInsets.symmetric(vertical: 4.0),
                                   child: AssignCardMain(
                                       cost: device['cost'],
+                                      totalPrice: totalPrice,
                                       empId: widget.id,
                                       model: device['Name'],
                                       deviceId: device['deviceid'],
