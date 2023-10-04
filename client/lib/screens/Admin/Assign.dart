@@ -50,27 +50,25 @@ class _AssignState extends State<Assign> {
           categorizedItems[item['ItemType']] = [item];
         }
       }
+
       devicesFuture = categorizedItems;
+
+      totalPrice = items.fold<int>(0, (sum, item) {
+        final int quantity = item['quantity'];
+        final int cost = int.parse(item['cost']);
+        return sum + (quantity * cost);
+      });
+
       return devicesFuture;
     } else {
       throw Exception('Failed to load items');
     }
   }
 
-  int calculateTotalPrice(Map<String, dynamic> categorizedDevices) {
-    for (final device in categorizedDevices[selectedCategory] ?? []) {
-      final int price = int.parse(device['cost']) ?? 0;
-      final int quantity = device['quantity'] ?? 0;
-      totalPrice += (price * quantity);
-    }
-
-    return totalPrice;
-  }
-
   void deleteDevice(int deviceId) async {
     final token = await authController.getToken();
     print(deviceId);
-    var url = Uri.https(baseUrl, '/inv/deleteitem');
+    var url = Uri.parse('$baseUrl/inv/deleteitem');
     final response = await http.post(
       url,
       headers: {'Cookie': token!, 'Content-Type': 'application/json'},
@@ -86,6 +84,12 @@ class _AssignState extends State<Assign> {
       print('Failed to delete device. Status code: ${response.statusCode}');
       // Handle the error or show a message to the user
     }
+  }
+
+  void updateTotalPrice(int newTotalPrice) {
+    setState(() {
+      totalPrice = newTotalPrice;
+    });
   }
 
   @override
@@ -191,10 +195,13 @@ class _AssignState extends State<Assign> {
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 4.0),
                                   child: AssignCardMain(
+                                      company: device['company'],
                                       cost: device['cost'],
                                       totalPrice: totalPrice,
                                       empId: widget.id,
+                                      onDelete: deleteDevice,
                                       model: device['Name'],
+                                      updateTotalPrice: updateTotalPrice,
                                       deviceId: device['deviceid'],
                                       quantity: device['quantity']),
                                 );
@@ -228,8 +235,7 @@ class _AssignState extends State<Assign> {
                                               style: TextStyle(
                                                   color: Color(0xff474747),
                                                   fontSize: 15.0)),
-                                          Text(
-                                              "\$ ${calculateTotalPrice(categorizedDevices)}",
+                                          Text("\$ $totalPrice",
                                               style: TextStyle(
                                                   color: Color(0xffE96E2B),
                                                   fontSize: 20.0,

@@ -7,12 +7,14 @@ class AssignCardInv extends StatelessWidget {
   late String cost;
   final Function onDelete;
   final int deviceId;
-  AssignCardInv(
-      {required this.model,
-      required this.cost,
-      required this.company,
-      required this.onDelete,
-      required this.deviceId});
+
+  AssignCardInv({
+    required this.model,
+    required this.cost,
+    required this.company,
+    required this.onDelete,
+    required this.deviceId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class AssignCardInv extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
-                "Cost Price",
+                "cost price:",
                 style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
               ),
               SizedBox(

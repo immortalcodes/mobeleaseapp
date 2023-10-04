@@ -39,7 +39,7 @@ void main() async {
           create: (context) => EmployeeProvider()..getEmployee()),
       ChangeNotifierProvider(create: (context) => SelectedDevicesProvider())
     ],
-    child: MyApp(token: token!),
+    child: MyApp(token: token ?? ""),
   ));
   // runApp(MyApp());
 }
@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (token == null) {
+    if (token == "") {
       inRoute = '/login';
     } else {
       inRoute = '/Employee';

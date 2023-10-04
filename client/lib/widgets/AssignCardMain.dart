@@ -13,13 +13,20 @@ class AssignCardMain extends StatefulWidget {
   late String cost;
   late int empId;
   late int totalPrice;
+  late String company;
+  final void Function(int) updateTotalPrice;
+  final Function onDelete;
+
   AssignCardMain(
       {required this.model,
       required this.quantity,
       required this.deviceId,
       required this.cost,
       required this.empId,
-      required this.totalPrice});
+      required this.totalPrice,
+      required this.company,
+      required this.updateTotalPrice,
+      required this.onDelete});
 
   @override
   State<AssignCardMain> createState() => _AssignCardMainState();
@@ -79,6 +86,12 @@ class _AssignCardMainState extends State<AssignCardMain> {
                 SizedBox(
                   width: 15,
                 ),
+                Text(widget.company,
+                    style:
+                        TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+                SizedBox(
+                  width: 15,
+                ),
                 Text(widget.model,
                     style:
                         TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
@@ -86,15 +99,11 @@ class _AssignCardMainState extends State<AssignCardMain> {
             ),
             Row(
               children: [
-                Text(
-                  "Cost price",
-                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
-                ),
                 SizedBox(width: 5),
                 Text("₹${widget.cost}",
                     style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
                         color: Colors.grey)),
                 SizedBox(width: 15),
                 GestureDetector(
@@ -107,12 +116,17 @@ class _AssignCardMainState extends State<AssignCardMain> {
                     ),
                   ),
                   onTap: () async {
-                    setState(() {
-                      widget.quantity = widget.quantity - 1;
-                      widget.totalPrice -= widget.cost as int;
-                    });
+                    if (widget.quantity == 1) {
+                      await widget.onDelete(widget.deviceId);
+                    } else {
+                      setState(() {
+                        widget.quantity = widget.quantity - 1;
+                        widget.totalPrice -= widget.cost as int;
+                      });
+                    }
 
                     await addOrremoveDevice(widget.quantity);
+                    widget.updateTotalPrice(widget.totalPrice);
                   },
                 ),
                 SizedBox(width: 5),
@@ -136,6 +150,7 @@ class _AssignCardMainState extends State<AssignCardMain> {
                       widget.totalPrice += int.parse(widget.cost);
                     });
                     await addOrremoveDevice(widget.quantity);
+                    widget.updateTotalPrice(widget.totalPrice);
                   },
                 ),
                 SizedBox(

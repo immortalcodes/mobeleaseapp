@@ -60,7 +60,7 @@ class _InventoryState extends State<Inventory> {
   void deleteDevice(int deviceId) async {
     final token = await authController.getToken();
     print(deviceId);
-    var url = Uri.https(baseUrl, '/inv/deleteitem');
+    var url = Uri.parse('$baseUrl/inv/deleteitem');
     final response = await http.post(
       url,
       headers: {'Cookie': token!, 'Content-Type': 'application/json'},
@@ -194,10 +194,12 @@ class _InventoryState extends State<Inventory> {
                           itemBuilder: (BuildContext context, int index) {
                             final device =
                                 categorizedDevices[selectedCategory]![index];
+
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: AssignCardInv(
                                 company: device.company ?? "",
+
                                 model: device.deviceDetail ?? "",
                                 cost: device.cost ?? "0",
                                 deviceId:
