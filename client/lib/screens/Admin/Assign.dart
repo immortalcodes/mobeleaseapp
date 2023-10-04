@@ -65,6 +65,30 @@ class _AssignState extends State<Assign> {
     }
   }
 
+  Future<void> addDevicetoAssign(int deviceId) async {
+    final token = await authController.getToken();
+    var url = Uri.parse('$baseUrl/inv/assign');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        'empid': widget.id,
+        'devices': [
+          {'deviceid': deviceId, 'quantity': 1}
+        ]
+      }),
+      headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      print(json.decode(response.body));
+      print("device added successfully");
+      setState(() {});
+    } else {
+      print("failed to add devices");
+    }
+  }
+
   void deleteDevice(int deviceId) async {
     final token = await authController.getToken();
     print(deviceId);
@@ -141,6 +165,8 @@ class _AssignState extends State<Assign> {
                                     MaterialPageRoute(
                                         builder: (context) => AssigningPage(
                                               empId: widget.id,
+                                              addorremoveFunction:
+                                                  addDevicetoAssign,
                                             )),
                                   );
                                 },

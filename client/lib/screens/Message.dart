@@ -19,6 +19,8 @@ class Message extends StatefulWidget {
 
 class _MessageState extends State<Message> {
   final AuthController authController = AuthController();
+  final TextEditingController _remarkController = TextEditingController();
+  final TextEditingController _replyController = TextEditingController();
 
   Future<Map<String, dynamic>> fetchRemarksofEmployee() async {
     print("emid id: ${widget.empId}");
@@ -46,6 +48,52 @@ class _MessageState extends State<Message> {
     }
   }
 
+  Future<void> addRemarksofEmployee(String remarkText) async {
+    print("emid id: ${widget.empId}");
+    final token = await authController.getToken();
+    var url = Uri.parse('$baseUrl/emp/addremark');
+
+    try {
+      final response = await http.post(
+        url,
+        body: jsonEncode({"remark": remarkText, "empid": widget.empId}),
+        headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        print("remark added successfully");
+      } else {
+        throw Exception('Failed to remark');
+      }
+
+      // return employees;
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+  Future<void> addReply(String replyText, int remarkId) async {
+    print("emid id: ${widget.empId}");
+    final token = await authController.getToken();
+    var url = Uri.parse('$baseUrl/emp/addreply');
+
+    try {
+      final response = await http.post(
+        url,
+        body: jsonEncode({"remarkid": remarkId, "reply": replyText}),
+        headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        print("reply successfully done");
+      } else {
+        throw Exception('Failed to reply');
+      }
+
+      // return employees;
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -53,9 +101,9 @@ class _MessageState extends State<Message> {
   }
 
   String formatTimestamp(String timestamp) {
+    if (timestamp == null) return "";
     final now = DateTime.now();
 
-    // Custom parsing function to extract date and time components
     final regex = RegExp(r'(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})');
     final match = regex.firstMatch(timestamp);
 
@@ -188,19 +236,27 @@ class _MessageState extends State<Message> {
                                         ? currentData['remark']
                                         : currentData['reply'];
 
-                                    final remarkTimeEmp =
-                                        initiater == "employee"
-                                            ? formatTimestamp(
+                                    final remarkTimeEmp = initiater ==
+                                            "employee"
+                                        ? formatTimestamp(
                                                 currentData['remarktimestamp'])
-                                            : formatTimestamp(
-                                                currentData['replytimestamp']);
+                                            .toString()
+                                        : (currentData['replytimestamp'] != null
+                                            ? formatTimestamp(currentData[
+                                                    'replytimestamp'])
+                                                .toString()
+                                            : '');
 
                                     final remarkTimeAdmin = initiater == "admin"
                                         ? formatTimestamp(
-                                            currentData['remarktimestamp'])
-                                        : formatTimestamp(
-                                            currentData['replytimestamp'] ??
-                                                "");
+                                                currentData['remarktimestamp'])
+                                            .toString()
+                                        : (currentData['replytimestamp'] != null
+                                            ? formatTimestamp(currentData[
+                                                    'replytimestamp'])
+                                                .toString()
+                                            : '');
+
                                     return Column(
                                       children: [
                                         remarkEmployee != null
@@ -285,6 +341,74 @@ class _MessageState extends State<Message> {
                                                 ),
                                               )
                                             : Text(""),
+                                        (initiater == 'admin' &&
+                                                currentData['reply'] == null)
+                                            ? Stack(
+                                                children: <Widget>[
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Container(
+                                                      padding: EdgeInsets.only(
+                                                          left: 10,
+                                                          bottom: 10,
+                                                          top: 10),
+                                                      height: 50,
+                                                      width: 250,
+                                                      color: Colors.white,
+                                                      child: Row(
+                                                        children: [
+                                                          SizedBox(
+                                                            width: 15,
+                                                          ),
+                                                          Expanded(
+                                                            child: TextField(
+                                                              controller:
+                                                                  _replyController,
+                                                              decoration: InputDecoration(
+                                                                  hintText:
+                                                                      "reply to remark..",
+                                                                  hintStyle: TextStyle(
+                                                                      color: Colors
+                                                                          .black54),
+                                                                  border:
+                                                                      InputBorder
+                                                                          .none),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 15,
+                                                          ),
+                                                          GestureDetector(
+                                                            onTap: () async {
+                                                              await addReply(
+                                                                  _replyController
+                                                                      .text,
+                                                                  int.parse(
+                                                                      key));
+
+                                                              _replyController
+                                                                  .clear();
+                                                              setState(() {});
+                                                            },
+                                                            child: CircleAvatar(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .white,
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .send_rounded,
+                                                                  color: Color(
+                                                                      0xffE96E2B),
+                                                                )),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Text("")
                                       ],
                                     );
                                   });
@@ -308,8 +432,9 @@ class _MessageState extends State<Message> {
                           ),
                           Expanded(
                             child: TextField(
+                              controller: _remarkController,
                               decoration: InputDecoration(
-                                  hintText: "Write message...",
+                                  hintText: "add a remark...",
                                   hintStyle: TextStyle(color: Colors.black54),
                                   border: InputBorder.none),
                             ),
@@ -318,7 +443,12 @@ class _MessageState extends State<Message> {
                             width: 15,
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () async {
+                              await addRemarksofEmployee(
+                                  _remarkController.text);
+                              _remarkController.clear();
+                              setState(() {});
+                            },
                             child: CircleAvatar(
                                 backgroundColor: Colors.white,
                                 child: Icon(

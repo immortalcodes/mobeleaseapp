@@ -121,7 +121,7 @@ class _AssignCardMainState extends State<AssignCardMain> {
                     } else {
                       setState(() {
                         widget.quantity = widget.quantity - 1;
-                        widget.totalPrice -= widget.cost as int;
+                        widget.totalPrice -= int.parse(widget.cost);
                       });
                     }
 

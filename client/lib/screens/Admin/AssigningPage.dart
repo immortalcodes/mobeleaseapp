@@ -9,12 +9,13 @@ import '../../widgets/AssignCardInv.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:shimmer/shimmer.dart';
+
 // import 'item_model.dart';
 
 class AssigningPage extends StatefulWidget {
   int? empId;
-  AssigningPage({super.key, this.empId});
+  Future<void> Function(int)? addorremoveFunction;
+  AssigningPage({super.key, this.empId, this.addorremoveFunction});
 
   @override
   State<AssigningPage> createState() => _AssigningPageState();
@@ -56,29 +57,6 @@ class _AssigningPageState extends State<AssigningPage> {
       return devicesFuture;
     } else {
       throw Exception('Failed to load items');
-    }
-  }
-
-  Future<void> addDevicetoAssign(int deviceId) async {
-    final token = await authController.getToken();
-    var url = Uri.parse('$baseUrl/inv/assign');
-
-    final response = await http.post(
-      url,
-      body: jsonEncode({
-        'empid': widget.empId,
-        'devices': [
-          {'deviceid': deviceId, 'quantity': 1}
-        ]
-      }),
-      headers: {'Cookie': token!, 'Content-Type': 'application/json'},
-    );
-
-    if (response.statusCode == 200) {
-      print(json.decode(response.body));
-      print("device added successfully");
-    } else {
-      print("failed to add devices");
     }
   }
 
@@ -223,7 +201,8 @@ class _AssigningPageState extends State<AssigningPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: GestureDetector(
                                 onDoubleTap: () async {
-                                  await addDevicetoAssign(device.deviceId!);
+                                  await widget
+                                      .addorremoveFunction!(device.deviceId!);
                                   Navigator.of(context).pop();
                                 },
                                 child: AssignCardInv(
