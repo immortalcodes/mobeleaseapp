@@ -22,13 +22,14 @@ async def login(item: credentials, response: Response):#:access_token: Union[str
                     response.set_cookie(key="access_token", value=token, samesite="Lax", secure=False)
 
                     return {"data": {
-                        'token' : token
+                        'token' : token,
+                        'role'  : 'admin'
                     }}
             else:
                     response.status_code = status.HTTP_401_UNAUTHORIZED
                     return {'message':'Invalid Credentials'}
         elif item.role ==  'employee':
-            cursor.execute("SELECT email from employee where email=%s",(item.email,))
+            cursor.execute("SELECT email,employeeid from employee where email=%s",(item.email,))
             email = cursor.fetchone()
             if email == None:
                 response.status_code = status.HTTP_404_NOT_FOUND
@@ -41,7 +42,9 @@ async def login(item: credentials, response: Response):#:access_token: Union[str
                     response.set_cookie(key="access_token", value=token, samesite="Lax", secure=False)
 
                     return {"data": {
-                        'token' : token
+                        'token' : token,
+                        'role' : 'employee',
+                        'empid' :  decodeToken(token)["empid"]
                     }}
                 else:
                     response.status_code = status.HTTP_401_UNAUTHORIZED
