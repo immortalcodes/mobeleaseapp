@@ -7,7 +7,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AddDeviceDialog extends StatefulWidget {
-  const AddDeviceDialog({super.key});
+  final VoidCallback? onDeviceAdded;
+  const AddDeviceDialog({super.key, this.onDeviceAdded});
 
   @override
   State<AddDeviceDialog> createState() => _AddDeviceDialogState();
@@ -60,10 +61,12 @@ class _AddDeviceDialogState extends State<AddDeviceDialog> {
       _storageController.clear();
       _remarkController.clear();
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Form submitted successfully"),
         duration: Duration(seconds: 5),
       ));
+      widget.onDeviceAdded?.call();
     } else {
       print('Form submission failed with status code ${response.statusCode}');
     }

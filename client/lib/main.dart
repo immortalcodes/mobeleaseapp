@@ -52,11 +52,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (token == "") {
-      inRoute = '/login';
-    } else {
-      inRoute = '/Employee';
-    }
+    //if (token == "") {
+    //inRoute = '/login';
+    //} else {
+    //inRoute = '/Employee';
+    // }
+    inRoute = '/login';
     return MaterialApp(
         initialRoute: inRoute,
         routes: {

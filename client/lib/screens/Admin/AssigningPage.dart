@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobelease/screens/Inventory/AddDevice.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
 import '../../models/Inventory_Model.dart';
@@ -6,7 +7,7 @@ import '../../widgets/Appbar.dart';
 import '../../widgets/BottomAppBar.dart';
 import '../../widgets/categories.dart';
 import '../../widgets/AssignCardInv.dart';
-import 'package:flutter/material.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -15,7 +16,9 @@ import 'dart:convert';
 class AssigningPage extends StatefulWidget {
   int? empId;
   Future<void> Function(int)? addorremoveFunction;
-  AssigningPage({super.key, this.empId, this.addorremoveFunction});
+  List<dynamic>? deviceItems;
+  AssigningPage(
+      {super.key, this.empId, this.addorremoveFunction, this.deviceItems});
 
   @override
   State<AssigningPage> createState() => _AssigningPageState();
@@ -24,6 +27,7 @@ class AssigningPage extends StatefulWidget {
 class _AssigningPageState extends State<AssigningPage> {
   ScrollController _scrollController = ScrollController();
   String selectedCategory = '';
+  List<String> categoryKeys = [];
   Map<String, List<ItemModel>> devicesFuture = {};
   final AuthController authController = AuthController();
 
@@ -39,21 +43,19 @@ class _AssigningPageState extends State<AssigningPage> {
       final Map<String, dynamic> data = json.decode(response.body)['data'];
       final Map<String, List<ItemModel>> categorizedDevices = {};
       for (String m in data.keys) {
-        // print(data[m]);
-        // categorizedDevices[m] = data[m];
-        // print(categorizedDevices);
         List<ItemModel> devices = [];
         for (var deviceData in data[m]) {
           ItemModel.fromJson(deviceData);
           devices.add(ItemModel.fromJson(deviceData));
-          // print(deviceData);
         }
-        // print(devices);
+
         categorizedDevices[m] = devices;
       }
       print(categorizedDevices);
+      categoryKeys = categorizedDevices.keys.toList();
+
       devicesFuture = categorizedDevices;
-      // print(devicesFuture);
+
       return devicesFuture;
     } else {
       throw Exception('Failed to load items');
@@ -102,7 +104,15 @@ class _AssigningPageState extends State<AssigningPage> {
   @override
   void initState() {
     super.initState();
-    selectedCategory = 'phone'; // Set default selected category to Phone
+    fetchItemsFromApi().then((_) {
+      print(categoryKeys);
+
+      setState(() {
+        selectedCategory = categoryKeys.isNotEmpty ? categoryKeys[0] : 'phone';
+      });
+    });
+
+    // Set default selected category to Phone
   }
 
   @override
@@ -141,7 +151,10 @@ class _AssigningPageState extends State<AssigningPage> {
                                   fontSize: 14.0)),
                           GestureDetector(
                             onTap: () {
-                              Navigator.pushNamed(context, '/AddDevice');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddDeviceDialog()));
                             },
                             child: Row(
                               children: [
@@ -201,8 +214,23 @@ class _AssigningPageState extends State<AssigningPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: GestureDetector(
                                 onDoubleTap: () async {
-                                  await widget
-                                      .addorremoveFunction!(device.deviceId!);
+                                  bool isPresent = widget.deviceItems!.any(
+                                    (deviceItem) =>
+                                        deviceItem['deviceid'] ==
+                                        device.deviceId,
+                                  );
+
+                                  if (!isPresent) {
+                                    await widget
+                                        .addorremoveFunction!(device.deviceId!);
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content: Text("Device already present"),
+                                      duration: Duration(seconds: 5),
+                                    ));
+                                  }
                                   Navigator.of(context).pop();
                                 },
                                 child: AssignCardInv(

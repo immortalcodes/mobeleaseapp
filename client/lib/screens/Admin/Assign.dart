@@ -27,7 +27,7 @@ class _AssignState extends State<Assign> {
   String selectedCategory = '';
   Map<String, dynamic> devicesFuture = {};
   int totalPrice = 0;
-
+  List<dynamic> items = [];
   Future<Map<String, dynamic>> fetchItemsFromApi() async {
     final token = await authController.getToken();
     var url = Uri.parse('$baseUrl/inv/viewassign');
@@ -38,7 +38,7 @@ class _AssignState extends State<Assign> {
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body)['data'];
-      final List<dynamic> items = data['devices'].toList();
+      items = data['devices'].toList();
       final Map<String, dynamic> categorizedItems = {};
       print("data: $data");
       print(categorizedItems.containsKey('watch'));
@@ -164,10 +164,10 @@ class _AssignState extends State<Assign> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => AssigningPage(
-                                              empId: widget.id,
-                                              addorremoveFunction:
-                                                  addDevicetoAssign,
-                                            )),
+                                            empId: widget.id,
+                                            addorremoveFunction:
+                                                addDevicetoAssign,
+                                            deviceItems: items)),
                                   );
                                 },
                                 child: CircleAvatar(
