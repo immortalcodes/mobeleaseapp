@@ -91,6 +91,11 @@ async def createEmployee(item:employee,response: Response,access_token: Union[st
      token = decodeToken(access_token)   
      if token and token['role'] == 'admin':
         try:
+            cursor.execute("SELECT email from employee where email=%s",(item.email,))
+            check = cursor.fetchone()
+            if len(check) > 0:
+                response.status_code = status.HTTP_409_CONFLICT
+                return {'message':'Employee Already Exists'}
             cursor.execute("INSERT INTO employee (firstname, lastname, phoneno,password,email,employeephoto) VALUES (%s, %s,%s, %s,%s, %s)",(item.firstname,item.lastname,item.phoneno,item.email,item.password,item.employeephoto))
             emp = connection.commit()
 

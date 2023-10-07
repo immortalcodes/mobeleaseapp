@@ -40,10 +40,7 @@ class AuthController {
     var url = Uri.parse('$baseUrl/auth/verifyuser');
     final response = await http.post(
       url,
-      headers: {
-        'Cookie': 'access_token=$token',
-        'Content-Type': 'application/json'
-      },
+      headers: {'Cookie': token, 'Content-Type': 'application/json'},
     );
     print(response.body);
     if (response.statusCode == 200) {

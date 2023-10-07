@@ -223,7 +223,6 @@ class _AssigningPageState extends State<AssigningPage> {
                                   if (!isPresent) {
                                     await widget
                                         .addorremoveFunction!(device.deviceId!);
-                                    Navigator.of(context).pop();
                                   } else {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
