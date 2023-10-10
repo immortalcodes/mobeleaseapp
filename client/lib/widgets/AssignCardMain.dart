@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobelease/controllers/auth_controller.dart';
 import 'package:mobelease/globals.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AssignCardMain extends StatefulWidget {
   late String model;
@@ -15,18 +16,20 @@ class AssignCardMain extends StatefulWidget {
   late int totalPrice;
   late String company;
   final void Function(int) updateTotalPrice;
+
   final Function onDelete;
 
-  AssignCardMain(
-      {required this.model,
-      required this.quantity,
-      required this.deviceId,
-      required this.cost,
-      required this.empId,
-      required this.totalPrice,
-      required this.company,
-      required this.updateTotalPrice,
-      required this.onDelete});
+  AssignCardMain({
+    required this.model,
+    required this.quantity,
+    required this.deviceId,
+    required this.cost,
+    required this.empId,
+    required this.totalPrice,
+    required this.company,
+    required this.updateTotalPrice,
+    required this.onDelete,
+  });
 
   @override
   State<AssignCardMain> createState() => _AssignCardMainState();
@@ -34,7 +37,7 @@ class AssignCardMain extends StatefulWidget {
 
 class _AssignCardMainState extends State<AssignCardMain> {
   final AuthController authController = AuthController();
-
+  int localQuantity = 0;
   Future<void> addOrremoveDevice(int updatedQuantity) async {
     final token = await authController.getToken();
     var url = Uri.parse('$baseUrl/inv/editassign');
@@ -56,6 +59,31 @@ class _AssignCardMainState extends State<AssignCardMain> {
     } else {
       print("failed to edit devices");
     }
+  }
+
+  void updateLocalStorage(int deviceId, int newQuantity) async {
+    final prefs = await SharedPreferences.getInstance();
+    final encodedDevices = prefs.getString('devices');
+    if (encodedDevices != null) {
+      final List<dynamic> decodedDevices = jsonDecode(encodedDevices);
+      print("Helloooo $decodedDevices");
+
+      for (var device in decodedDevices) {
+        if (device['deviceid'] == deviceId) {
+          device['quantity'] = newQuantity;
+          break;
+        }
+
+        await prefs.setString('devices', jsonEncode(decodedDevices));
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    localQuantity = widget.quantity;
   }
 
   @override
@@ -100,7 +128,7 @@ class _AssignCardMainState extends State<AssignCardMain> {
             Row(
               children: [
                 SizedBox(width: 5),
-                Text("₹${widget.cost}",
+                Text("\$ ${widget.cost}",
                     style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
@@ -116,22 +144,22 @@ class _AssignCardMainState extends State<AssignCardMain> {
                     ),
                   ),
                   onTap: () async {
-                    if (widget.quantity == 1) {
+                    if (localQuantity == 1) {
                       await widget.onDelete(widget.deviceId);
                     } else {
                       setState(() {
-                        widget.quantity = widget.quantity - 1;
+                        localQuantity = localQuantity - 1;
                         widget.totalPrice -= int.parse(widget.cost);
                       });
                     }
 
-                    await addOrremoveDevice(widget.quantity);
-                    widget.updateTotalPrice(widget.totalPrice);
+                    // await addOrremoveDevice(widget.quantity);
+                    // widget.updateTotalPrice(widget.totalPrice);
                   },
                 ),
                 SizedBox(width: 5),
                 Text(
-                  widget.quantity.toString(),
+                  localQuantity.toString(),
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(width: 5),
@@ -145,12 +173,17 @@ class _AssignCardMainState extends State<AssignCardMain> {
                     ),
                   ),
                   onTap: () async {
+                    print("%%% ${widget.deviceId}");
+
                     setState(() {
-                      widget.quantity = widget.quantity + 1;
+                      localQuantity = localQuantity + 1;
+
                       widget.totalPrice += int.parse(widget.cost);
                     });
-                    await addOrremoveDevice(widget.quantity);
-                    widget.updateTotalPrice(widget.totalPrice);
+                    updateLocalStorage(widget.deviceId, localQuantity);
+                    // await addOrremoveDevice(widget.quantity);
+
+                    // widget.updateTotalPrice(widget.totalPrice);
                   },
                 ),
                 SizedBox(

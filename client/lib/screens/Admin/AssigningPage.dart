@@ -41,6 +41,7 @@ class _AssigningPageState extends State<AssigningPage> {
     );
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body)['data'];
+      print("hjhj $data");
       final Map<String, List<ItemModel>> categorizedDevices = {};
       for (String m in data.keys) {
         List<ItemModel> devices = [];
@@ -115,6 +116,11 @@ class _AssigningPageState extends State<AssigningPage> {
     // Set default selected category to Phone
   }
 
+  Future<void> fetchDevices() async {
+    await fetchItemsFromApi();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     // ScrollController _scrollController = ScrollController();
@@ -154,7 +160,9 @@ class _AssigningPageState extends State<AssigningPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => AddDeviceDialog()));
+                                      builder: (context) => AddDeviceDialog(
+                                            onDeviceAdded: fetchDevices,
+                                          )));
                             },
                             child: Row(
                               children: [
@@ -210,6 +218,7 @@ class _AssigningPageState extends State<AssigningPage> {
                           itemBuilder: (BuildContext context, int index) {
                             final device =
                                 categorizedDevices[selectedCategory]![index];
+                            print("devices $device");
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: GestureDetector(
@@ -236,6 +245,7 @@ class _AssigningPageState extends State<AssigningPage> {
                                   company: device.company ?? "",
                                   model: device.deviceDetail ?? "",
                                   cost: device.cost ?? "0",
+                                  storage: device.storage ?? "0",
                                   deviceId: device.deviceId ??
                                       0, // Pass the device ID
                                   onDelete:

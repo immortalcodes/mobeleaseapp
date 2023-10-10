@@ -7,6 +7,7 @@ class AssignCardInv extends StatelessWidget {
   late String cost;
   final Function onDelete;
   final int deviceId;
+  String? storage;
 
   AssignCardInv({
     required this.model,
@@ -14,6 +15,7 @@ class AssignCardInv extends StatelessWidget {
     required this.company,
     required this.onDelete,
     required this.deviceId,
+    this.storage,
   });
 
   @override
@@ -39,21 +41,16 @@ class AssignCardInv extends StatelessWidget {
               style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
           Text(model,
               style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+          Text("Storage: $storage",
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
 
           //SizedBox(width: 20.0,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
-                "cost price:",
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
-              ),
-              SizedBox(
-                width: 5.0,
-              ),
-              Text(
                 "\$$cost",
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
               ),
               SizedBox(
                 width: 5.0,

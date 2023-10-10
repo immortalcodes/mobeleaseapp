@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobelease/screens/Admin/AssigningPage.dart';
 import 'package:mobelease/widgets/buttons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
 import 'package:http/http.dart' as http;
@@ -25,9 +26,12 @@ class _AssignState extends State<Assign> {
 
   ScrollController _scrollController = ScrollController();
   String selectedCategory = '';
+  List<String> categoryKeys = [];
   Map<String, dynamic> devicesFuture = {};
   int totalPrice = 0;
   List<dynamic> items = [];
+  int quantity = 0;
+
   Future<Map<String, dynamic>> fetchItemsFromApi() async {
     final token = await authController.getToken();
     var url = Uri.parse('$baseUrl/inv/viewassign');
@@ -44,12 +48,14 @@ class _AssignState extends State<Assign> {
       print(categorizedItems.containsKey('watch'));
       for (var item in items) {
         print(item['ItemType']);
+
         if (categorizedItems.containsKey(item['ItemType'])) {
           categorizedItems[item['ItemType']]!.add(item);
         } else {
           categorizedItems[item['ItemType']] = [item];
         }
       }
+      categoryKeys = categorizedItems.keys.toList();
 
       devicesFuture = categorizedItems;
 
@@ -58,6 +64,19 @@ class _AssignState extends State<Assign> {
         final int cost = int.parse(item['cost']);
         return sum + (quantity * cost);
       });
+
+      List<Map<String, dynamic>> getlocalDevices = await getDevices();
+      if (getlocalDevices.isEmpty) {
+        final List<Map<String, dynamic>> deviceQuantities = items.map((item) {
+          return {
+            'deviceid': item['deviceid'],
+            'quantity': item['quantity'],
+          };
+        }).toList();
+
+        // Store the device IDs with quantities in local storage
+        await saveDevices(deviceQuantities);
+      }
 
       return devicesFuture;
     } else {
@@ -111,15 +130,37 @@ class _AssignState extends State<Assign> {
   }
 
   void updateTotalPrice(int newTotalPrice) {
-    setState(() {
-      totalPrice = newTotalPrice;
-    });
+    // setState(() {
+    //   totalPrice = newTotalPrice;
+    // });
+  }
+  Future<void> saveDevices(List<Map<String, dynamic>> devices) async {
+    final prefs = await SharedPreferences.getInstance();
+    final encodedDevices = jsonEncode(devices);
+    await prefs.setString('devices', encodedDevices);
+  }
+
+  Future<List<Map<String, dynamic>>> getDevices() async {
+    final prefs = await SharedPreferences.getInstance();
+    final encodedDevices = prefs.getString('devices');
+    if (encodedDevices != null) {
+      final List<dynamic> decodedDevices = jsonDecode(encodedDevices);
+      return decodedDevices.cast<Map<String, dynamic>>();
+    } else {
+      return [];
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    selectedCategory = 'phone'; // Set default selected category to Phone
+    fetchItemsFromApi().then((_) {
+      print(categoryKeys);
+
+      setState(() {
+        selectedCategory = categoryKeys.isNotEmpty ? categoryKeys[0] : 'phone';
+      });
+    });
   }
 
   @override
@@ -217,6 +258,8 @@ class _AssignState extends State<Assign> {
                                 final device = categorizedDevices[
                                     selectedCategory]![index];
 
+                                quantity = device['quantity'];
+
                                 return Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 4.0),
@@ -229,7 +272,7 @@ class _AssignState extends State<Assign> {
                                       model: device['Name'],
                                       updateTotalPrice: updateTotalPrice,
                                       deviceId: device['deviceid'],
-                                      quantity: device['quantity']),
+                                      quantity: quantity),
                                 );
                               },
                             ),
@@ -269,12 +312,15 @@ class _AssignState extends State<Assign> {
                                         ],
                                       ),
                                       BlackButton(
-                                              buttonText: "Assign",
-                                              Width: 106,
-                                              Height: 29,
-                                              Radius: 13,
-                                              onpress: () {})
-                                          .buildBlackButton()
+                                          buttonText: "Assign",
+                                          Width: 106,
+                                          Height: 29,
+                                          Radius: 13,
+                                          onpress: () async {
+                                            List<Map<String, dynamic>> devices =
+                                                await getDevices();
+                                            print("Helloooo $devices");
+                                          }).buildBlackButton()
                                     ],
                                   ),
                                 ),

@@ -59,6 +59,7 @@ class Categories {
             svgpath,
             color: Color(0xffE96E2B),
           ),
+          SizedBox(width: 5),
           Text(
             title,
             style: TextStyle(color: getTitleColor()),

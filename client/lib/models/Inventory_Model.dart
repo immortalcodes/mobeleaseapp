@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 class ItemModel {
   final int? deviceId;
   final String? itemType;
@@ -22,12 +23,12 @@ class ItemModel {
 
   factory ItemModel.fromJson(Map<String, dynamic> json) {
     return ItemModel(
-      deviceId :json['deviceid'],
+      deviceId: json['deviceid'],
       itemType: json['itemtype'],
       company: json['company'],
       deviceDetail: json['devicedetail'],
       cost: json['cost'],
-      storage: json['storage'],
+      storage: json['storge'],
       remark: json['remark'],
       inuse: json['inuse'],
     );
