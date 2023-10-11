@@ -98,6 +98,8 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Color(0xffFEF9F7),
           primarySwatch: Colors.blue,
         ),
-        home: Employee());
+        home: Login(
+          loginMember: 'EMPLOYEE',
+        ));
   }
 }

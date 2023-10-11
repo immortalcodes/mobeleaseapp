@@ -12,7 +12,7 @@ import '../../widgets/Appbar.dart';
 import '../../widgets/QuickStyle.dart';
 import '../../widgets/BottomAppBar.dart';
 import 'EmployeeAll.dart';
-import '../../widgets/EmployeeDataCard.dart';
+
 import 'package:http/http.dart' as http;
 
 class Employee extends StatefulWidget {
@@ -31,6 +31,7 @@ class _EmployeeState extends State<Employee> {
 
   Future<List<EmployeeModel>> getEmployee() async {
     final token = await authController.getToken();
+
     var url = Uri.parse('$baseUrl/emp/allemployee');
     final client = http.Client();
     try {

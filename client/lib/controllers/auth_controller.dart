@@ -21,15 +21,13 @@ class AuthController {
       print(cookies);
       Map<String, dynamic> jsonResponse = json.decode(response.body);
 
-      String token = jsonResponse['data']['token'];
-      int? empId = jsonResponse['data']['empid'];
-      print(empId);
-
       if (cookies != null) {
         // Store the received cookie (authentication token) using SharedPreferences
         final prefs = await SharedPreferences.getInstance();
-        prefs.setString('authToken', cookies);
+        prefs.setString(cookieKey, cookies);
         if (role == "employee") {
+          int? empId = jsonResponse['data']['empid'];
+          print(empId);
           prefs.setInt('empId', empId!);
         }
 
