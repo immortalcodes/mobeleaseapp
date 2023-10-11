@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobelease/widgets/Emp_bottomAppBar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/Appbar.dart';
 import '../../widgets/EmployeeDataCard.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,6 +13,18 @@ class Emp_home extends StatefulWidget {
 }
 
 class _Emp_homeState extends State<Emp_home> {
+  Future<void> viewAllSale() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? empId = prefs.getInt('empId');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    viewAllSale();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,7 +102,7 @@ class _Emp_homeState extends State<Emp_home> {
                     children: [
                       EmployeeDataCard(
                           cost: 4500,
-                          date: '03/03/20232',
+                          date: '03/03/2023',
                           name: "Ashwin Jaiswal",
                           cash: true,
                           paid: false,

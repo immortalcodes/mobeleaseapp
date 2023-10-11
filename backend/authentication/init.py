@@ -44,7 +44,7 @@ async def login(item: credentials, response: Response):#:access_token: Union[str
                     return {"data": {
                         'token' : token,
                         'role' : 'employee',
-                        'empid' :  decodeToken(token)["empid"]
+                        'empid' :  decodeToken(str(token))["empid"]
                     }}
                 else:
                     response.status_code = status.HTTP_401_UNAUTHORIZED

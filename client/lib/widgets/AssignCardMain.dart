@@ -1,11 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobelease/controllers/auth_controller.dart';
-import 'package:mobelease/globals.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AssignCardMain extends StatefulWidget {
   late String model;
@@ -15,9 +10,8 @@ class AssignCardMain extends StatefulWidget {
   late int empId;
   late int totalPrice;
   late String company;
-  final void Function(int) updateTotalPrice;
 
-  final Function onDelete;
+  final Function(int, int) updateDeviceQuantity;
 
   AssignCardMain({
     required this.model,
@@ -27,8 +21,7 @@ class AssignCardMain extends StatefulWidget {
     required this.empId,
     required this.totalPrice,
     required this.company,
-    required this.updateTotalPrice,
-    required this.onDelete,
+    required this.updateDeviceQuantity,
   });
 
   @override
@@ -38,46 +31,6 @@ class AssignCardMain extends StatefulWidget {
 class _AssignCardMainState extends State<AssignCardMain> {
   final AuthController authController = AuthController();
   int localQuantity = 0;
-  Future<void> addOrremoveDevice(int updatedQuantity) async {
-    final token = await authController.getToken();
-    var url = Uri.parse('$baseUrl/inv/editassign');
-
-    final response = await http.post(
-      url,
-      body: jsonEncode({
-        'empid': widget.empId,
-        'devices': [
-          {'deviceid': widget.deviceId, 'quantity': updatedQuantity}
-        ]
-      }),
-      headers: {'Cookie': token!, 'Content-Type': 'application/json'},
-    );
-
-    if (response.statusCode == 200) {
-      print(json.decode(response.body));
-      print("edited successfully");
-    } else {
-      print("failed to edit devices");
-    }
-  }
-
-  void updateLocalStorage(int deviceId, int newQuantity) async {
-    final prefs = await SharedPreferences.getInstance();
-    final encodedDevices = prefs.getString('devices');
-    if (encodedDevices != null) {
-      final List<dynamic> decodedDevices = jsonDecode(encodedDevices);
-      print("Helloooo $decodedDevices");
-
-      for (var device in decodedDevices) {
-        if (device['deviceid'] == deviceId) {
-          device['quantity'] = newQuantity;
-          break;
-        }
-
-        await prefs.setString('devices', jsonEncode(decodedDevices));
-      }
-    }
-  }
 
   @override
   void initState() {
@@ -144,17 +97,14 @@ class _AssignCardMainState extends State<AssignCardMain> {
                     ),
                   ),
                   onTap: () async {
-                    if (localQuantity == 1) {
-                      await widget.onDelete(widget.deviceId);
-                    } else {
+                    if (localQuantity >= 1) {
                       setState(() {
                         localQuantity = localQuantity - 1;
                         widget.totalPrice -= int.parse(widget.cost);
                       });
+                      widget.updateDeviceQuantity(
+                          widget.deviceId, localQuantity);
                     }
-
-                    // await addOrremoveDevice(widget.quantity);
-                    // widget.updateTotalPrice(widget.totalPrice);
                   },
                 ),
                 SizedBox(width: 5),
@@ -180,10 +130,8 @@ class _AssignCardMainState extends State<AssignCardMain> {
 
                       widget.totalPrice += int.parse(widget.cost);
                     });
-                    updateLocalStorage(widget.deviceId, localQuantity);
-                    // await addOrremoveDevice(widget.quantity);
-
-                    // widget.updateTotalPrice(widget.totalPrice);
+                    print("ddd $localQuantity");
+                    widget.updateDeviceQuantity(widget.deviceId, localQuantity);
                   },
                 ),
                 SizedBox(

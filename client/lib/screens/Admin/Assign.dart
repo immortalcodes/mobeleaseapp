@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobelease/screens/Admin/AssigningPage.dart';
 import 'package:mobelease/widgets/buttons.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
 import 'package:http/http.dart' as http;
@@ -25,6 +24,7 @@ class _AssignState extends State<Assign> {
   final AuthController authController = AuthController();
 
   ScrollController _scrollController = ScrollController();
+  List<Map<String, dynamic>> deviceQuantities = [];
   String selectedCategory = '';
   List<String> categoryKeys = [];
   Map<String, dynamic> devicesFuture = {};
@@ -65,18 +65,15 @@ class _AssignState extends State<Assign> {
         return sum + (quantity * cost);
       });
 
-      List<Map<String, dynamic>> getlocalDevices = await getDevices();
-      if (getlocalDevices.isEmpty) {
-        final List<Map<String, dynamic>> deviceQuantities = items.map((item) {
-          return {
-            'deviceid': item['deviceid'],
-            'quantity': item['quantity'],
-          };
-        }).toList();
+      deviceQuantities = items.map((item) {
+        return {
+          'deviceid': item['deviceid'],
+          'quantity': item['quantity'],
+        };
+      }).toList();
 
-        // Store the device IDs with quantities in local storage
-        await saveDevices(deviceQuantities);
-      }
+      print("DSU $deviceQuantities");
+      // Store the device IDs with quantities in local storage
 
       return devicesFuture;
     } else {
@@ -108,47 +105,34 @@ class _AssignState extends State<Assign> {
     }
   }
 
-  void deleteDevice(int deviceId) async {
+  Future<void> addOrremoveDevice(
+      List<Map<String, dynamic>> newdeviceQuantities) async {
     final token = await authController.getToken();
-    print(deviceId);
-    var url = Uri.parse('$baseUrl/inv/deleteitem');
+    var url = Uri.parse('$baseUrl/inv/editassign');
+
     final response = await http.post(
       url,
+      body: jsonEncode({'empid': widget.id, 'devices': newdeviceQuantities}),
       headers: {'Cookie': token!, 'Content-Type': 'application/json'},
-      body: jsonEncode({'deviceid': deviceId}),
     );
 
     if (response.statusCode == 200) {
-      // Device deleted successfully
-      print('Device deleted successfully');
-      setState(() {});
-      // Refresh the inventory or update the UI as needed
+      print(json.decode(response.body));
+      print("edited successfully");
     } else {
-      print('Failed to delete device. Status code: ${response.statusCode}');
-      // Handle the error or show a message to the user
+      print("failed to edit devices");
     }
   }
 
-  void updateTotalPrice(int newTotalPrice) {
-    // setState(() {
-    //   totalPrice = newTotalPrice;
-    // });
-  }
-  Future<void> saveDevices(List<Map<String, dynamic>> devices) async {
-    final prefs = await SharedPreferences.getInstance();
-    final encodedDevices = jsonEncode(devices);
-    await prefs.setString('devices', encodedDevices);
-  }
-
-  Future<List<Map<String, dynamic>>> getDevices() async {
-    final prefs = await SharedPreferences.getInstance();
-    final encodedDevices = prefs.getString('devices');
-    if (encodedDevices != null) {
-      final List<dynamic> decodedDevices = jsonDecode(encodedDevices);
-      return decodedDevices.cast<Map<String, dynamic>>();
+  void updateDeviceQuantity(int deviceId, int newQuantity) {
+    final index =
+        deviceQuantities.indexWhere((item) => item['deviceid'] == deviceId);
+    if (index != -1) {
+      deviceQuantities[index]['quantity'] = newQuantity;
     } else {
-      return [];
+      deviceQuantities.add({'deviceid': deviceId, 'quantity': newQuantity});
     }
+    print(deviceQuantities);
   }
 
   @override
@@ -260,6 +244,8 @@ class _AssignState extends State<Assign> {
 
                                 quantity = device['quantity'];
 
+                                print("quantyr  $quantity");
+
                                 return Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 4.0),
@@ -268,9 +254,9 @@ class _AssignState extends State<Assign> {
                                       cost: device['cost'],
                                       totalPrice: totalPrice,
                                       empId: widget.id,
-                                      onDelete: deleteDevice,
                                       model: device['Name'],
-                                      updateTotalPrice: updateTotalPrice,
+                                      updateDeviceQuantity:
+                                          updateDeviceQuantity,
                                       deviceId: device['deviceid'],
                                       quantity: quantity),
                                 );
@@ -317,9 +303,9 @@ class _AssignState extends State<Assign> {
                                           Height: 29,
                                           Radius: 13,
                                           onpress: () async {
-                                            List<Map<String, dynamic>> devices =
-                                                await getDevices();
-                                            print("Helloooo $devices");
+                                            await addOrremoveDevice(
+                                                deviceQuantities);
+                                            setState(() {});
                                           }).buildBlackButton()
                                     ],
                                   ),
