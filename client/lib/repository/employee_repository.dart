@@ -6,29 +6,27 @@ import '../globals.dart' as globals;
 import '../models/Employee_Model.dart';
 import 'package:http/http.dart' as http;
 
-class EmployeeRepository{
+class EmployeeRepository {
   AuthController authController = AuthController();
   String baseUrl = globals.baseUrl;
 
-  Future<List<EmployeeModel>> getEmployees() async{
-
+  Future<List<EmployeeModel>> getEmployees() async {
     final token = await authController.getToken();
-    var url=Uri.https(baseUrl,'/emp/allemployee');
+    var url = Uri.parse('$baseUrl/emp/allemployee');
     final client = http.Client();
     try {
-      final response = await client.post(Uri.https(baseUrl, '/emp/allemployee'),
-        headers: {
-          'Cookie': token!,
-          'Content-Type': 'application/json'
-        },
+      final response = await client.post(
+        Uri.parse('$baseUrl/emp/allemployee'),
+        headers: {'Cookie': token!, 'Content-Type': 'application/json'},
       );
-      final Map<String, dynamic> responseData = jsonDecode(response.body)['data'];
+      final Map<String, dynamic> responseData =
+          jsonDecode(response.body)['data'];
       final List<EmployeeModel> employees = responseData.values
           .map((employeeData) => EmployeeModel.fromJson(employeeData))
           .toList();
       print(employees);
       return employees;
-    }  catch (e) {
+    } catch (e) {
       return Future.error(e.toString());
     }
   }

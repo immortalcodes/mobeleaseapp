@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobelease/controllers/employee_controller.dart';
 import 'package:mobelease/screens/Admin/AssigningPage.dart';
+
 import 'package:mobelease/screens/Employee/Emp_Assign_2.dart';
 import 'package:mobelease/screens/Employee/Emp_Inventory.dart';
 import 'package:mobelease/screens/Employee/Emp_Reports_1.dart';
@@ -15,7 +16,7 @@ import 'controllers/Assign_Provider.dart';
 import 'package:mobelease/screens/login.dart';
 import 'screens/Admin/addEmployee.dart';
 import 'screens/init_screen.dart';
-import 'screens/Admin/EmployeePersonal.dart';
+
 import 'screens/Admin/EmployeeSelect.dart';
 import 'screens/Admin/Assign.dart';
 import 'screens/notifications.dart';
@@ -24,25 +25,39 @@ import 'screens/Message.dart';
 import 'controllers/ProtectedRoute.dart';
 import 'screens/Admin/EmployeeAll.dart';
 import 'package:provider/provider.dart';
-
 import 'screens/Employee/Emp_Assign_1.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? token = prefs.getString('authToken');
+  print("token $token");
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
           create: (context) => EmployeeProvider()..getEmployee()),
       ChangeNotifierProvider(create: (context) => SelectedDevicesProvider())
     ],
-    child: MyApp(),
+    child: MyApp(token: token ?? ""),
   ));
   // runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  String inRoute = '/login';
+  String token;
+  MyApp({required this.token});
+
+  String inRoute = "";
+
   @override
   Widget build(BuildContext context) {
+    //if (token == "") {
+    //inRoute = '/login';
+    //} else {
+    //inRoute = '/Employee';
+    // }
+    inRoute = '/login';
     return MaterialApp(
         initialRoute: inRoute,
         routes: {
@@ -58,8 +73,7 @@ class MyApp extends StatelessWidget {
           '/EmployeeSelect': (context) =>
               ProtectedPage(child: EmployeeSelect()),
           '/Assign': (context) => ProtectedPage(child: Assign(id: 1)),
-          '/AssigningPage': (context) =>
-              ProtectedPage(child: DeviceSelectionScreen()),
+          '/AssigningPage': (context) => ProtectedPage(child: AssigningPage()),
           '/Inventory': (context) => ProtectedPage(child: Inventory()),
           '/Remarks': (context) => ProtectedPage(child: Remarks()),
           '/Message': (context) => ProtectedPage(child: Message()),
@@ -84,6 +98,8 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: Color(0xffFEF9F7),
           primarySwatch: Colors.blue,
         ),
-        home: Employee());
+        home: Login(
+          loginMember: 'EMPLOYEE',
+        ));
   }
 }

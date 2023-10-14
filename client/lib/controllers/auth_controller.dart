@@ -9,28 +9,49 @@ class AuthController {
 
   Future<bool> login(String email, String password, String role) async {
     var url = Uri.parse('$baseUrl/auth/login');
-    print(url);
-    print(email);
 
     final response = await http.post(
       url,
       body: jsonEncode({"email": email, "password": password, "role": role}),
       headers: {'Content-Type': 'application/json'},
     );
-    print(response.statusCode);
 
     if (response.statusCode == 200) {
-      print(response.headers['server']);
       final cookies = response.headers['set-cookie'];
+      print(cookies);
+      Map<String, dynamic> jsonResponse = json.decode(response.body);
+
       if (cookies != null) {
-        print(cookies);
         // Store the received cookie (authentication token) using SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         prefs.setString(cookieKey, cookies);
+        if (role == "employee") {
+          int? empId = jsonResponse['data']['empid'];
+          print(empId);
+          prefs.setInt('empId', empId!);
+        }
+
         return true;
       }
     }
     return false;
+  }
+
+//  verify user
+
+  Future<void> verifiedUser(String token) async {
+    var url = Uri.parse('$baseUrl/auth/verifyuser');
+    final response = await http.post(
+      url,
+      headers: {'Cookie': token, 'Content-Type': 'application/json'},
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      print("User verified successfully");
+      print("user: ${response.body}");
+    } else {
+      print("User not verified");
+    }
   }
 
   Future<void> logout() async {
@@ -46,20 +67,6 @@ class AuthController {
   Future<bool> isAuthenticated() async {
     final token = await getToken();
     return token != null && token.isNotEmpty;
-  }
-
-  Future<http.Response> getWithAuth(String path) async {
-    final token = await getToken();
-    if (token == null) {
-      throw Exception('User not authenticated');
-    }
-
-    final response = await http.get(
-      Uri.parse('$baseUrl/$path'),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-
-    return response;
   }
 
   Future<http.Response> postWithAuth(
@@ -78,7 +85,7 @@ class AuthController {
       },
       body: jsonEncode(body), // Encode the request body as JSON
     );
-
+    print("reponse ${response.body}");
     return response;
   }
 

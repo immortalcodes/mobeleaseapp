@@ -22,6 +22,7 @@ List<EmployeeModel> employeesList = [];
 
 class _EmployeeSelectState extends State<EmployeeSelect> {
   final AuthController authController = AuthController();
+
   Future<List<EmployeeModel>> getEmployee() async {
     final token = await authController.getToken();
     var url = Uri.parse('$baseUrl/emp/allemployee');
@@ -146,7 +147,10 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => Assign(id: index + 1),
+                                    builder: (context) => Assign(
+                                      id: index + 1,
+                                      employee: employee,
+                                    ),
                                   ),
                                 );
                               },
