@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:mobelease/widgets/AssignCard.dart';
+import 'package:mobelease/screens/Employee/Emp_Dropdown_Unit.dart';
+
 import 'package:mobelease/widgets/categories.dart';
 import '../../widgets/Appbar.dart';
-import '../../widgets/Dropdown.dart';
+
 import '../../widgets/Emp_Dropdown_Farm.dart';
 import '../../widgets/Emp_Dropdown_Language.dart';
 import '../../widgets/TextFieldWidget.dart';
 import '../../widgets/TextFieldWidget2.dart';
-import '../../widgets/buttons.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class Emp_Assign_2 extends StatefulWidget {
   const Emp_Assign_2({super.key});
@@ -25,12 +25,10 @@ String selectedValue_Language = 'English';
 String selectedValue_Farm = 'Rosa Park';
 
 final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-TextEditingController _firstnameController =
-    TextEditingController(text: firstName);
-TextEditingController _lastnameController =
-    TextEditingController(text: lastName);
-TextEditingController _phoneController = TextEditingController(text: phoneNo);
-TextEditingController _unitController = TextEditingController(text: unit);
+TextEditingController _firstnameController = TextEditingController(text: '');
+TextEditingController _lastnameController = TextEditingController();
+TextEditingController _phoneController = TextEditingController();
+TextEditingController _unitController = TextEditingController();
 
 class _Emp_Assign_2State extends State<Emp_Assign_2> {
   void updateSelectedValue_Language(String value) {
@@ -45,7 +43,18 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
     });
   }
 
-  String selectedCategory = '';
+  List<String> farmUnitList = [];
+  String farmName = "";
+  void onSelectFarmtoFarrmUnit(
+      List<String> selectedFarmList, String selectedFarmName) {
+    setState(() {
+      farmUnitList = selectedFarmList;
+      farmName = selectedFarmName;
+    });
+    print("hello $farmUnitList $farmName");
+  }
+
+  String selectedCategory = 'Credit';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,8 +147,8 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                   color: Colors.white,
                 ),
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 17.0, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 17.0, vertical: 12),
                   child: Form(
                     key: _formKey,
                     child: ListView(
@@ -158,11 +167,26 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                                     height: 5,
                                   ),
                                   // TextEditingController()
-                                  TextFieldWidget(
-                                    profileField: false,
-                                    controller: _firstnameController,
-                                    hint: 'First Name',
-                                  ),
+                                  SizedBox(
+                                      height: 44,
+                                      child: TextFormField(
+                                        controller: _firstnameController,
+                                        decoration: InputDecoration(
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.grey),
+                                            borderRadius:
+                                                BorderRadius.circular(9.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(9.0),
+                                              borderSide: BorderSide(
+                                                color: Color(0xffE96E2B),
+                                              )),
+                                          hintText: "Name",
+                                        ),
+                                      )),
                                 ],
                               ),
                             ),
@@ -175,18 +199,33 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                                   SizedBox(
                                     height: 5,
                                   ),
-                                  TextFieldWidget(
-                                    profileField: false,
-                                    controller: _lastnameController,
-                                    hint: 'Last Name',
-                                  ),
+                                  SizedBox(
+                                      height: 44,
+                                      child: TextFormField(
+                                        controller: _lastnameController,
+                                        decoration: InputDecoration(
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.grey),
+                                            borderRadius:
+                                                BorderRadius.circular(9.0),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(9.0),
+                                              borderSide: BorderSide(
+                                                color: Color(0xffE96E2B),
+                                              )),
+                                          hintText: "Name",
+                                        ),
+                                      )),
                                 ],
                               ),
                             ),
                           ],
                         ),
                         SizedBox(
-                          height: 5,
+                          height: 10,
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,14 +234,29 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                             SizedBox(
                               height: 5,
                             ),
-                            TextFieldWidget2(
-                              controller: _phoneController,
-                              hint: 'Phone Number',
-                            ),
+                            SizedBox(
+                                height: 44,
+                                child: TextFormField(
+                                  controller: _phoneController,
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(9.0),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(9.0),
+                                        borderSide: BorderSide(
+                                          color: Color(0xffE96E2B),
+                                        )),
+                                    hintText: "+184678xxxx",
+                                  ),
+                                )),
                           ],
                         ),
                         SizedBox(
-                          height: 5,
+                          height: 10,
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,7 +266,7 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                               height: 5,
                             ),
                             Container(
-                              height: 50,
+                              height: 44,
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
                                   border: Border.all(
@@ -232,11 +286,7 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                             ),
                           ],
                         ),
-                        // SizedBox(height: 5,),
-                        // DropdownWidget(label: 'Farm', items: ['Rose Park', 'Hudson Lane', 'Sterlin Rd.']),
-                        SizedBox(
-                          height: 5,
-                        ),
+                        SizedBox(height: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -245,7 +295,7 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                               height: 5,
                             ),
                             Container(
-                              height: 50,
+                              height: 44,
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
                                   border: Border.all(
@@ -256,8 +306,7 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Emp_Dropdown_Farm(
-                                    selectedValue: selectedValue_Farm,
-                                    onValueChanged: updateSelectedValue_Farm,
+                                    onSelectFarm: onSelectFarmtoFarrmUnit,
                                   ),
                                 ),
                               ),
@@ -265,7 +314,7 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                           ],
                         ),
                         SizedBox(
-                          height: 5,
+                          height: 10,
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,12 +323,83 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                             SizedBox(
                               height: 5,
                             ),
-                            TextFieldWidget2(
-                              controller: _unitController,
-                              hint: 'Unit',
+                            Container(
+                              height: 44,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                  ),
+                                  borderRadius: BorderRadius.circular(9)),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Emp_Dropdown_Unit(
+                                      farmunitList: farmUnitList,
+                                      farmName: farmName),
+                                ),
+                              ),
                             ),
                           ],
                         ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Customer ID"),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            SizedBox(
+                                height: 44,
+                                child: TextFormField(
+                                  decoration: InputDecoration(
+                                    suffixIcon: IconButton(
+                                      icon: Icon(Icons.camera_alt),
+                                      onPressed: () {},
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(9.0),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(9.0),
+                                        borderSide: BorderSide(
+                                          color: Color(0xffE96E2B),
+                                        )),
+                                    hintText: "docs.pdf",
+                                  ),
+                                )),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(top: 8),
+                          child: Row(
+                            children: [
+                              Text(
+                                "Alert",
+                                style: TextStyle(color: Color(0xffE96E2B)),
+                              ),
+                              SizedBox(width: 20),
+                              ElevatedButton(
+                                  onPressed: () {},
+                                  style: ElevatedButton.styleFrom(
+                                    primary: const Color(0xffE96E2B),
+                                    onPrimary: Colors.white,
+                                    minimumSize: Size(65, 26),
+                                    padding: EdgeInsets.zero,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  child: Text("Alert"))
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),

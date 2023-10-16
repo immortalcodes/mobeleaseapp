@@ -55,10 +55,12 @@ class Categories {
       onPressed: onpress,
       child: Row(
         children: [
-          SvgPicture.asset(
-            svgpath,
-            color: Color(0xffE96E2B),
-          ),
+          svgpath.isEmpty
+              ? Text("")
+              : SvgPicture.asset(
+                  svgpath,
+                  color: Color(0xffE96E2B),
+                ),
           SizedBox(width: 5),
           Text(
             title,

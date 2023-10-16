@@ -20,6 +20,7 @@ dependencies:
   shared_preferences: ^2.2.1
   image_picker: ^1.0.4
   google_fonts: ^5.1.0
+  toggle_switch: ^2.1.0
   dropdown_search: ^5.0.6
   shimmer: ^3.0.0
 
