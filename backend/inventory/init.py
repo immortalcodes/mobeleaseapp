@@ -63,7 +63,7 @@ async def viewallItem(response: Response,access_token: Union[str, None] = Cookie
                         'company':device[1],
                         'devicedetail':device[2],
                         'cost':device[3],
-                        'storge':device[4],
+                        'storage':device[4],
                         'remark':device[6],
                     },
                 ]
@@ -73,7 +73,7 @@ async def viewallItem(response: Response,access_token: Union[str, None] = Cookie
                         'company':device[1],
                         'devicedetail':device[2],
                         'cost':device[3],
-                        'storge':device[4],
+                        'storage':device[4],
                         'remark':device[6],
                     })
 
