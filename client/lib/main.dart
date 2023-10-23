@@ -12,6 +12,7 @@ import 'package:mobelease/screens/Employee/Reports.dart';
 import 'package:mobelease/screens/Inventory/AddDevice.dart';
 import 'package:mobelease/screens/Admin/Employee.dart';
 import 'package:mobelease/screens/Remarks.dart';
+import 'package:mobelease/widgets/Chatbox.dart';
 import 'controllers/Assign_Provider.dart';
 import 'package:mobelease/screens/login.dart';
 import 'screens/Admin/addEmployee.dart';
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
           '/EmployeeAll': (context) => ProtectedPage(child: EmployeeAll()),
           '/AddDevice': (context) => ProtectedPage(child: AddDeviceDialog()),
           '/Emp_home': (context) => Emp_home(),
+          'Emp_chatbox': (context) => ctbox(),
           '/Emp_Assign_1': (context) => Emp_Assign_1(),
           '/Emp_Assign_2': (context) => Emp_Assign_2(),
           '/Emp_Inventory': (context) => Emp_Inventory(),

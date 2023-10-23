@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobelease/controllers/auth_controller.dart';
 import 'package:mobelease/globals.dart';
+import 'package:mobelease/screens/Employee/Emp_Assign_1.dart';
 import 'package:mobelease/widgets/Emp_bottomAppBar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/Appbar.dart';
@@ -20,10 +21,11 @@ class Emp_home extends StatefulWidget {
 
 class _Emp_homeState extends State<Emp_home> {
   final AuthController authController = AuthController();
+  String? empId;
 
   Future<List<Map<String, dynamic>>> viewAllSale() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? empId = prefs.getInt('empId').toString();
+    empId = prefs.getInt('empId').toString();
 
     var url = Uri.parse('$baseUrl/sale/viewallsale');
 
@@ -97,7 +99,12 @@ class _Emp_homeState extends State<Emp_home> {
               padding: const EdgeInsets.symmetric(vertical: 36.0),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/Emp_Assign_1');
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Emp_Assign_1(
+                                empId: int.parse(empId!),
+                              )));
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.5,
