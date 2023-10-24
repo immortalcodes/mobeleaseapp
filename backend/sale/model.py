@@ -33,7 +33,7 @@ class viewsale(BaseModel):
     starttime : str
     endtime : str
     status : Optional[str] = '*all*'
-    empid : Optional[str] = '*all*'
+    empid : Optional[int] = 0
     saletype : Optional[str] = '*all*'
 
 
@@ -56,3 +56,8 @@ class alterinstallment(BaseModel):
 
 class saleid(BaseModel):
     saleid : int
+
+class statparams(BaseModel):
+    empid : Optional[int] = 0
+    starttime : str
+    endtime : str

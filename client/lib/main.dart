@@ -38,7 +38,7 @@ void main() async {
     providers: [
       ChangeNotifierProvider(
           create: (context) => EmployeeProvider()..getEmployee()),
-      ChangeNotifierProvider(create: (context) => SelectedDevicesProvider())
+      ChangeNotifierProvider(create: (context) => SelectedDevicesProvider()),
     ],
     child: MyApp(token: token ?? ""),
   ));
@@ -83,10 +83,10 @@ class MyApp extends StatelessWidget {
           '/Emp_home': (context) => Emp_home(),
           'Emp_chatbox': (context) => ctbox(),
           '/Emp_Assign_1': (context) => Emp_Assign_1(),
-          '/Emp_Assign_2': (context) => Emp_Assign_2(),
+
           '/Emp_Inventory': (context) => Emp_Inventory(),
           '/PaymentCash': (context) => PaymentCash(),
-          '/PaymentCredit': (context) => PaymentCredit(),
+
           '/Emp_Reports_1': (context) => Emp_Reports_1(),
           '/Reports': (context) => Reports(
                 dues: false,

@@ -18,6 +18,11 @@ config = dotenv_values(".env")
 saleRouter = APIRouter()
 
 
+def nonetoint(x):
+     if x == None:
+          return 0
+     else:
+          return int(x)
 
 
 
@@ -113,14 +118,18 @@ async def makesale(item:saleobject,response: Response,access_token: Union[str, N
           
           if item.type == "cash":
                current_dt = datetime.now(tz=ZoneInfo(config["TimeZone"]))
-               cursor.execute("INSERT into devicesale (saletype,employeeid,unit,farm,itemarray,totalcost,totalsale,remark,timestamp,status,amountleft,paymentalert) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(item.type, empid, item.unit,item.farm,Json(item.itemarray),totalcost,totalsale,item.remark,current_dt,'paid',0,0))
+               cursor.execute("INSERT into devicesale (saletype,employeeid,unit,farm,itemarray,totalcost,totalsale,remark,timestamp,status,amountleft,paymentalert) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning saleid",(item.type, empid, item.unit,item.farm,Json(item.itemarray),totalcost,totalsale,item.remark,current_dt,'paid',0,0))
+               res = cursor.fetchone()
                response.status_code = status.HTTP_200_OK
-               return {'data':'Cash Sale Completed Successfully'}
+               res = {"saleid":res[0]}
+               return {'data': res}
           elif item.type == "credit":
                current_dt = datetime.now(tz=ZoneInfo(config["TimeZone"]))
-               cursor.execute("INSERT into devicesale (saletype,employeeid,customername,customeridimage,phoneno,language,unit,farm,itemarray,totalcost,totalsale,remark,timestamp,status,amountleft,paymentalert) VALUES  (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(item.type, empid,item.customername,item.customeridimage,item.phoneno, item.language,item.unit,item.farm,Json(item.itemarray),totalcost,totalsale,item.remark,current_dt,'due',totalsale,1))
+               cursor.execute("INSERT into devicesale (saletype,employeeid,customername,customeridimage,phoneno,language,unit,farm,itemarray,totalcost,totalsale,remark,timestamp,status,amountleft,paymentalert) VALUES  (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) returning saleid",(item.type, empid,item.customername,item.customeridimage,item.phoneno, item.language,item.unit,item.farm,Json(item.itemarray),totalcost,totalsale,item.remark,current_dt,'due',totalsale,1))
+               res = cursor.fetchone()
                response.status_code = status.HTTP_200_OK
-               return {'data':'Credit Sale Completed Successfully'}
+               res = {"saleid":res[0]}
+               return {'data': res}
                
      
           
@@ -172,7 +181,84 @@ async def viewallsale(item:viewsale,response: Response,access_token: Union[str, 
           return {'data':data}
 
      elif token and token['role'] == 'admin':
-          cursor.execute("SELECT saleid,saletype,employeeid,customername,customeridimage,phoneno,language,unit,farm,itemarray,totalsale,remark,timestamp,status,amountleft,paymentalert,totalcost from devicesale where (%s = '*all*' or employeeid = %s) and (%s = '*all*' or status = %s) and (%s = '*all*' or saletype = %s) and employeeid = %s  and timestamp between %s and %s ",(item.empid,item.empid,item.status,item.status,item.saletype,item.saletype,empid,item.starttime,item.endtime))
+          cursor.execute("SELECT saleid,saletype,employeeid,customername,customeridimage,phoneno,language,unit,farm,itemarray,totalsale,remark,timestamp,status,amountleft,paymentalert,totalcost from devicesale where (%s = 0 or employeeid = %s) and (%s = '*all*' or status = %s) and (%s = '*all*' or saletype = %s)  and timestamp between %s and %s ",(item.empid,item.empid,item.status,item.status,item.saletype,item.saletype,item.starttime,item.endtime))
+          sales = cursor.fetchall()
+          data = {}
+          for sale in sales:
+               with open('photocustomer.jpg', 'wb') as photo_file:
+                    if sale[4]:
+                        photo_file.write(sale[4])
+               if sale[4]:
+                    with open('photocustomer.jpg', 'rb') as photo_file:
+                        photodata = photo_file.read()
+               else:
+                    photodata = None
+               data[sale[0]] = {
+                    'saletype':sale[1],
+                    'employeeid':sale[2],
+                    'customername':sale[3],
+                    'customeridimage':photodata,
+                    'phoneno':sale[5],
+                    'language':sale[6],
+                    'unit':sale[7],
+                    'farm':sale[8],
+                    'itemarray':sale[9],
+                    'totalsale':sale[10],
+                    'remark':sale[11],
+                    'timestamp':sale[12],
+                    'status':sale[13],
+                    'amountleft':sale[14],
+                    'paymentalert':sale[15],
+                    'totalcost' : sale[16],
+               }
+          response.status_code = status.HTTP_200_OK
+          return {'data':data}
+     
+     else:
+          response.status_code = status.HTTP_403_FORBIDDEN
+          return {"message":"error in verifying token and permission"}
+     
+
+
+@saleRouter.post("/viewsinglesale", status_code=200)
+async def viewsinglesale(item:saleid,response: Response,access_token: Union[str, None] = Cookie(default=None)):
+     token = decodeToken(access_token) 
+     if token and token['role'] == 'employee':
+          empid  = token['empid']
+          cursor.execute("SELECT saleid,saletype,employeeid,customername,customeridimage,phoneno,language,unit,farm,itemarray,totalsale,remark,timestamp,status,amountleft,paymentalert from devicesale where employeeid = %s  and saleid = %s",(empid,item.saleid,))
+          sales = cursor.fetchall()
+          data = {}
+          for sale in sales:
+               with open('photocustomer.jpg', 'wb') as photo_file:
+                    if sale[4]:
+                        photo_file.write(sale[4])
+               if sale[4]:
+                    with open('photocustomer.jpg', 'rb') as photo_file:
+                        photodata = photo_file.read()
+               else:
+                    photodata = None
+               data[sale[0]] = {
+                    'saletype':sale[1],
+                    'employeeid':sale[2],
+                    'customername':sale[3],
+                    'customeridimage':photodata,
+                    'phoneno':sale[5],
+                    'language':sale[6],
+                    'unit':sale[7],
+                    'farm':sale[8],
+                    'itemarray':sale[9],
+                    'totalsale':sale[10],
+                    'remark':sale[11],
+                    'timestamp':sale[12],
+                    'status':sale[13],
+                    'amountleft':sale[14],
+                    'paymentalert':sale[15],
+               }
+          response.status_code = status.HTTP_200_OK
+          return {'data':data}
+
+     elif token and token['role'] == 'admin':
+          cursor.execute("SELECT saleid,saletype,employeeid,customername,customeridimage,phoneno,language,unit,farm,itemarray,totalsale,remark,timestamp,status,amountleft,paymentalert,totalcost from devicesale where saleid = %s",(item.saleid,))
           sales = cursor.fetchall()
           data = {}
           for sale in sales:
@@ -429,3 +515,62 @@ async def viewinstallment(item:saleid,response: Response,access_token: Union[str
           response.status_code = status.HTTP_403_FORBIDDEN
           return {"message":"Permission not Granted"}
           
+
+
+@saleRouter.post("/viewstats", status_code=200)
+async def viewinstallment(item:statparams,response: Response,access_token: Union[str, None] = Cookie(default=None)):
+     token = decodeToken(access_token) 
+     if token and token['role'] == 'employee':
+          empid  = token['empid']
+          cursor.execute("Select SUM(totalcost) , SUM(totalsale) from devicesale where employeeid = %s and timestamp between %s and %s and saletype = 'credit'",(empid,item.starttime,item.endtime))
+          credit_cogs,credit_totalsale = cursor.fetchone()
+          cursor.execute("Select SUM(amountleft)  from devicesale where employeeid = %s and status!='stolen'  and timestamp between %s and %s",(empid,item.starttime,item.endtime))
+          creditleft = cursor.fetchone()[0]
+          cursor.execute("Select SUM(amountleft)  from devicesale where employeeid = %s and status='stolen'  and timestamp between %s and %s",(empid,item.starttime,item.endtime))
+          stolen_loss = cursor.fetchone()[0]
+          cursor.execute("Select SUM(totalcost) , SUM(totalsale) from devicesale where employeeid = %s and timestamp between %s and %s and saletype = 'cash'",(empid,item.starttime,item.endtime))
+          cash_cogs,cash_totalsale = cursor.fetchone()
+          profit_credit = float(nonetoint(credit_totalsale)) - float(nonetoint(credit_cogs)) - float(nonetoint(stolen_loss))
+          profit_cash = float(nonetoint(cash_totalsale)) - float(nonetoint(cash_cogs))
+          data = {
+               "credit_cogs":credit_cogs,
+               "credit_totalsale":credit_totalsale,
+               "creditleft":creditleft,
+               "stolen_loss":stolen_loss,
+               "cash_cogs":cash_cogs,
+               "cash_totalsale":cash_totalsale,
+               "profit_credit":profit_credit,
+               "profit_cash":profit_cash,
+               "total_profit": profit_cash+profit_credit,
+          }
+          response.status_code = status.HTTP_200_OK
+          return {'data':data}
+     elif token and token['role'] == 'admin':
+          empid  = item.empid
+          cursor.execute("Select SUM(totalcost) , SUM(totalsale) from devicesale where (%s = 0 or employeeid = %s) and timestamp between %s and %s and saletype = 'credit'",(empid,empid,item.starttime,item.endtime))
+          credit_cogs,credit_totalsale = cursor.fetchone()
+          print(credit_cogs,credit_totalsale)
+          cursor.execute("Select SUM(amountleft)  from devicesale where (%s = 0 or employeeid = %s) and status!='stolen'  and timestamp between %s and %s",(empid,empid,item.starttime,item.endtime))
+          creditleft = cursor.fetchone()[0]
+          cursor.execute("Select SUM(amountleft)  from devicesale where (%s = 0 or employeeid = %s) and status='stolen'  and timestamp between %s and %s",(empid,empid,item.starttime,item.endtime))
+          stolen_loss = cursor.fetchone()[0]
+          cursor.execute("Select SUM(totalcost) , SUM(totalsale) from devicesale where (%s = 0 or employeeid = %s) and timestamp between %s and %s and saletype = 'cash'",(empid,empid,item.starttime,item.endtime))
+          cash_cogs,cash_totalsale = cursor.fetchone()
+          profit_credit = float(nonetoint(credit_totalsale)) - float(nonetoint(credit_cogs)) - float(nonetoint(stolen_loss))
+          profit_cash = float(nonetoint(cash_totalsale)) - float(nonetoint(cash_cogs))
+          data = {
+               "credit_cogs":credit_cogs,
+               "credit_totalsale":credit_totalsale,
+               "creditleft":creditleft,
+               "stolen_loss":stolen_loss,
+               "cash_cogs":cash_cogs,
+               "cash_totalsale":cash_totalsale,
+               "profit_credit":profit_credit,
+               "profit_cash":profit_cash,
+               "total_profit": profit_cash+profit_credit,
+          }
+          response.status_code = status.HTTP_200_OK
+          return {'data':data}
+     else:
+          response.status_code = status.HTTP_403_FORBIDDEN
+          return {"message":"Permission not Granted"}

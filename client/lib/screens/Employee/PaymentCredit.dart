@@ -8,7 +8,23 @@ import '../../widgets/PaymentTag.dart';
 import 'package:intl/intl.dart';
 
 class PaymentCredit extends StatefulWidget {
-  const PaymentCredit({super.key});
+  final Set<Map<String, dynamic>> isSelectedItems;
+  final String cName;
+  final String cPhoneno;
+  final String cImage;
+  final String cFarm;
+  final String cUnit;
+  final bool cAlert;
+
+  const PaymentCredit(
+      {super.key,
+      required this.isSelectedItems,
+      required this.cName,
+      required this.cPhoneno,
+      required this.cImage,
+      required this.cFarm,
+      required this.cUnit,
+      required this.cAlert});
 
   @override
   State<PaymentCredit> createState() => _PaymentCreditState();
@@ -158,7 +174,7 @@ class _PaymentCreditState extends State<PaymentCredit> {
                                   color: Color(0xffE96E2B),
                                   fontWeight: FontWeight.w600,
                                   fontSize: 20.0)),
-                          Text("(Cash)",
+                          Text("(Credit)",
                               style: TextStyle(
                                   color: Color(0xffE96E2B),
                                   fontWeight: FontWeight.w400,
@@ -228,11 +244,12 @@ class _PaymentCreditState extends State<PaymentCredit> {
                             ],
                           ),
                         ),
-                        PaymentCard(
-                            item: 'iPhone13',
-                            quantity: 1,
+                        for (var item in widget.isSelectedItems)
+                          PaymentCard(
+                            item: item['model'],
+                            quantity: int.parse(item['quantity']),
                             price: 5300,
-                            total: 5300),
+                          ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 16),
@@ -374,7 +391,8 @@ class _PaymentCreditState extends State<PaymentCredit> {
                                 Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("5 items Selected",
+                                      Text(
+                                          "${widget.isSelectedItems.length} items Selected",
                                           style: TextStyle(
                                               color: Color(0xff474747),
                                               fontSize: 13.0)),
