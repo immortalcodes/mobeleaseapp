@@ -1,0 +1,52 @@
+
+
+Public and Private Keypair
+{
+    "kty": "EC",
+    "d": "D9U4frZ8QBCieLwa0Fpwl1yTeIu6v_7xOgp8BxZZ6Rc",
+    "use": "sig",
+    "crv": "P-256",
+    "kid": "2IvW6pve3GOXZjZzVkCtrZWUmATgc-KgG_mmtgLe7FI",
+    "x": "ZcPZM5rOLR4XxylOFOVh2qy8HxP_mC96Q7eUmM6uhyk",
+    "y": "-mFrlXGwHGkY01i7vFb0fZVH3g1q2TbDwBD1zpCRg-M",
+    "alg": "ES256"
+}
+
+
+
+Public and Private Keypair Set
+
+{
+    "keys": [
+        {
+            "kty": "EC",
+            "d": "D9U4frZ8QBCieLwa0Fpwl1yTeIu6v_7xOgp8BxZZ6Rc",
+            "use": "sig",
+            "crv": "P-256",
+            "kid": "2IvW6pve3GOXZjZzVkCtrZWUmATgc-KgG_mmtgLe7FI",
+            "x": "ZcPZM5rOLR4XxylOFOVh2qy8HxP_mC96Q7eUmM6uhyk",
+            "y": "-mFrlXGwHGkY01i7vFb0fZVH3g1q2TbDwBD1zpCRg-M",
+            "alg": "ES256"
+        }
+    ]
+}
+
+
+
+Public Key
+{
+    "kty": "EC",
+    "use": "sig",
+    "crv": "P-256",
+    "kid": "2IvW6pve3GOXZjZzVkCtrZWUmATgc-KgG_mmtgLe7FI",
+    "x": "ZcPZM5rOLR4XxylOFOVh2qy8HxP_mC96Q7eUmM6uhyk",
+    "y": "-mFrlXGwHGkY01i7vFb0fZVH3g1q2TbDwBD1zpCRg-M",
+    "alg": "ES256"
+}
+
+
+
+Curve: P-256
+Key Use : Signature
+Algorithm :ES256 ECDSA using P-256 and SHA-256
+
