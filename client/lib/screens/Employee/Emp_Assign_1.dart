@@ -42,8 +42,15 @@ class _Emp_Assign_1State extends State<Emp_Assign_1> {
       final Map<String, dynamic> data = json.decode(response.body)['data'];
       items = data['devices'].toList();
       final Map<String, dynamic> categorizedItems = {};
+
       print("data: $data");
       print(categorizedItems.containsKey('watch'));
+
+      final Map<int, dynamic> uniqueItemsMap = {};
+      for (var item in items) {
+        uniqueItemsMap[item['deviceid']] = item;
+      }
+      items = uniqueItemsMap.values.toList();
       for (var item in items) {
         print(item['ItemType']);
 
@@ -208,6 +215,7 @@ class _Emp_Assign_1State extends State<Emp_Assign_1> {
                                         model: device['Name'],
                                         deviceId: device['deviceid'],
                                         quantity: device['quantity'].toString(),
+                                        myModel: Provider.of<MyModel>(context),
                                       ),
                                     ),
                                     Consumer<MyModel>(
@@ -226,17 +234,14 @@ class _Emp_Assign_1State extends State<Emp_Assign_1> {
                                                       BorderRadius.circular(
                                                           8.0))),
                                           onPressed: () {
-                                            final item = {
-                                              "deviceId": device['deviceid'],
-                                              "quantity":
-                                                  device['quantity'].toString(),
-                                              "model": device['Name'],
-                                            };
-                                            MyModel.addorRemovecount(item);
+                                            MyModel.addorRemovecount(
+                                                device['deviceid'],
+                                                device['Name']);
 
                                             print(MyModel.isSelectedItems);
                                           },
-                                          child: !MyModel.isselected
+                                          child: !MyModel.isDeviceSelected(
+                                                  device['deviceid'])
                                               ? Text("Add")
                                               : Text("remove"),
                                         );
@@ -362,24 +367,36 @@ class _Emp_Assign_1State extends State<Emp_Assign_1> {
 
 class MyModel with ChangeNotifier {
   Set<Map<String, dynamic>> isSelectedItems = {};
-  bool isselected = false;
-  void addorRemovecount(Map<String, dynamic> item) {
-    isselected = !isselected;
+  Set<int> selectedDeviceIds = {};
 
-    print("heloo $isselected");
-    if (isselected) {
-      bool deviceExists =
-          isSelectedItems.any((e) => e['deviceId'] == item['deviceId']);
-      if (!deviceExists) {
-        isSelectedItems.add(item);
-        print("add");
-      }
+  bool isDeviceSelected(int deviceId) {
+    return selectedDeviceIds.contains(deviceId);
+  }
+
+  Map<int, int> localQntMap = {};
+
+  void updateLocalQnt(int deviceId, int value) {
+    localQntMap[deviceId] = value;
+    notifyListeners();
+    print("jkkkkk $localQntMap");
+  }
+
+  void addorRemovecount(int deviceId, String name) {
+    final item = {
+      "deviceId": deviceId,
+      "quantity": localQntMap[deviceId],
+      "model": name,
+    };
+
+    final isAlreadySelected = isDeviceSelected(deviceId);
+
+    if (!isAlreadySelected) {
+      isSelectedItems.add(item);
+      selectedDeviceIds.add(deviceId);
       print("add");
     } else {
-      isSelectedItems.removeWhere((e) =>
-          e['deviceId'] == item['deviceId'] &&
-          e['quantity'] == item['quantity'] &&
-          e['model'] == item['model']);
+      isSelectedItems.removeWhere((e) => e['deviceId'] == deviceId);
+      selectedDeviceIds.remove(deviceId);
       print("remove");
     }
     notifyListeners();

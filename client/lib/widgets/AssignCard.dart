@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobelease/screens/Employee/Emp_Assign_1.dart';
 
 import 'package:mobelease/widgets/buttons.dart';
 
@@ -9,13 +10,14 @@ class AssignCard extends StatefulWidget {
   late String company;
 
   int? deviceId;
+  MyModel? myModel;
 
-  AssignCard({
-    required this.model,
-    required this.quantity,
-    required this.company,
-    this.deviceId,
-  });
+  AssignCard(
+      {required this.model,
+      required this.quantity,
+      required this.company,
+      this.deviceId,
+      this.myModel});
   @override
   _AssignCardState createState() => _AssignCardState();
 }
@@ -25,11 +27,6 @@ class _AssignCardState extends State<AssignCard> {
 
   int localQuantity = 0;
   Set<Map<String, dynamic>>? selecteditemCount = {};
-  @override
-  void initState() {
-    super.initState();
-    localQuantity = int.parse(widget.quantity);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,9 +77,12 @@ class _AssignCardState extends State<AssignCard> {
               ),
               GestureDetector(
                 onTap: () {
-                  setState(() {
-                    localQuantity -= 1;
-                  });
+                  if (localQuantity > 0)
+                    setState(() {
+                      localQuantity -= 1;
+                    });
+                  widget.myModel!
+                      .updateLocalQnt(widget.deviceId!, localQuantity);
                 },
                 child: Icon(
                   Icons.remove_circle,
@@ -90,14 +90,17 @@ class _AssignCardState extends State<AssignCard> {
                 ),
               ),
               Text(
-                localQuantity.toString(),
+                "${localQuantity.toString()} / ${widget.quantity}",
                 style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800),
               ),
               GestureDetector(
                 onTap: () {
-                  setState(() {
-                    localQuantity += 1;
-                  });
+                  if (localQuantity < int.parse(widget.quantity))
+                    setState(() {
+                      localQuantity += 1;
+                    });
+                  widget.myModel!
+                      .updateLocalQnt(widget.deviceId!, localQuantity);
                 },
                 child: Icon(
                   Icons.add_circle,
