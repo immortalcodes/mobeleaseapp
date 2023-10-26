@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:mobelease/controllers/auth_controller.dart';
+import 'package:mobelease/globals.dart';
 import 'package:mobelease/widgets/InstallmentsCard.dart';
 import 'package:mobelease/widgets/TextFieldWidget.dart';
 
@@ -6,6 +10,7 @@ import '../../widgets/Appbar.dart';
 import '../../widgets/PaymentCard.dart';
 import '../../widgets/PaymentTag.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class PaymentCredit extends StatefulWidget {
   final Set<Map<String, dynamic>> isSelectedItems;
@@ -15,6 +20,7 @@ class PaymentCredit extends StatefulWidget {
   final String cFarm;
   final String cUnit;
   final bool cAlert;
+  final String clangauge;
 
   const PaymentCredit(
       {super.key,
@@ -24,7 +30,8 @@ class PaymentCredit extends StatefulWidget {
       required this.cImage,
       required this.cFarm,
       required this.cUnit,
-      required this.cAlert});
+      required this.cAlert,
+      required this.clangauge});
 
   @override
   State<PaymentCredit> createState() => _PaymentCreditState();
@@ -146,6 +153,57 @@ class _PaymentCreditState extends State<PaymentCredit> {
     );
   }
 
+  double totalPrice = 0.0;
+  double salePrice = 0.0;
+
+  void onUpdatetotalprice(double newPrice, double newsalePrice) {
+    setState(() {
+      totalPrice = newPrice;
+      salePrice = newsalePrice;
+    });
+
+    convertedSelectedItems = widget.isSelectedItems.map((item) {
+      return {
+        'deviceid': item['deviceId'],
+        'quantity': item['quantity'],
+        'sellprice': salePrice
+      };
+    }).toList();
+
+    print("djjd $convertedSelectedItems");
+  }
+
+  final AuthController authController = AuthController();
+  List<Map<String, dynamic>> convertedSelectedItems = [];
+
+  Future<void> onPayment() async {
+    final token = await authController.getToken();
+    var url = Uri.parse('$baseUrl/sale/makesale');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        "type": "credit",
+        "customername": widget.cName,
+        "customeridimage": widget.cImage,
+        "phoneno": widget.cPhoneno,
+        "language": widget.clangauge,
+        "unit": widget.cUnit,
+        "farm": widget.cFarm,
+        "itemarray": convertedSelectedItems,
+        "paymentalert": widget.cAlert
+      }),
+      headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      print("sale is make sucessful");
+      print(response.body);
+    } else {
+      print("error: ");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -247,8 +305,8 @@ class _PaymentCreditState extends State<PaymentCredit> {
                         for (var item in widget.isSelectedItems)
                           PaymentCard(
                             item: item['model'],
+                            onUpdateprice: onUpdatetotalprice,
                             quantity: int.parse(item['quantity']),
-                            price: 5300,
                           ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -261,7 +319,7 @@ class _PaymentCreditState extends State<PaymentCredit> {
                                 width: MediaQuery.of(context).size.width * 0.1,
                               ),
                               Text(
-                                '\$5300',
+                                '\$ $totalPrice',
                                 style: TextStyle(
                                     color: Color(0xffE96E2B),
                                     fontSize: 12,
@@ -270,26 +328,6 @@ class _PaymentCreditState extends State<PaymentCredit> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              PaymentTag(Tag: "Credit Left"),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.1,
-                              ),
-                              Text(
-                                '\$2500',
-                                style: TextStyle(
-                                    color: Color(0xffE96E2B),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                        )
                       ],
                     ),
                   ),
@@ -407,7 +445,7 @@ class _PaymentCreditState extends State<PaymentCredit> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(8.0))),
-                                  onPressed: () {},
+                                  onPressed: onPayment,
                                   child: Text(
                                     "Complete Payment",
                                     style: TextStyle(

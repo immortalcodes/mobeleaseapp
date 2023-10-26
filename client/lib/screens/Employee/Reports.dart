@@ -184,7 +184,7 @@ class _ReportsState extends State<Reports> {
                         ],
                       ),
                     ),
-                    PaymentCard(item: 'iPhone13', quantity: 1, price: 5300),
+                    PaymentCard(item: 'iPhone13', quantity: 1),
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 8.0, horizontal: 16),

@@ -4,12 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 class PaymentCard extends StatefulWidget {
   String item = '';
   int quantity = 0;
-  double price = 0;
+  Function(double, double)? onUpdateprice;
 
   PaymentCard({
     required this.item,
     required this.quantity,
-    required this.price,
+    this.onUpdateprice,
   });
 
   @override
@@ -18,12 +18,6 @@ class PaymentCard extends StatefulWidget {
 
 class _PaymentCardState extends State<PaymentCard> {
   double updatedPrice = 0.0;
-
-  @override
-  void initState() {
-    super.initState();
-    updatedPrice = widget.price;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +63,7 @@ class _PaymentCardState extends State<PaymentCard> {
                         builder: (BuildContext context) {
                           TextEditingController _priceController =
                               TextEditingController(
-                                  text: widget.price.toString());
+                                  text: updatedPrice.toString());
                           return AlertDialog(
                             title: Text('Edit Price'),
                             content: TextFormField(
@@ -90,6 +84,9 @@ class _PaymentCardState extends State<PaymentCard> {
                                     setState(() {
                                       updatedPrice = newPrice;
                                     });
+                                    widget.onUpdateprice!(
+                                        widget.quantity * updatedPrice,
+                                        updatedPrice);
                                     Navigator.of(context).pop();
                                     // Add code to save the new price
                                   }
@@ -107,7 +104,7 @@ class _PaymentCardState extends State<PaymentCard> {
               width: MediaQuery.of(context).size.width * 0.05,
             ),
             Text(
-              '\$ ${widget.quantity * (updatedPrice != 0 ? updatedPrice : widget.price)}',
+              '\$ ${widget.quantity * updatedPrice}',
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 10),
             ),
           ],

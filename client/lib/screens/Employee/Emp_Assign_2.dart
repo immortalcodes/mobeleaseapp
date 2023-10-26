@@ -70,6 +70,7 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
   String selectedCategory = 'Credit';
   var encodedImage;
   void _submitForm() async {
+    print("jdkdkd ${widget.isSelectedItems}");
     if (_formKey.currentState!.validate()) {
       final String firstname = _firstnameController.text;
       final String lastname = _lastnameController.text;
@@ -97,6 +98,7 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                 cImage: encodedImage,
                 cUnit: selectedFarmunit,
                 cFarm: farmName,
+                clangauge: selectedValue_Language,
               ),
             ),
           );

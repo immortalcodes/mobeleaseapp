@@ -105,7 +105,6 @@ class _PaymentCashState extends State<PaymentCash> {
                       PaymentCard(
                         item: 'iPhone13',
                         quantity: 1,
-                        price: 5300,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
