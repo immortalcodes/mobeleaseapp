@@ -7,13 +7,42 @@ import '../../widgets/Appbar.dart';
 import '../../widgets/PaymentTag.dart';
 
 class PaymentCash extends StatefulWidget {
-  const PaymentCash({super.key});
+  final Set<Map<String, dynamic>> isSelectedItems;
+
+  const PaymentCash({super.key, required this.isSelectedItems});
 
   @override
   State<PaymentCash> createState() => _PaymentCashState();
 }
 
 class _PaymentCashState extends State<PaymentCash> {
+  List<Map<String, dynamic>> convertedSelectedItems = [];
+
+  double totalPrice = 0.0;
+  int salePrice = 0;
+  Map<int, int> updatedPrices = {};
+  void onUpdatetotalprice(int deviceId, int newsalePrice) {
+    updatedPrices[deviceId] = newsalePrice;
+    setState(() {
+      salePrice = newsalePrice;
+      convertedSelectedItems = widget.isSelectedItems.map((item) {
+        return {
+          'deviceid': item['deviceId'],
+          'quantity': item['quantity'],
+          'sellprice': updatedPrices[item['deviceId']] ?? 0
+        };
+      }).toList();
+
+      totalPrice = convertedSelectedItems.fold(0, (total, item) {
+        final quantity = int.parse(item['quantity'].toString());
+        final sellPrice = double.parse(item['sellprice'].toString());
+        return total + (quantity * sellPrice);
+      });
+    });
+
+    print("djjd $convertedSelectedItems");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,10 +131,13 @@ class _PaymentCashState extends State<PaymentCash> {
                           ],
                         ),
                       ),
-                      PaymentCard(
-                        item: 'iPhone13',
-                        quantity: 1,
-                      ),
+                      for (var item in widget.isSelectedItems)
+                        PaymentCard(
+                          id: item['deviceId'],
+                          item: item['model'],
+                          onUpdateprice: onUpdatetotalprice,
+                          quantity: int.parse(item['quantity']),
+                        ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16),
@@ -117,7 +149,7 @@ class _PaymentCashState extends State<PaymentCash> {
                               width: MediaQuery.of(context).size.width * 0.1,
                             ),
                             Text(
-                              '\$5300',
+                              '\$ $totalPrice',
                               style: TextStyle(
                                   color: Color(0xffE96E2B),
                                   fontSize: 12,
@@ -125,7 +157,7 @@ class _PaymentCashState extends State<PaymentCash> {
                             )
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -148,7 +180,8 @@ class _PaymentCashState extends State<PaymentCash> {
                               Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text("5 items Selected",
+                                    Text(
+                                        "${widget.isSelectedItems.length}  items Selected",
                                         style: TextStyle(
                                             color: Color(0xff474747),
                                             fontSize: 13.0)),

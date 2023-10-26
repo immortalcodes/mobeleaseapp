@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:mobelease/screens/Employee/Emp_Dropdown_Unit.dart';
+import 'package:mobelease/screens/Employee/PaymentCash.dart';
 import 'package:mobelease/screens/Employee/PaymentCredit.dart';
 
 import 'package:mobelease/widgets/categories.dart';
@@ -102,8 +103,6 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
               ),
             ),
           );
-        } else {
-          Navigator.pushNamed(context, '/PaymentCash');
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -191,6 +190,15 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                             title: 'Cash',
                             svgpath: "",
                             onpress: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PaymentCash(
+                                    isSelectedItems: widget.isSelectedItems,
+                                  ),
+                                ),
+                              );
+
                               setState(() {
                                 selectedCategory =
                                     'Cash'; // Update the selected category

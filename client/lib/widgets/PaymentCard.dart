@@ -4,10 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 class PaymentCard extends StatefulWidget {
   String item = '';
   int quantity = 0;
-  Function(double, double)? onUpdateprice;
+  int? id;
+  Function(int, int)? onUpdateprice;
 
   PaymentCard({
     required this.item,
+    this.id,
     required this.quantity,
     this.onUpdateprice,
   });
@@ -17,7 +19,7 @@ class PaymentCard extends StatefulWidget {
 }
 
 class _PaymentCardState extends State<PaymentCard> {
-  double updatedPrice = 0.0;
+  int updatedPrice = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -77,16 +79,14 @@ class _PaymentCardState extends State<PaymentCard> {
                               TextButton(
                                 child: Text('Save'),
                                 onPressed: () {
-                                  double newPrice =
-                                      double.tryParse(_priceController.text) ??
-                                          0;
+                                  int newPrice =
+                                      int.tryParse(_priceController.text) ?? 0;
                                   if (newPrice != 0) {
                                     setState(() {
                                       updatedPrice = newPrice;
                                     });
                                     widget.onUpdateprice!(
-                                        widget.quantity * updatedPrice,
-                                        updatedPrice);
+                                        widget.id!, updatedPrice);
                                     Navigator.of(context).pop();
                                     // Add code to save the new price
                                   }

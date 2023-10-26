@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobelease/controllers/auth_controller.dart';
 import 'package:mobelease/globals.dart';
+import 'package:mobelease/screens/Employee/Emp_Reports_1.dart';
 import 'package:mobelease/widgets/InstallmentsCard.dart';
 import 'package:mobelease/widgets/TextFieldWidget.dart';
 
@@ -154,21 +155,26 @@ class _PaymentCreditState extends State<PaymentCredit> {
   }
 
   double totalPrice = 0.0;
-  double salePrice = 0.0;
-
-  void onUpdatetotalprice(double newPrice, double newsalePrice) {
+  int salePrice = 0;
+  Map<int, int> updatedPrices = {};
+  void onUpdatetotalprice(int deviceId, int newsalePrice) {
+    updatedPrices[deviceId] = newsalePrice;
     setState(() {
-      totalPrice = newPrice;
       salePrice = newsalePrice;
-    });
+      convertedSelectedItems = widget.isSelectedItems.map((item) {
+        return {
+          'deviceid': item['deviceId'],
+          'quantity': item['quantity'],
+          'sellprice': updatedPrices[item['deviceId']] ?? 0
+        };
+      }).toList();
 
-    convertedSelectedItems = widget.isSelectedItems.map((item) {
-      return {
-        'deviceid': item['deviceId'],
-        'quantity': item['quantity'],
-        'sellprice': salePrice
-      };
-    }).toList();
+      totalPrice = convertedSelectedItems.fold(0, (total, item) {
+        final quantity = int.parse(item['quantity'].toString());
+        final sellPrice = double.parse(item['sellprice'].toString());
+        return total + (quantity * sellPrice);
+      });
+    });
 
     print("djjd $convertedSelectedItems");
   }
@@ -198,6 +204,13 @@ class _PaymentCreditState extends State<PaymentCredit> {
 
     if (response.statusCode == 200) {
       print("sale is make sucessful");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("sale is make sucessful"),
+        duration: Duration(seconds: 5),
+      ));
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Emp_Reports_1()));
       print(response.body);
     } else {
       print("error: ");
@@ -304,6 +317,7 @@ class _PaymentCreditState extends State<PaymentCredit> {
                         ),
                         for (var item in widget.isSelectedItems)
                           PaymentCard(
+                            id: item['deviceId'],
                             item: item['model'],
                             onUpdateprice: onUpdatetotalprice,
                             quantity: int.parse(item['quantity']),
@@ -332,83 +346,83 @@ class _PaymentCreditState extends State<PaymentCredit> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 18.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 8.0,
-                          offset: Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 30.0, vertical: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              PaymentTag(
-                                Tag: 'Installments',
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.2,
-                              ),
-                              PaymentTag(
-                                Tag: 'Date',
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.05,
-                              ),
-                              PaymentTag(
-                                Tag: 'Price',
-                              ),
-                            ],
-                          ),
-                        ),
-                        InstallmentsCard(
-                            installments: 'Down Payment',
-                            date: '03/04/22',
-                            price: 5300),
-                        InstallmentsCard(
-                            installments: '1st EMI',
-                            date: '03/04/22',
-                            price: 1000),
-                        Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 16),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xffECECEC),
-                                  // elevation: 5.0,
-                                  textStyle: TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0))),
-                              onPressed: () {
-                                _showAddEmiDialog(context);
-                              },
-                              child: Text(
-                                "Add EMI",
-                                style: TextStyle(
-                                    color: Color(0xffE96E2B),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            )),
-                      ],
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(
+                //       vertical: 8.0, horizontal: 18.0),
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //       borderRadius: BorderRadius.circular(10),
+                //       color: Colors.white,
+                //       boxShadow: [
+                //         BoxShadow(
+                //           color: Colors.black12,
+                //           blurRadius: 8.0,
+                //           offset: Offset(0, 8),
+                //         ),
+                //       ],
+                //     ),
+                //     child: Column(
+                //       children: [
+                //         Padding(
+                //           padding: const EdgeInsets.symmetric(
+                //               horizontal: 30.0, vertical: 8),
+                //           child: Row(
+                //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //             children: [
+                //               PaymentTag(
+                //                 Tag: 'Installments',
+                //               ),
+                //               SizedBox(
+                //                 width: MediaQuery.of(context).size.width * 0.2,
+                //               ),
+                //               PaymentTag(
+                //                 Tag: 'Date',
+                //               ),
+                //               SizedBox(
+                //                 width: MediaQuery.of(context).size.width * 0.05,
+                //               ),
+                //               PaymentTag(
+                //                 Tag: 'Price',
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //         InstallmentsCard(
+                //             installments: 'Down Payment',
+                //             date: '03/04/22',
+                //             price: 5300),
+                //         InstallmentsCard(
+                //             installments: '1st EMI',
+                //             date: '03/04/22',
+                //             price: 1000),
+                //         Padding(
+                //             padding: const EdgeInsets.symmetric(
+                //                 vertical: 8.0, horizontal: 16),
+                //             child: ElevatedButton(
+                //               style: ElevatedButton.styleFrom(
+                //                   backgroundColor: Color(0xffECECEC),
+                //                   // elevation: 5.0,
+                //                   textStyle: TextStyle(
+                //                     fontSize: 18,
+                //                   ),
+                //                   shape: RoundedRectangleBorder(
+                //                       borderRadius:
+                //                           BorderRadius.circular(20.0))),
+                //               onPressed: () {
+                //                 _showAddEmiDialog(context);
+                //               },
+                //               child: Text(
+                //                 "Add EMI",
+                //                 style: TextStyle(
+                //                     color: Color(0xffE96E2B),
+                //                     fontSize: 12,
+                //                     fontWeight: FontWeight.w500),
+                //               ),
+                //             )),
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 Expanded(
                   child: Stack(
                     children: <Widget>[

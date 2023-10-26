@@ -179,8 +179,7 @@ class _Emp_homeState extends State<Emp_home> {
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: EmployeeDataCard(
-                                    cost: double.parse(
-                                        salesData[index]['totalsale']),
+                                    cost: salesData[index]['totalsale'],
                                     date: formatTimestamp(
                                         salesData[index]['timestamp']),
                                     name: salesData[index]['customername'],

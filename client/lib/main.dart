@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
           '/Emp_Assign_1': (context) => Emp_Assign_1(),
 
           '/Emp_Inventory': (context) => Emp_Inventory(),
-          '/PaymentCash': (context) => PaymentCash(),
+          // '/PaymentCash': (context) => PaymentCash(),
 
           '/Emp_Reports_1': (context) => Emp_Reports_1(),
           '/Reports': (context) => Reports(

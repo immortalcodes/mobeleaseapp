@@ -368,7 +368,12 @@ class MyModel with ChangeNotifier {
 
     print("heloo $isselected");
     if (isselected) {
-      isSelectedItems.add(item);
+      bool deviceExists =
+          isSelectedItems.any((e) => e['deviceId'] == item['deviceId']);
+      if (!deviceExists) {
+        isSelectedItems.add(item);
+        print("add");
+      }
       print("add");
     } else {
       isSelectedItems.removeWhere((e) =>
