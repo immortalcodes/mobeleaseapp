@@ -320,7 +320,7 @@ class _PaymentCreditState extends State<PaymentCredit> {
                             id: item['deviceId'],
                             item: item['model'],
                             onUpdateprice: onUpdatetotalprice,
-                            quantity: int.parse(item['quantity']),
+                            quantity: item['quantity'],
                           ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
