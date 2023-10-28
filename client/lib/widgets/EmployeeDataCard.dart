@@ -84,9 +84,11 @@ class _EmployeeDataCardState extends State<EmployeeDataCard> {
                             fontSize: 18, fontWeight: FontWeight.bold),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/Reports');
+                    },
                     child: Text(
-                      "ADD REMARK",
+                      "View Details",
                       style: TextStyle(
                           fontSize: 10.5, fontWeight: FontWeight.w700),
                     ),
