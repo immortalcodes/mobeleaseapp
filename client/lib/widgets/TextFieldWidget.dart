@@ -23,7 +23,9 @@ class TextFieldWidget extends StatelessWidget {
                 onPressed: fn,
               )
             : Text(""),
+
         hintText: hint,
+
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey),
           borderRadius: BorderRadius.circular(9.0),
