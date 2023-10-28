@@ -182,7 +182,8 @@ class _Emp_homeState extends State<Emp_home> {
                                     cost: salesData[index]['totalsale'],
                                     date: formatTimestamp(
                                         salesData[index]['timestamp']),
-                                    name: salesData[index]['customername'],
+                                    name:
+                                        salesData[index]['customername'] ?? "",
                                     cash:
                                         salesData[index]['saletype'] == "cash",
                                     paid: salesData[index]['status'] == "paid",

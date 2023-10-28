@@ -38,8 +38,7 @@ class PaymentCredit extends StatefulWidget {
   State<PaymentCredit> createState() => _PaymentCreditState();
 }
 
-String? EMIVal = " ";
-TextEditingController _EMIValController = TextEditingController(text: EMIVal);
+TextEditingController _dueValController = TextEditingController();
 TextEditingController _dateController = TextEditingController();
 
 class _PaymentCreditState extends State<PaymentCredit> {
@@ -50,7 +49,7 @@ class _PaymentCreditState extends State<PaymentCredit> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Add EMI',
+            'Add Down Payment',
             style: TextStyle(color: Color(0xffE96E2B)),
           ),
           content: SingleChildScrollView(
@@ -59,13 +58,13 @@ class _PaymentCreditState extends State<PaymentCredit> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Amount of EMI",
+                    Text("Due Amount",
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 12)),
                     TextFieldWidget(
                         profileField: false,
                         hint: '\$980',
-                        controller: _EMIValController),
+                        controller: _dueValController),
                   ],
                 ),
                 SizedBox(
@@ -140,7 +139,15 @@ class _PaymentCreditState extends State<PaymentCredit> {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0))),
-                  onPressed: () {},
+                  onPressed: () {
+                    print("### ${_dateController.text}");
+                    print("### ${_dueValController.text}");
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Installment added successfully"),
+                      duration: Duration(seconds: 5),
+                    ));
+                  },
                   child: Text(
                     "ADD",
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
@@ -185,7 +192,7 @@ class _PaymentCreditState extends State<PaymentCredit> {
   Future<void> onPayment() async {
     final token = await authController.getToken();
     var url = Uri.parse('$baseUrl/sale/makesale');
-
+    print("############### ${widget.cName}");
     final response = await http.post(
       url,
       body: jsonEncode({
@@ -201,19 +208,36 @@ class _PaymentCreditState extends State<PaymentCredit> {
       }),
       headers: {'Cookie': token!, 'Content-Type': 'application/json'},
     );
+    Map<String, dynamic> jsonResponse = json.decode(response.body);
+    int saleId = jsonResponse['data']['saleid'];
 
     if (response.statusCode == 200) {
       print("sale is make sucessful");
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("sale is make sucessful"),
-        duration: Duration(seconds: 5),
-      ));
 
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Emp_Reports_1()));
-      print(response.body);
-    } else {
-      print("error: ");
+      var url2 = Uri.parse('$baseUrl/sale/addinstallment');
+      final responseDownPayment = await http.post(
+        url2,
+        body: jsonEncode({
+          "saleid": saleId,
+          "status": "down",
+          "paymentdate": _dueValController.text,
+          "amountpaid": _dateController.text
+        }),
+        headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+      );
+
+      if (responseDownPayment.statusCode == 200) {
+        print("%%%%% $responseDownPayment.body");
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("sale is make sucessful"),
+          duration: Duration(seconds: 5),
+        ));
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Emp_Reports_1()));
+      } else {
+        print("error: ");
+      }
     }
   }
 
@@ -346,83 +370,79 @@ class _PaymentCreditState extends State<PaymentCredit> {
                     ),
                   ),
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(
-                //       vertical: 8.0, horizontal: 18.0),
-                //   child: Container(
-                //     decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(10),
-                //       color: Colors.white,
-                //       boxShadow: [
-                //         BoxShadow(
-                //           color: Colors.black12,
-                //           blurRadius: 8.0,
-                //           offset: Offset(0, 8),
-                //         ),
-                //       ],
-                //     ),
-                //     child: Column(
-                //       children: [
-                //         Padding(
-                //           padding: const EdgeInsets.symmetric(
-                //               horizontal: 30.0, vertical: 8),
-                //           child: Row(
-                //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //             children: [
-                //               PaymentTag(
-                //                 Tag: 'Installments',
-                //               ),
-                //               SizedBox(
-                //                 width: MediaQuery.of(context).size.width * 0.2,
-                //               ),
-                //               PaymentTag(
-                //                 Tag: 'Date',
-                //               ),
-                //               SizedBox(
-                //                 width: MediaQuery.of(context).size.width * 0.05,
-                //               ),
-                //               PaymentTag(
-                //                 Tag: 'Price',
-                //               ),
-                //             ],
-                //           ),
-                //         ),
-                //         InstallmentsCard(
-                //             installments: 'Down Payment',
-                //             date: '03/04/22',
-                //             price: 5300),
-                //         InstallmentsCard(
-                //             installments: '1st EMI',
-                //             date: '03/04/22',
-                //             price: 1000),
-                //         Padding(
-                //             padding: const EdgeInsets.symmetric(
-                //                 vertical: 8.0, horizontal: 16),
-                //             child: ElevatedButton(
-                //               style: ElevatedButton.styleFrom(
-                //                   backgroundColor: Color(0xffECECEC),
-                //                   // elevation: 5.0,
-                //                   textStyle: TextStyle(
-                //                     fontSize: 18,
-                //                   ),
-                //                   shape: RoundedRectangleBorder(
-                //                       borderRadius:
-                //                           BorderRadius.circular(20.0))),
-                //               onPressed: () {
-                //                 _showAddEmiDialog(context);
-                //               },
-                //               child: Text(
-                //                 "Add EMI",
-                //                 style: TextStyle(
-                //                     color: Color(0xffE96E2B),
-                //                     fontSize: 12,
-                //                     fontWeight: FontWeight.w500),
-                //               ),
-                //             )),
-                //       ],
-                //     ),
-                //   ),
-                // ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 18.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 8.0,
+                          offset: Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30.0, vertical: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              PaymentTag(
+                                Tag: 'Installments',
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.2,
+                              ),
+                              PaymentTag(
+                                Tag: 'Date',
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.05,
+                              ),
+                              PaymentTag(
+                                Tag: 'Price',
+                              ),
+                            ],
+                          ),
+                        ),
+                        InstallmentsCard(
+                            installments: 'Down Payment',
+                            date: _dateController.text ?? "",
+                            price: _dueValController.text ?? "0.0"),
+                        Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 16),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Color(0xffECECEC),
+                                  // elevation: 5.0,
+                                  textStyle: TextStyle(
+                                    fontSize: 18,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(20.0))),
+                              onPressed: () {
+                                _showAddEmiDialog(context);
+                              },
+                              child: Text(
+                                "Add Down Payment",
+                                style: TextStyle(
+                                    color: Color(0xffE96E2B),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                ),
                 Expanded(
                   child: Stack(
                     children: <Widget>[

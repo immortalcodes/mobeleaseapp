@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:mobelease/controllers/auth_controller.dart';
+import 'package:mobelease/globals.dart';
+import 'package:mobelease/screens/Employee/Emp_Reports_1.dart';
 import 'package:mobelease/widgets/PaymentCard.dart';
-
+import 'package:http/http.dart' as http;
 import '../../widgets/Appbar.dart';
 import '../../widgets/PaymentTag.dart';
 
@@ -21,6 +25,7 @@ class _PaymentCashState extends State<PaymentCash> {
   double totalPrice = 0.0;
   int salePrice = 0;
   Map<int, int> updatedPrices = {};
+
   void onUpdatetotalprice(int deviceId, int newsalePrice) {
     updatedPrices[deviceId] = newsalePrice;
     setState(() {
@@ -41,6 +46,37 @@ class _PaymentCashState extends State<PaymentCash> {
     });
 
     print("djjd $convertedSelectedItems");
+  }
+
+  final AuthController authController = AuthController();
+
+  Future<void> onPayment() async {
+    final token = await authController.getToken();
+    var url = Uri.parse('$baseUrl/sale/makesale');
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        "type": "cash",
+        "itemarray": convertedSelectedItems,
+        "paymentalert": 0
+      }),
+      headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      print("sale is make sucessful");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("sale is make sucessful"),
+        duration: Duration(seconds: 5),
+      ));
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Emp_Reports_1()));
+      print(response.body);
+    } else {
+      print("error: ");
+    }
   }
 
   @override
@@ -196,7 +232,7 @@ class _PaymentCashState extends State<PaymentCash> {
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(8.0))),
-                                onPressed: () {},
+                                onPressed: onPayment,
                                 child: Text(
                                   "Complete Payment",
                                   style: TextStyle(

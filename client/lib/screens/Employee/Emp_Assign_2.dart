@@ -87,13 +87,14 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
           farmName.isNotEmpty &&
           _imageFile.toString().isNotEmpty) {
         if (selectedCategory == 'Credit') {
+          String name = "$firstname $lastname";
           // ignore: use_build_context_synchronously
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => PaymentCredit(
                 isSelectedItems: widget.isSelectedItems,
-                cName: "$firstName $lastName",
+                cName: name,
                 cPhoneno: phoneno,
                 cAlert: forAlert,
                 cImage: encodedImage,
