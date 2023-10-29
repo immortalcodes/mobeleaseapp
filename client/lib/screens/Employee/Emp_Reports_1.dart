@@ -25,7 +25,8 @@ class _Emp_Reports_1State extends State<Emp_Reports_1> {
   TextEditingController _enddateController = TextEditingController();
   List<Map<String, dynamic>> statesList = [];
 
-  Future<void> viewAllState(String starttime, String endtime) async {
+  Future<void> viewAllState(
+      String starttime, String endtime, String status, String saleType) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     empId = prefs.getInt('empId').toString();
 
@@ -42,6 +43,8 @@ class _Emp_Reports_1State extends State<Emp_Reports_1> {
           "starttime": starttime,
           "endtime": endtime,
           "empid": empId,
+          "status": status,
+          "saletype": saleType
         }),
         headers: {'Cookie': token!, 'Content-Type': 'application/json'},
       );
@@ -324,7 +327,10 @@ class _Emp_Reports_1State extends State<Emp_Reports_1> {
                           borderRadius: BorderRadius.circular(8.0))),
                   onPressed: () async {
                     await viewAllState(
-                        _startdateController.text, _enddateController.text);
+                        _startdateController.text,
+                        _enddateController.text,
+                        dropdownValue,
+                        dropdownsaleValue);
 
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
