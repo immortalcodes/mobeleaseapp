@@ -461,8 +461,8 @@ async def updateinstallment(item:alterinstallment,response: Response,access_toke
 async def viewinstallment(item:saleid,response: Response,access_token: Union[str, None] = Cookie(default=None)):
      token = decodeToken(access_token) 
      if token :
-          empid = token["empid"]
-          cursor.execute("SELECT * from devicesale where employeeid = %s and saleid = %s",(empid,item.saleid))
+          # empid = token["empid"]
+          cursor.execute("SELECT * from devicesale where saleid = %s",(item.saleid,))
           res = cursor.fetchone()
           if token["role"] == "employee":     
                if res == set():
