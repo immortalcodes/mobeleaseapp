@@ -1,5 +1,3 @@
-// import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 class BlackButton {
@@ -9,7 +7,12 @@ class BlackButton {
   late double Radius;
   Function() onpress;
 
-  BlackButton({required this.buttonText,required this.Width,required this.Height,required this.Radius, required this.onpress});
+  BlackButton(
+      {required this.buttonText,
+      required this.Width,
+      required this.Height,
+      required this.Radius,
+      required this.onpress});
 
   ElevatedButton buildBlackButton() {
     return ElevatedButton(
@@ -18,12 +21,13 @@ class BlackButton {
           // elevation: 5.0,
           minimumSize: Size(Width, Height),
           textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(Radius))),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(Radius))),
       onPressed: onpress,
       child: Text(
         buttonText,
-        style: TextStyle(letterSpacing: 2,fontSize: 15,fontWeight: FontWeight.w700),
+        style: TextStyle(
+            letterSpacing: 2, fontSize: 15, fontWeight: FontWeight.w700),
       ),
     );
   }

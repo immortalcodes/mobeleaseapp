@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobelease/screens/Employee/Emp_Assign_1.dart';
 
-import 'package:mobelease/widgets/buttons.dart';
-
 class AssignCard extends StatefulWidget {
   late String model;
   late String quantity;
   late String company;
-
+  bool isEmp;
   int? deviceId;
   MyModel? myModel;
 
@@ -16,6 +14,7 @@ class AssignCard extends StatefulWidget {
       {required this.model,
       required this.quantity,
       required this.company,
+      required this.isEmp,
       this.deviceId,
       this.myModel});
   @override
@@ -75,38 +74,47 @@ class _AssignCardState extends State<AssignCard> {
               SizedBox(
                 width: 5.0,
               ),
-              GestureDetector(
-                onTap: () {
-                  if (localQuantity > 0)
-                    setState(() {
-                      localQuantity -= 1;
-                    });
-                  widget.myModel!
-                      .updateLocalQnt(widget.deviceId!, localQuantity);
-                },
-                child: Icon(
-                  Icons.remove_circle,
-                  color: Color(0xffE96E2B),
+              if (!(widget.isEmp))
+                GestureDetector(
+                  onTap: () {
+                    if (localQuantity > 0)
+                      setState(() {
+                        localQuantity -= 1;
+                      });
+                    // widget.myModel!
+                    //     .updateLocalQnt(widget.deviceId!, localQuantity);
+                  },
+                  child: Icon(
+                    Icons.remove_circle,
+                    color: Color(0xffE96E2B),
+                  ),
                 ),
-              ),
-              Text(
-                "${localQuantity.toString()} / ${widget.quantity}",
-                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800),
-              ),
-              GestureDetector(
-                onTap: () {
-                  if (localQuantity < int.parse(widget.quantity))
-                    setState(() {
-                      localQuantity += 1;
-                    });
-                  widget.myModel!
-                      .updateLocalQnt(widget.deviceId!, localQuantity);
-                },
-                child: Icon(
-                  Icons.add_circle,
-                  color: Color(0xffE96E2B),
+              widget.isEmp
+                  ? Text(
+                      widget.quantity,
+                      style:
+                          TextStyle(fontSize: 10, fontWeight: FontWeight.w800),
+                    )
+                  : Text(
+                      "${localQuantity.toString()} / ${widget.quantity}",
+                      style:
+                          TextStyle(fontSize: 10, fontWeight: FontWeight.w800),
+                    ),
+              if (!(widget.isEmp))
+                GestureDetector(
+                  onTap: () {
+                    if (localQuantity < int.parse(widget.quantity))
+                      setState(() {
+                        localQuantity += 1;
+                      });
+                    // widget.myModel!
+                    //     .updateLocalQnt(widget.deviceId!, localQuantity);
+                  },
+                  child: Icon(
+                    Icons.add_circle,
+                    color: Color(0xffE96E2B),
+                  ),
                 ),
-              ),
               SizedBox(width: 10),
             ],
           ),

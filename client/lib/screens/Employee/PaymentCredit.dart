@@ -1,12 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:mobelease/controllers/auth_controller.dart';
 import 'package:mobelease/globals.dart';
 import 'package:mobelease/screens/Employee/Emp_Reports_1.dart';
 import 'package:mobelease/widgets/InstallmentsCard.dart';
 import 'package:mobelease/widgets/TextFieldWidget.dart';
-
 import '../../widgets/Appbar.dart';
 import '../../widgets/PaymentCard.dart';
 import '../../widgets/PaymentTag.dart';
@@ -40,6 +38,8 @@ class PaymentCredit extends StatefulWidget {
 
 TextEditingController _dueValController = TextEditingController();
 TextEditingController _dateController = TextEditingController();
+String? dueval;
+String? dateofDown;
 
 class _PaymentCreditState extends State<PaymentCredit> {
   Future<void> _showAddEmiDialog(BuildContext context) async {
@@ -113,8 +113,13 @@ class _PaymentCreditState extends State<PaymentCredit> {
                           //You can format date as per your need
 
                           setState(() {
-                            _dateController.text =
-                                formattedDate; //set foratted date to TextField value.
+                            _dateController.text = formattedDate;
+
+                            dateofDown = formattedDate;
+
+                            dueval = _dueValController.text;
+
+                            //set foratted date to TextField value.
                           });
                         } else {
                           print("Date is not selected");
@@ -215,13 +220,14 @@ class _PaymentCreditState extends State<PaymentCredit> {
       print("sale is make sucessful");
 
       var url2 = Uri.parse('$baseUrl/sale/addinstallment');
+      print("kskssks $dateofDown $dueval");
       final responseDownPayment = await http.post(
         url2,
         body: jsonEncode({
           "saleid": saleId,
           "status": "down",
-          "paymentdate": _dueValController.text,
-          "amountpaid": _dateController.text
+          "paymentdate": dateofDown,
+          "amountpaid": int.parse(dueval!)
         }),
         headers: {'Cookie': token!, 'Content-Type': 'application/json'},
       );

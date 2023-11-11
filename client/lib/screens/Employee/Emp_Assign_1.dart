@@ -211,6 +211,7 @@ class _Emp_Assign_1State extends State<Emp_Assign_1> {
                                   children: [
                                     Expanded(
                                       child: AssignCard(
+                                        isEmp: false,
                                         company: device['company'],
                                         model: device['Name'],
                                         deviceId: device['deviceid'],

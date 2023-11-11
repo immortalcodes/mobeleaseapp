@@ -160,6 +160,7 @@ async def viewallsale(item:viewsale,response: Response,access_token: Union[str, 
                         photodata = photo_file.read()
                else:
                     photodata = None
+               
                data[sale[0]] = {
                     'saletype':sale[1],
                     'employeeid':sale[2],
@@ -237,6 +238,16 @@ async def viewsinglesale(item:saleid,response: Response,access_token: Union[str,
                         photodata = photo_file.read()
                else:
                     photodata = None
+               itemsarray = {}
+               for d_id in sale[9].keys():
+                    cursor.execute("SELECT company,devicedetail from inventory where deviceid = %s",(d_id,))
+                    device = cursor.fetchone()
+                    itemsarray[d_id] = {
+                         'devicename':device[1],
+                         'company':device[0],
+                         'quantity':sale[9][d_id][0],
+                         'sellprice':sale[9][d_id][1],
+                    }
                data[sale[0]] = {
                     'saletype':sale[1],
                     'employeeid':sale[2],
@@ -246,7 +257,7 @@ async def viewsinglesale(item:saleid,response: Response,access_token: Union[str,
                     'language':sale[6],
                     'unit':sale[7],
                     'farm':sale[8],
-                    'itemarray':sale[9],
+                    'itemarray':itemsarray,
                     'totalsale':sale[10],
                     'remark':sale[11],
                     'timestamp':sale[12],
@@ -270,6 +281,16 @@ async def viewsinglesale(item:saleid,response: Response,access_token: Union[str,
                         photodata = photo_file.read()
                else:
                     photodata = None
+               itemsarray = {}
+               for d_id in sale[9].keys():
+                    cursor.execute("SELECT company,devicedetail from inventory where deviceid = %s",(d_id,))
+                    device = cursor.fetchone()
+                    itemsarray[d_id] = {
+                         'devicename':device[1],
+                         'company':device[0],
+                         'quantity':sale[9][d_id][0],
+                         'sellprice':sale[9][d_id][1],
+                    }
                data[sale[0]] = {
                     'saletype':sale[1],
                     'employeeid':sale[2],
@@ -279,7 +300,7 @@ async def viewsinglesale(item:saleid,response: Response,access_token: Union[str,
                     'language':sale[6],
                     'unit':sale[7],
                     'farm':sale[8],
-                    'itemarray':sale[9],
+                    'itemarray':itemsarray,
                     'totalsale':sale[10],
                     'remark':sale[11],
                     'timestamp':sale[12],
@@ -459,6 +480,16 @@ async def viewinstallment(item:saleid,response: Response,access_token: Union[str
                         photodata = photo_file.read()
           else:
                     photodata = None
+          itemsarray = {}
+          for d_id in res[9].keys():
+                    cursor.execute("SELECT company,devicedetail from inventory where deviceid = %s",(d_id,))
+                    device = cursor.fetchone()
+                    itemsarray[d_id] = {
+                         'devicename':device[1],
+                         'company':device[0],
+                         'quantity':res[9][d_id][0],
+                         'sellprice':res[9][d_id][1],
+                    }
           if token["role"] == "admin":
                data["saledetails"] = {
                     'saleid': res[0],
@@ -470,7 +501,7 @@ async def viewinstallment(item:saleid,response: Response,access_token: Union[str
                     'language':res[6],
                     'unit':res[7],
                     'farm':res[8],
-                    'itemarray':res[9],
+                    'itemarray':itemsarray,
                     'totalsale': res[11],
                     'remark':res[12],
                     'timestamp':res[13],
@@ -490,7 +521,7 @@ async def viewinstallment(item:saleid,response: Response,access_token: Union[str
                     'language':res[6],
                     'unit':res[7],
                     'farm':res[8],
-                    'itemarray':res[9],
+                    'itemarray':itemsarray,
                     'totalsale': res[11],
                     'remark':res[12],
                     'timestamp':res[13],

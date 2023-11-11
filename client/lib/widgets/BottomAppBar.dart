@@ -64,21 +64,25 @@ class _bottomAppBarState extends State<bottomAppBar> {
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
                 icon: SvgPicture.asset("assets/svgs/person.svg",
+                    // ignore: deprecated_member_use
                     color:
                         _selectedIndex == 0 ? Color(0xffE96E2B) : Colors.grey),
                 label: "Employee"),
             BottomNavigationBarItem(
                 icon: SvgPicture.asset("assets/svgs/inventory.svg",
+                    // ignore: deprecated_member_use
                     color:
                         _selectedIndex == 1 ? Color(0xffE96E2B) : Colors.grey),
                 label: "Inventory"),
             BottomNavigationBarItem(
                 icon: SvgPicture.asset("assets/svgs/Add.svg",
+                    // ignore: deprecated_member_use
                     color:
                         _selectedIndex == 2 ? Color(0xffE96E2B) : Colors.grey),
                 label: "Reports"),
             BottomNavigationBarItem(
                 icon: SvgPicture.asset("assets/svgs/Message.svg",
+                    // ignore: deprecated_member_use
                     color:
                         _selectedIndex == 3 ? Color(0xffE96E2B) : Colors.grey),
                 label: "Remarks"),

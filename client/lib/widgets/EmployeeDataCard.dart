@@ -1,4 +1,9 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:mobelease/controllers/auth_controller.dart';
+import 'package:mobelease/globals.dart';
+import 'package:mobelease/screens/Employee/Reports.dart';
+import 'package:http/http.dart' as http;
 
 class EmployeeDataCard extends StatefulWidget {
   late double cost;
@@ -6,20 +11,82 @@ class EmployeeDataCard extends StatefulWidget {
   late String name;
   late bool cash;
   late bool paid;
+  int? saleId;
 
-  EmployeeDataCard({
-    required this.cost,
-    required this.date,
-    required this.name,
-    required this.cash,
-    required this.paid,
-  });
+  EmployeeDataCard(
+      {required this.cost,
+      required this.date,
+      required this.name,
+      required this.cash,
+      required this.paid,
+      this.saleId});
 
   @override
   State<EmployeeDataCard> createState() => _EmployeeDataCardState();
 }
 
 class _EmployeeDataCardState extends State<EmployeeDataCard> {
+  final AuthController authController = AuthController();
+  List<Map<String, dynamic>> singlesalesList = [];
+  List<Map<String, dynamic>> installmentsList = [];
+
+  Future<void> viewSingleInstallment() async {
+    var url = Uri.parse('$baseUrl/sale/viewsinglesale');
+
+    final token = await authController.getToken();
+    print("kdkdkd ${widget.saleId}");
+    try {
+      final response = await http.post(
+        url,
+        body: jsonEncode({
+          "saleid": widget.saleId,
+        }),
+        headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> viewSingleSalesData =
+            jsonDecode(response.body)!['data'];
+        singlesalesList =
+            List<Map<String, dynamic>>.from(viewSingleSalesData.values);
+      } else {
+        print("failed to load viewSalesData");
+      }
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+  Future<void> viewInstallment() async {
+    var url = Uri.parse('$baseUrl/sale/viewinstallment');
+
+    final token = await authController.getToken();
+    print("kdkdkd ${widget.saleId}");
+    try {
+      final response = await http.post(
+        url,
+        body: jsonEncode({
+          "saleid": widget.saleId,
+        }),
+        headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> viewinstallmentData =
+            jsonDecode(response.body)!['data'];
+
+        Map<String, dynamic> installments = viewinstallmentData['installments'];
+
+        installmentsList = List<Map<String, dynamic>>.from(installments.values);
+        print("333 $installmentsList");
+      } else {
+        print("failed to load viewSalesData");
+      }
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -84,8 +151,17 @@ class _EmployeeDataCardState extends State<EmployeeDataCard> {
                             fontSize: 18, fontWeight: FontWeight.bold),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5))),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/Reports');
+                    onPressed: () async {
+                      await viewSingleInstallment();
+                      await viewInstallment();
+                      // ignore: use_build_context_synchronously
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Reports(
+                                    singlesalesList: singlesalesList,
+                                    installmentsList: installmentsList,
+                                  )));
                     },
                     child: Text(
                       "View Details",

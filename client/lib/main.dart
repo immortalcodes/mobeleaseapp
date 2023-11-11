@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobelease/controllers/employee_controller.dart';
 import 'package:mobelease/screens/Admin/AssigningPage.dart';
-
-import 'package:mobelease/screens/Employee/Emp_Assign_2.dart';
 import 'package:mobelease/screens/Employee/Emp_Inventory.dart';
 import 'package:mobelease/screens/Employee/Emp_Reports_1.dart';
 import 'package:mobelease/screens/Employee/Emp_home.dart';
-import 'package:mobelease/screens/Employee/PaymentCash.dart';
-import 'package:mobelease/screens/Employee/PaymentCredit.dart';
-import 'package:mobelease/screens/Employee/Reports.dart';
 import 'package:mobelease/screens/Inventory/AddDevice.dart';
 import 'package:mobelease/screens/Admin/Employee.dart';
 import 'package:mobelease/screens/Remarks.dart';
@@ -17,7 +12,6 @@ import 'controllers/Assign_Provider.dart';
 import 'package:mobelease/screens/login.dart';
 import 'screens/Admin/addEmployee.dart';
 import 'screens/init_screen.dart';
-
 import 'screens/Admin/EmployeeSelect.dart';
 import 'screens/Admin/Assign.dart';
 import 'screens/notifications.dart';
@@ -53,11 +47,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //if (token == "") {
-    //inRoute = '/login';
-    //} else {
-    //inRoute = '/Employee';
-    // }
     inRoute = '/login';
     return MaterialApp(
         initialRoute: inRoute,
@@ -69,8 +58,6 @@ class MyApp extends StatelessWidget {
           '/notifications': (context) => ProtectedPage(child: Notifications()),
           '/Employee': (context) => ProtectedPage(child: Employee()),
           '/addEmployee': (context) => ProtectedPage(child: addEmployee()),
-          // '/Employeeuser':(context) => Employeeuser(),
-
           '/EmployeeSelect': (context) =>
               ProtectedPage(child: EmployeeSelect()),
           '/Assign': (context) => ProtectedPage(child: Assign(id: 1)),
@@ -81,18 +68,9 @@ class MyApp extends StatelessWidget {
           '/EmployeeAll': (context) => ProtectedPage(child: EmployeeAll()),
           '/AddDevice': (context) => ProtectedPage(child: AddDeviceDialog()),
           '/Emp_home': (context) => Emp_home(),
-          'Emp_chatbox': (context) => ctbox(),
           '/Emp_Assign_1': (context) => Emp_Assign_1(),
-
           '/Emp_Inventory': (context) => Emp_Inventory(),
-          // '/PaymentCash': (context) => PaymentCash(),
-
           '/Emp_Reports_1': (context) => Emp_Reports_1(),
-          '/Reports': (context) => Reports(
-                dues: false,
-                cash: true,
-                paid: true,
-              )
         },
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,

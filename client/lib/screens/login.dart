@@ -5,7 +5,6 @@ import '../widgets/buttons.dart';
 import '../widgets/Background.dart';
 import '../widgets/TextFieldWidget.dart';
 import 'Admin/Employee.dart';
-import 'init_screen.dart';
 
 class Login extends StatefulWidget {
   final String loginMember;

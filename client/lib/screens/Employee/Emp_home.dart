@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobelease/controllers/auth_controller.dart';
@@ -22,7 +21,7 @@ class Emp_home extends StatefulWidget {
 class _Emp_homeState extends State<Emp_home> {
   final AuthController authController = AuthController();
   String? empId;
-
+  List<String> saleIds = [];
   Future<List<Map<String, dynamic>>> viewAllSale() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     empId = prefs.getInt('empId').toString();
@@ -52,9 +51,12 @@ class _Emp_homeState extends State<Emp_home> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> viewSalesData =
             jsonDecode(response.body)!['data'];
-        print("veiw sal $viewSalesData");
+        // print("veiw sal $viewSalesData");
         List<Map<String, dynamic>> salesList =
             List<Map<String, dynamic>>.from(viewSalesData.values);
+
+        saleIds = List<String>.from(viewSalesData.keys);
+
         return salesList;
       } else {
         print("failed to load viewSalesData");
@@ -179,6 +181,7 @@ class _Emp_homeState extends State<Emp_home> {
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: EmployeeDataCard(
+                                    saleId: int.parse(saleIds[index]),
                                     cost: salesData[index]['totalsale'],
                                     date: formatTimestamp(
                                         salesData[index]['timestamp']),

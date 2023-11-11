@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:mobelease/controllers/auth_controller.dart';
 import 'package:mobelease/globals.dart';
@@ -8,7 +7,6 @@ import 'package:mobelease/widgets/categories.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/Appbar.dart';
 import '../../widgets/Emp_bottomAppBar.dart';
-import '../../widgets/buttons.dart';
 import 'package:http/http.dart' as http;
 
 class Emp_Inventory extends StatefulWidget {
@@ -152,6 +150,7 @@ class _Emp_InventoryState extends State<Emp_Inventory> {
                           padding: const EdgeInsets.symmetric(
                               vertical: 4.0, horizontal: 8.0),
                           child: AssignCard(
+                            isEmp: true,
                             company: device['company'],
                             model: device['Name'],
                             quantity: device['quantity'].toString(),

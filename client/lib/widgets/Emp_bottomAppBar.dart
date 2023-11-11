@@ -1,5 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mobelease/controllers/auth_controller.dart';
+import 'package:mobelease/globals.dart';
+import 'package:mobelease/screens/Message.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class Emp_bottomAppBar extends StatefulWidget {
   final int index;
@@ -13,11 +20,44 @@ class _Emp_bottomAppBarState extends State<Emp_bottomAppBar> {
   final PageController pageController = PageController(initialPage: 0);
 
   int _selectedIndex = 0;
+  final AuthController authController = AuthController();
+  List<Map<String, dynamic>> singleEmployeeList = [];
+  int? empId;
+
+  Future<void> getSingleEmployee() async {
+    final token = await authController.getToken();
+    var url = Uri.parse('$baseUrl/emp/singleemployee');
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    empId = prefs.getInt('empId');
+    print(empId);
+    final client = http.Client();
+    try {
+      final response = await client.post(
+        url,
+        body: jsonEncode({"empid": empId}),
+        headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData =
+            jsonDecode(response.body)!['data'];
+        singleEmployeeList =
+            List<Map<String, dynamic>>.from(responseData.values);
+      } else {
+        throw Exception('Failed to load employees');
+      }
+
+      // return employees;
+    } catch (e) {
+      return print(e.toString());
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _selectedIndex =
         widget.index; // Initialize _selectedIndex with the passed index
+    getSingleEmployee();
   }
 
   void _onItemTapped(int index) {
@@ -39,7 +79,15 @@ class _Emp_bottomAppBarState extends State<Emp_bottomAppBar> {
           Navigator.pushReplacementNamed(context, '/Emp_Reports_1');
           break;
         case 3:
-          Navigator.pushReplacementNamed(context, '/Emp_chatbox');
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Message(
+                        empId: empId,
+                        empImg: singleEmployeeList[0]['empphoto'],
+                        empName:
+                            "${singleEmployeeList[0]['firstname']} ${singleEmployeeList[0]['lastname']}",
+                      )));
           break;
       }
     }

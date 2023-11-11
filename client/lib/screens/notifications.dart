@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/Appbar.dart';
 import '../widgets/NotificationsCard.dart';
 
 class Notifications extends StatelessWidget {
@@ -9,36 +8,41 @@ class Notifications extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 11.0,left: 11.0,right: 11.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Image(
-                      image: AssetImage("assets/images/logo.png"),
-                      width: 99.0,
-                      height: 55.0,
-                    ),
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.pop(context);
-                      },
-                      child: CircleAvatar(
-                        radius: 12.0,
-                        backgroundColor: Colors.grey[300],
-                        child: Icon(Icons.close, color: Colors.black,),
+        child: Column(
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.only(top: 11.0, left: 11.0, right: 11.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Image(
+                    image: AssetImage("assets/images/logo.png"),
+                    width: 99.0,
+                    height: 55.0,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: CircleAvatar(
+                      radius: 12.0,
+                      backgroundColor: Colors.grey[300],
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.black,
                       ),
                     ),
-                  ],
-                    ),
                   ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18,vertical:18.0),
-                child: Row(
+                ],
+              ),
+            ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 18, vertical: 18.0),
+              child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children:[
+                  children: [
                     Text(
                       'Notifications',
                       style: TextStyle(
@@ -51,9 +55,7 @@ class Notifications extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      onTap: (){
-
-                      },
+                      onTap: () {},
                       child: Text(
                         'Clear all',
                         style: TextStyle(
@@ -66,28 +68,31 @@ class Notifications extends StatelessWidget {
                         ),
                       ),
                     ),
-                    ]
-                ),
-              ),
-              ListView(
-                shrinkWrap: true,
-                children: [Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 17.0, vertical: 10),
+                  ]),
+            ),
+            ListView(
+              shrinkWrap: true,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 17.0, vertical: 10),
                   child: NotificationsCard(),
                 ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 17.0, vertical: 10),
-                    child: NotificationsCard(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 17.0, vertical: 10),
-                    child: NotificationsCard(),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 17.0, vertical: 10),
+                  child: NotificationsCard(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 17.0, vertical: 10),
+                  child: NotificationsCard(),
+                ),
+              ],
+            ),
+          ],
         ),
+      ),
     );
   }
 }
