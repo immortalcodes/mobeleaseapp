@@ -208,56 +208,64 @@ class _EmployeeState extends State<Employee> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  SizedBox(
-                                    height: 100,
-                                    width: 275,
-                                    child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: employeesList.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          print('asdf $context, $index');
-                                          final employee = employeesList[index];
-                                          print('Employee Id:, ${employee.id}');
-                                          return Padding(
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: Column(
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    // Navigate to the desired page when clicked
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (
-                                                          context,
-                                                        ) =>
-                                                            EmployeePersonal(
-                                                                empid:
-                                                                    index + 1),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: Employee_icon(
-                                                      imagePath:
-                                                          employee.empPhoto ??
-                                                              ""),
-                                                ),
-                                                SizedBox(
-                                                  height: 10.0,
-                                                  width: 30.0,
-                                                  child: Text(
-                                                    employee.firstName ??
-                                                        'No First Name Available',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontSize: 9.0),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(30),
+                                    child: SizedBox(
+                                      height: 90,
+                                      width:
+                                          MediaQuery.sizeOf(context).width - 36,
+                                      child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: employeesList.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            print('asdf $context, $index');
+                                            final employee =
+                                                employeesList[index];
+                                            print(
+                                                'Employee Id:, ${employee.id}');
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: Column(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      // Navigate to the desired page when clicked
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (
+                                                            context,
+                                                          ) =>
+                                                              EmployeePersonal(
+                                                                  empid: index +
+                                                                      1),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: Employee_icon(
+                                                        imagePath:
+                                                            employee.empPhoto ??
+                                                                ""),
                                                   ),
-                                                )
-                                              ],
-                                            ),
-                                          );
-                                        }),
+                                                  SizedBox(
+                                                    height: 10.0,
+                                                    width: 35.0,
+                                                    child: Text(
+                                                      employee.firstName ??
+                                                          'No First Name Available',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontSize: 10.0),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          }),
+                                    ),
                                   ),
                                   if (employeeNo != 0) ...[
                                     Padding(

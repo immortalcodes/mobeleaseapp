@@ -5,7 +5,7 @@ import 'package:mobelease/globals.dart';
 import 'package:mobelease/widgets/Emp_bottomAppBar.dart';
 import 'package:intl/intl.dart';
 import 'package:mobelease/widgets/TextFieldWidget.dart';
-import 'package:mobelease/widgets/saleDetailsCard.dart';
+// import 'package:mobelease/widgets/saleDetailsCard.dart';
 import '../../widgets/Appbar.dart';
 import '../../widgets/PaymentTag.dart';
 import '../../widgets/ReportsInstallmentsCard.dart';
@@ -205,11 +205,11 @@ class _ReportsState extends State<Reports> {
                         ),
                       ),
                       for (var item in saleitemsList)
-                        SaleDetailsCard(
-                          itemName: item['devicename'],
-                          quantity: item['quantity'],
-                          sellprice: item['sellprice'],
-                        ),
+                        // SaleDetailsCard(
+                        //   itemName: item['devicename'],
+                        //   quantity: item['quantity'],
+                        //   sellprice: item['sellprice'],
+                        // ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16),
