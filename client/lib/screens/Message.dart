@@ -111,6 +111,9 @@ class _MessageState extends State<Message> {
   }
 
   String formatTimestamp(String timestamp) {
+    DateTime currentTimeInstance = DateTime.now();
+    Duration localTimeZoneOffset = currentTimeInstance.timeZoneOffset;
+    bool isOffsetNegetive = localTimeZoneOffset.isNegative;
     if (timestamp == null) return "";
     final now = DateTime.now();
 
@@ -120,7 +123,10 @@ class _MessageState extends State<Message> {
     if (match != null) {
       final dateTimeString = match.group(0);
       final dateTime = DateTime.parse(dateTimeString!);
-      final difference = now.difference(dateTime);
+      final localDateTime = isOffsetNegetive
+          ? dateTime.subtract(localTimeZoneOffset)
+          : dateTime.add(localTimeZoneOffset);
+      final difference = now.difference(localDateTime);
 
       if (difference.inMinutes < 1) {
         return "just now";
