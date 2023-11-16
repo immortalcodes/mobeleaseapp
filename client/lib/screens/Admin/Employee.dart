@@ -250,7 +250,7 @@ class _EmployeeState extends State<Employee> {
                                                                 ""),
                                                   ),
                                                   SizedBox(
-                                                    height: 15.0,
+                                                    height: 28.0,
                                                     width: 35.0,
                                                     child: Text(
                                                       employee.firstName ??

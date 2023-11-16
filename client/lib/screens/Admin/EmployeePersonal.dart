@@ -58,7 +58,6 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
       } else {
         throw Exception('Failed to load employees');
       }
-
       // return employees;
     } catch (e) {
       return Future.error(e.toString());

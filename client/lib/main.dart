@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           scaffoldBackgroundColor: Color(0xffFEF9F7),
-          useMaterial3: true,
+          useMaterial3: false,
           primarySwatch: Colors.blue,
         ),
         home: Login(
