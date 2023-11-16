@@ -20,14 +20,20 @@ class BlackButton {
           backgroundColor: Color(0xffE96E2B),
           // elevation: 5.0,
           minimumSize: Size(Width, Height),
-          textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          textStyle: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(Radius))),
       onPressed: onpress,
       child: Text(
         buttonText,
         style: TextStyle(
-            letterSpacing: 2, fontSize: 15, fontWeight: FontWeight.w700),
+            letterSpacing: 2,
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+            color: Colors.white),
       ),
     );
   }
