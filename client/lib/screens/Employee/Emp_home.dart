@@ -25,9 +25,7 @@ class _Emp_homeState extends State<Emp_home> {
   Future<List<Map<String, dynamic>>> viewAllSale() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     empId = prefs.getInt('empId').toString();
-
     var url = Uri.parse('$baseUrl/sale/viewallsale');
-
     final token = await authController.getToken();
 
     print("token $token");

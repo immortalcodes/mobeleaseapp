@@ -36,7 +36,7 @@ class _bottomAppBarState extends State<bottomAppBar> {
           Navigator.pushReplacementNamed(context, '/Inventory');
           break;
         case 2:
-          Navigator.pushReplacementNamed(context, '/EmployeeSelect');
+          Navigator.pushReplacementNamed(context, '/report');
           break;
         case 3:
           Navigator.pushReplacementNamed(context, '/Remarks');

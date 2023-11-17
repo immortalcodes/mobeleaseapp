@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobelease/controllers/employee_controller.dart';
 import 'package:mobelease/screens/Admin/AssigningPage.dart';
+import 'package:mobelease/screens/Admin/admin_reports_screen.dart';
 import 'package:mobelease/screens/Employee/Emp_Inventory.dart';
 import 'package:mobelease/screens/Employee/Emp_Reports_1.dart';
 import 'package:mobelease/screens/Employee/Emp_home.dart';
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
                 loginMember: 'EMPLOYEE',
               ),
           '/home': (context) => InitScreen(),
+          '/report': (context) => ReportsScreen(),
           '/notifications': (context) => ProtectedPage(child: Notifications()),
           '/Employee': (context) => ProtectedPage(child: Employee()),
           '/addEmployee': (context) => ProtectedPage(child: addEmployee()),

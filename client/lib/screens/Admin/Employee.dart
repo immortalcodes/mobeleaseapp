@@ -28,7 +28,9 @@ class _EmployeeState extends State<Employee> {
 
   Future<List<EmployeeModel>> getEmployee() async {
     final token = await authController.getToken();
-
+    print(
+        "Heeereeeeeeeeeeeeeeeeeeeeeeeeee=========================>>>>>>>>>>>>>>>>>");
+    print(token);
     var url = Uri.parse('$baseUrl/emp/allemployee');
     final client = http.Client();
     try {
@@ -379,7 +381,6 @@ class _EmployeeState extends State<Employee> {
                             colorhex: 0xffEFF6FF),
                       ],
                     ),
-
                     // EmployeeDataCard(
                     //     cost: 4500,
                     //     date: '03/03/20232',
@@ -387,7 +388,6 @@ class _EmployeeState extends State<Employee> {
                     //     cash: true,
                     //     paid: true,
                     //     dues: false),
-
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 18.0, vertical: 18.0),
