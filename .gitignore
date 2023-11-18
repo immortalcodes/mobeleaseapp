@@ -14,7 +14,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -160,3 +159,4 @@ cython_debug/
 #.idea/
 
 backend/photo.jpg
+.DS_Store
