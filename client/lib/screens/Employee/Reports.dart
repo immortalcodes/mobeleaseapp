@@ -14,8 +14,12 @@ import 'package:http/http.dart' as http;
 class Reports extends StatefulWidget {
   List<Map<String, dynamic>>? singlesalesList;
   List<Map<String, dynamic>> installmentsList;
+  int saleId;
 
-  Reports({this.singlesalesList, required this.installmentsList});
+  Reports(
+      {this.singlesalesList,
+      required this.installmentsList,
+      required this.saleId});
 
   @override
   State<Reports> createState() => _ReportsState();
@@ -35,6 +39,8 @@ class _ReportsState extends State<Reports> {
     // List<Map<String, dynamic>>? installmentsList =
     //     List<Map<String, dynamic>>.from(
     //         widget.singlesalesList![0]['installments'].values);
+
+    print("hhjdf ${widget.installmentsList}");
 
     return Scaffold(
       body: SafeArea(
@@ -285,7 +291,8 @@ class _ReportsState extends State<Reports> {
                           ],
                         ),
                         child: SizedBox(
-                          height: 280,
+                          height:
+                              widget.installmentsList.length == 1 ? 150 : 280,
                           child: SingleChildScrollView(
                             child: Column(
                               children: List.generate(
@@ -506,20 +513,19 @@ class _ReportsState extends State<Reports> {
                       final token = await authController.getToken();
 
                       try {
+                        print("debug ####33 ${widget.saleId}");
                         final response = await http.post(
                           url,
                           body: dropdownValue == 'paid'
                               ? jsonEncode({
-                                  "saleid": widget.installmentsList[0]
-                                      ['saleid'],
+                                  "saleid": widget.saleId,
                                   "status": dropdownValue,
                                   "paymentdate": _dateController.text,
                                   "amountpaid":
                                       int.parse(_EMIValController.text)
                                 })
                               : jsonEncode({
-                                  "saleid": widget.installmentsList[0]
-                                      ['saleid'],
+                                  "saleid": widget.saleId,
                                   "status": dropdownValue,
                                   "deadline": _dateController.text,
                                   "promisedamount":

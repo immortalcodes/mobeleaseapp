@@ -159,6 +159,7 @@ class _EmployeeDataCardState extends State<EmployeeDataCard> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => Reports(
+                                    saleId: widget.saleId!,
                                     singlesalesList: singlesalesList,
                                     installmentsList: installmentsList,
                                   )));
