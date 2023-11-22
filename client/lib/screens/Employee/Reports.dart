@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobelease/controllers/auth_controller.dart';
@@ -13,13 +14,10 @@ import 'package:http/http.dart' as http;
 
 class Reports extends StatefulWidget {
   List<Map<String, dynamic>>? singlesalesList;
-  List<Map<String, dynamic>> installmentsList;
+
   int saleId;
 
-  Reports(
-      {this.singlesalesList,
-      required this.installmentsList,
-      required this.saleId});
+  Reports({this.singlesalesList, required this.saleId});
 
   @override
   State<Reports> createState() => _ReportsState();
@@ -31,6 +29,38 @@ class _ReportsState extends State<Reports> {
   String dropdownValue = 'paid';
   final AuthController authController = AuthController();
 
+  List<Map<String, dynamic>> installmentList = [];
+
+  Future<List<Map<String, dynamic>>> viewInstallment() async {
+    var url = Uri.parse('$baseUrl/sale/viewinstallment');
+
+    final token = await authController.getToken();
+    print("kdkdkd ${widget.saleId}");
+    try {
+      final response = await http.post(
+        url,
+        body: jsonEncode({
+          "saleid": widget.saleId,
+        }),
+        headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> viewinstallmentData =
+            jsonDecode(response.body)!['data'];
+
+        Map<String, dynamic> installments = viewinstallmentData['installments'];
+        installmentList = List<Map<String, dynamic>>.from(installments.values);
+        return installmentList;
+      } else {
+        print("failed to load viewSalesData");
+      }
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+    return [];
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>>? saleitemsList = List<Map<String, dynamic>>.from(
@@ -40,7 +70,9 @@ class _ReportsState extends State<Reports> {
     //     List<Map<String, dynamic>>.from(
     //         widget.singlesalesList![0]['installments'].values);
 
-    print("hhjdf ${widget.installmentsList}");
+    void onAddEmi() {
+      setState(() {});
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -271,61 +303,73 @@ class _ReportsState extends State<Reports> {
                   ),
                 ),
               ),
-              widget.installmentsList.isEmpty
-                  ? SizedBox(
-                      height: 20,
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 18.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 8.0,
-                              offset: Offset(0, 8),
-                            ),
-                          ],
-                        ),
-                        child: SizedBox(
-                          height:
-                              widget.installmentsList.length == 1 ? 150 : 280,
-                          child: SingleChildScrollView(
-                            child: Column(
-                              children: List.generate(
-                                  widget.installmentsList.length, (index) {
-                                var installment =
-                                    widget.installmentsList[index];
-                                print("kfkkffk ${widget.installmentsList}");
-                                return ReportsInstallmentsCard(
-                                  saleId: widget.installmentsList[0]['saleid'],
-                                  installmentId: index +
-                                      1, // Pass the installment index here
-                                  deadline: installment['deadline'] == null
-                                      ? "--"
-                                      : DateFormat('dd/MM/yyyy').format(
-                                          DateTime.parse(
-                                              installment['deadline'])),
-                                  promiseamount:
-                                      installment['promisedamount'] ?? 0,
-                                  status: installment['status'] ?? "-",
-                                  amountpaid: installment['amountpaid'] ?? 0,
-                                  paymentdate:
-                                      installment['paymentdate'] == null
-                                          ? "--"
-                                          : DateFormat('dd/MM/yyyy').format(
-                                              DateTime.parse(
-                                                  installment['paymentdate'])),
-                                );
-                              }),
-                            ),
-                          ),
-                        ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 18.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 8.0,
+                        offset: Offset(0, 8),
                       ),
-                    ),
+                    ],
+                  ),
+                  child: FutureBuilder(
+                      future: viewInstallment(),
+                      builder: (context, snapshot) {
+                        List<Map<String, dynamic>>? installmentData =
+                            snapshot.data;
+
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.connectionState ==
+                                ConnectionState.done &&
+                            installmentData!.isEmpty) {
+                          return SizedBox(
+                            height: 20,
+                          );
+                        } else {
+                          return SizedBox(
+                            height: installmentData!.length == 1 ? 150 : 280,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: List.generate(installmentData.length,
+                                    (index) {
+                                  var installment = installmentData[index];
+                                  print("kfkkffk $installmentData}");
+                                  return ReportsInstallmentsCard(
+                                    saleId: installmentData[0]['saleid'],
+                                    installmentId: index +
+                                        1, // Pass the installment index here
+                                    deadline: installment['deadline'] == null
+                                        ? "--"
+                                        : DateFormat('dd/MM/yyyy').format(
+                                            DateTime.parse(
+                                                installment['deadline'])),
+                                    promiseamount:
+                                        installment['promisedamount'] ?? 0,
+                                    status: installment['status'] ?? "-",
+                                    amountpaid: installment['amountpaid'] ?? 0,
+                                    paymentdate: installment['paymentdate'] ==
+                                            null
+                                        ? "--"
+                                        : DateFormat('dd/MM/yyyy').format(
+                                            DateTime.parse(
+                                                installment['paymentdate'])),
+                                  );
+                                }),
+                              ),
+                            ),
+                          );
+                        }
+                      }),
+                ),
+              ),
               Center(
                 child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -340,7 +384,7 @@ class _ReportsState extends State<Reports> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0))),
                       onPressed: () {
-                        _showAddEmiDialog(context);
+                        _showAddEmiDialog(context, onAddEmi);
                       },
                       child: Text(
                         "Add EMI",
@@ -361,7 +405,8 @@ class _ReportsState extends State<Reports> {
     );
   }
 
-  Future<void> _showAddEmiDialog(BuildContext context) async {
+  Future<void> _showAddEmiDialog(
+      BuildContext context, VoidCallback onAddEMI) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -542,7 +587,7 @@ class _ReportsState extends State<Reports> {
                             content: Text("added installment sucessfully"),
                             duration: Duration(seconds: 5),
                           ));
-
+                          onAddEMI.call();
                           Navigator.pop(context);
                         } else {
                           print("failed to add installment");

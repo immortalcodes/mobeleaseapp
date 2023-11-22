@@ -57,36 +57,6 @@ class _EmployeeDataCardState extends State<EmployeeDataCard> {
     }
   }
 
-  Future<void> viewInstallment() async {
-    var url = Uri.parse('$baseUrl/sale/viewinstallment');
-
-    final token = await authController.getToken();
-    print("kdkdkd ${widget.saleId}");
-    try {
-      final response = await http.post(
-        url,
-        body: jsonEncode({
-          "saleid": widget.saleId,
-        }),
-        headers: {'Cookie': token!, 'Content-Type': 'application/json'},
-      );
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> viewinstallmentData =
-            jsonDecode(response.body)!['data'];
-
-        Map<String, dynamic> installments = viewinstallmentData['installments'];
-
-        installmentsList = List<Map<String, dynamic>>.from(installments.values);
-        print("333 $installmentsList");
-      } else {
-        print("failed to load viewSalesData");
-      }
-    } catch (e) {
-      return Future.error(e.toString());
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -153,7 +123,7 @@ class _EmployeeDataCardState extends State<EmployeeDataCard> {
                             borderRadius: BorderRadius.circular(5))),
                     onPressed: () async {
                       await viewSingleInstallment();
-                      await viewInstallment();
+
                       // ignore: use_build_context_synchronously
                       Navigator.push(
                           context,
@@ -161,7 +131,6 @@ class _EmployeeDataCardState extends State<EmployeeDataCard> {
                               builder: (context) => Reports(
                                     saleId: widget.saleId!,
                                     singlesalesList: singlesalesList,
-                                    installmentsList: installmentsList,
                                   )));
                     },
                     child: Text(
