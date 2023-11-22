@@ -28,7 +28,7 @@ class _ReportsState extends State<Reports> {
   TextEditingController _dateController = TextEditingController();
   String dropdownValue = 'paid';
   final AuthController authController = AuthController();
-
+  List<String> installmentsIDs = [];
   List<Map<String, dynamic>> installmentList = [];
 
   Future<List<Map<String, dynamic>>> viewInstallment() async {
@@ -50,6 +50,7 @@ class _ReportsState extends State<Reports> {
             jsonDecode(response.body)!['data'];
 
         Map<String, dynamic> installments = viewinstallmentData['installments'];
+        installmentsIDs = List<String>.from(installments.keys);
         installmentList = List<Map<String, dynamic>>.from(installments.values);
         return installmentList;
       } else {
@@ -341,11 +342,12 @@ class _ReportsState extends State<Reports> {
                                 children: List.generate(installmentData.length,
                                     (index) {
                                   var installment = installmentData[index];
-                                  print("kfkkffk $installmentData}");
+                                  print("kfkkffk $installmentsIDs}");
                                   return ReportsInstallmentsCard(
+                                    onUpdateEmi: onAddEmi,
                                     saleId: installmentData[0]['saleid'],
-                                    installmentId: index +
-                                        1, // Pass the installment index here
+                                    installmentId:
+                                        int.parse(installmentsIDs[index]),
                                     deadline: installment['deadline'] == null
                                         ? "--"
                                         : DateFormat('dd/MM/yyyy').format(
