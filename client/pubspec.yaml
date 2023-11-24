@@ -23,6 +23,7 @@ dependencies:
   toggle_switch: ^2.1.0
   dropdown_search: ^5.0.6
   shimmer: ^3.0.0
+  fl_chart: ^0.64.0
 
 dev_dependencies:
   flutter_test:

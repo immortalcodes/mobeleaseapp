@@ -45,8 +45,9 @@ class ReportsScreen extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding:
-                  const EdgeInsets.only(top: 11.0, left: 11.0, right: 11.0),
+              padding: const EdgeInsets.only(
+                top: 11.0,
+              ),
               child: Appbar(),
             ),
             SizedBox(
@@ -77,227 +78,515 @@ class ReportsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: 150,
-                            ),
-                            Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Color.fromARGB(255, 247, 218, 194),
-                                  ),
-                                  height: 60,
-                                  width: 120,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 5),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 11,
-                                              backgroundColor: Color.fromARGB(
-                                                  255, 240, 123, 13),
-                                              child: Icon(
-                                                Icons.poll_rounded,
-                                                color: Colors.white,
-                                                size: 16,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              "Total Sales",
-                                              style: TextStyle(fontSize: 12),
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 30,
-                                            ),
-                                            Text(
-                                                '\$ ${stats['credit_totalsale']}'),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      color:
-                                          Color.fromARGB(255, 217, 241, 218)),
-                                  height: 60,
-                                  width: 120,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 5),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 11,
-                                              backgroundColor: Color.fromARGB(
-                                                  255, 10, 170, 93),
-                                              child: Icon(
-                                                Icons.poll_rounded,
-                                                color: Colors.white,
-                                                size: 16,
+                                      color: Color.fromARGB(255, 219, 201, 243),
+                                    ),
+                                    height: 60,
+                                    width: 125,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 11,
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 113, 23, 240),
+                                                child: Icon(
+                                                  Icons.poll_rounded,
+                                                  color: Colors.white,
+                                                  size: 16,
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              "COGS",
-                                              style: TextStyle(fontSize: 12),
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 30,
-                                            ),
-                                            Text('\$ ${stats['credit_cogs']}'),
-                                          ],
-                                        )
-                                      ],
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "Total Sale Cash",
+                                                style: TextStyle(fontSize: 12),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 30,
+                                              ),
+                                              Text(
+                                                  '\$ ${stats['cash_totalsale']}'),
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Color.fromARGB(255, 201, 229, 243),
+                                  SizedBox(
+                                    height: 10,
                                   ),
-                                  height: 60,
-                                  width: 120,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 5),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 11,
-                                              backgroundColor: Color.fromARGB(
-                                                  255, 23, 142, 240),
-                                              child: Icon(
-                                                Icons.poll_rounded,
-                                                color: Colors.white,
-                                                size: 16,
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Color.fromARGB(255, 186, 241, 227),
+                                    ),
+                                    height: 60,
+                                    width: 125,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 11,
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 10, 203, 190),
+                                                child: Icon(
+                                                  Icons.poll_rounded,
+                                                  color: Colors.white,
+                                                  size: 16,
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              "Total credit left",
-                                              style: TextStyle(fontSize: 12),
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 30,
-                                            ),
-                                            Text('\$ ${stats['creditleft']}'),
-                                          ],
-                                        )
-                                      ],
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "Profit Credit",
+                                                style: TextStyle(fontSize: 12),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 30,
+                                              ),
+                                              Text(
+                                                  '\$ ${stats['profit_credit'] == null ? 0 : stats['profit_credit']}'),
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Color.fromARGB(255, 233, 241, 186),
-                                  ),
-                                  height: 60,
-                                  width: 120,
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 5),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 11,
-                                              backgroundColor: Color.fromARGB(
-                                                  255, 174, 203, 10),
-                                              child: Icon(
-                                                Icons.poll_rounded,
-                                                color: Colors.white,
-                                                size: 16,
+                                ],
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Color.fromARGB(255, 243, 201, 232),
+                                    ),
+                                    height: 60,
+                                    width: 125,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 11,
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 240, 23, 204),
+                                                child: Icon(
+                                                  Icons.poll_rounded,
+                                                  color: Colors.white,
+                                                  size: 16,
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              "Stolen loss",
-                                              style: TextStyle(fontSize: 12),
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 30,
-                                            ),
-                                            Text(
-                                                '\$ ${stats['stolen_loss'] == null ? 0 : stats['stolen_loss']}'),
-                                          ],
-                                        )
-                                      ],
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "Profit Cash",
+                                                style: TextStyle(fontSize: 12),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 30,
+                                              ),
+                                              Text(
+                                                  '\$ ${stats['profit_cash']}'),
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Color.fromARGB(255, 241, 232, 186),
+                                    ),
+                                    height: 60,
+                                    width: 125,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 11,
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 203, 171, 10),
+                                                child: Icon(
+                                                  Icons.poll_rounded,
+                                                  color: Colors.white,
+                                                  size: 16,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "Total Profit",
+                                                style: TextStyle(fontSize: 12),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 30,
+                                              ),
+                                              Text(
+                                                  '\$ ${stats['total_profit'] == null ? 0 : stats['total_profit']}'),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Color.fromARGB(255, 247, 218, 194),
+                                    ),
+                                    height: 60,
+                                    width: 125,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 11,
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 240, 123, 13),
+                                                child: Icon(
+                                                  Icons.poll_rounded,
+                                                  color: Colors.white,
+                                                  size: 16,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "Total Sale Credit",
+                                                style: TextStyle(fontSize: 12),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 30,
+                                              ),
+                                              Text(
+                                                  '\$ ${stats['credit_totalsale']}'),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color:
+                                            Color.fromARGB(255, 217, 241, 218)),
+                                    height: 60,
+                                    width: 125,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 11,
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 10, 170, 93),
+                                                child: Icon(
+                                                  Icons.poll_rounded,
+                                                  color: Colors.white,
+                                                  size: 16,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "Credit COGS",
+                                                style: TextStyle(fontSize: 12),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 30,
+                                              ),
+                                              Text(
+                                                  '\$ ${stats['credit_cogs']}'),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Color.fromARGB(255, 201, 229, 243),
+                                    ),
+                                    height: 60,
+                                    width: 120,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 11,
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 23, 142, 240),
+                                                child: Icon(
+                                                  Icons.poll_rounded,
+                                                  color: Colors.white,
+                                                  size: 16,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "Total credit left",
+                                                style: TextStyle(fontSize: 12),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 30,
+                                              ),
+                                              Text('\$ ${stats['creditleft']}'),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Color.fromARGB(255, 233, 241, 186),
+                                    ),
+                                    height: 60,
+                                    width: 120,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 5),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: 11,
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 174, 203, 10),
+                                                child: Icon(
+                                                  Icons.poll_rounded,
+                                                  color: Colors.white,
+                                                  size: 16,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "Stolen loss",
+                                                style: TextStyle(fontSize: 12),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 30,
+                                              ),
+                                              Text(
+                                                  '\$ ${stats['stolen_loss'] == null ? 0 : stats['stolen_loss']}'),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color.fromARGB(255, 186, 205, 241),
                                 ),
-                              ],
-                            ),
-                          ],
-                        )
+                                height: 60,
+                                width: 120,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 5, vertical: 5),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 11,
+                                            backgroundColor: Color.fromARGB(
+                                                255, 10, 87, 203),
+                                            child: Icon(
+                                              Icons.poll_rounded,
+                                              color: Colors.white,
+                                              size: 16,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            "Cash COGS",
+                                            style: TextStyle(fontSize: 12),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 30,
+                                          ),
+                                          Text(
+                                              '\$ ${stats['cash_cogs'] == null ? 0 : stats['cash_cogs']}'),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Sales",
+                                style: TextStyle(
+                                    fontSize: 18, color: Color(0xffE96E2B)),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     );
                   }
