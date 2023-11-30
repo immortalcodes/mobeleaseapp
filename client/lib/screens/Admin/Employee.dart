@@ -28,8 +28,6 @@ class _EmployeeState extends State<Employee> {
 
   Future<List<EmployeeModel>> getEmployee() async {
     final token = await authController.getToken();
-    print(
-        "Heeereeeeeeeeeeeeeeeeeeeeeeeeee=========================>>>>>>>>>>>>>>>>>");
     print(token);
     var url = Uri.parse('$baseUrl/emp/allemployee');
     final client = http.Client();
@@ -44,7 +42,6 @@ class _EmployeeState extends State<Employee> {
         final List<String> sortedKeys1 = responseData.keys.toList();
         List<int> sortedKeys =
             sortedKeys1.map((str) => int.parse(str!)).toList()..sort();
-        // print(sortedKeys);
         final List<EmployeeModel> employees = sortedKeys
             .map((key) => EmployeeModel.fromJson(responseData[key.toString()]))
             .toList();
@@ -214,8 +211,11 @@ class _EmployeeState extends State<Employee> {
                                     borderRadius: BorderRadius.circular(30),
                                     child: SizedBox(
                                       height: 90,
-                                      width:
-                                          MediaQuery.sizeOf(context).width - 36,
+                                      width: employeeNo != 0
+                                          ? MediaQuery.sizeOf(context).width -
+                                              100
+                                          : MediaQuery.sizeOf(context).width -
+                                              36,
                                       child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
                                           itemCount: employeesList.length,

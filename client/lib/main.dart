@@ -56,7 +56,10 @@ class MyApp extends StatelessWidget {
                 loginMember: 'EMPLOYEE',
               ),
           '/home': (context) => InitScreen(),
-          '/report': (context) => ReportsScreen(),
+          '/report': (context) => ReportsScreen(
+                dropDown: 'all',
+                empId: 0,
+              ),
           '/notifications': (context) => ProtectedPage(child: Notifications()),
           '/Employee': (context) => ProtectedPage(child: Employee()),
           '/addEmployee': (context) => ProtectedPage(child: addEmployee()),

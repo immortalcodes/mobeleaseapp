@@ -27,14 +27,14 @@ class _LoginState extends State<Login> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final email = _emailController.text;
     final password = _passwordController.text;
-     
+
     if (email.isEmpty || password.isEmpty) {
       setState(() {
         _errorMessage = 'Please fill your details';
       });
       return;
     }
-
+  
     final loginSuccess = await _authController.login(
         email, password, widget.loginMember.toLowerCase());
 

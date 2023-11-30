@@ -79,7 +79,7 @@ class _Emp_homeState extends State<Emp_home> {
 
     viewAllSale();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

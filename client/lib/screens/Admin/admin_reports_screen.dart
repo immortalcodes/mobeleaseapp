@@ -1,29 +1,53 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mobelease/controllers/auth_controller.dart';
 import 'package:mobelease/globals.dart';
+import 'package:mobelease/models/Employee_Model.dart';
+import 'package:mobelease/screens/Admin/Employee.dart';
 import 'package:mobelease/widgets/Appbar.dart';
 import 'package:mobelease/widgets/BottomAppBar.dart';
+import 'package:mobelease/widgets/EmployeeDataCard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ReportsScreen extends StatelessWidget {
-  ReportsScreen({super.key});
+class ReportsScreen extends StatefulWidget {
+  String dropDown;
+  int empId;
+  ReportsScreen({super.key, required this.dropDown, required this.empId});
+
+  @override
+  State<ReportsScreen> createState() => _ReportsScreenState();
+}
+
+class _ReportsScreenState extends State<ReportsScreen> {
   final AuthController authController = AuthController();
-  Future<dynamic> getStatistics() async {
+  List<String> saleIds = [];
+  String? empId;
+  List<EmployeeModel> employeesList = [];
+
+  OutlineInputBorder kEnabledTextFieldBorder = OutlineInputBorder(
+      borderSide: const BorderSide(color: Color(0xffE96E2B)),
+      borderRadius: BorderRadius.circular(15));
+
+  OutlineInputBorder kFocusedTextFieldBorder = OutlineInputBorder(
+      borderSide: BorderSide(color: Color(0xffE96E2B), width: 2),
+      borderRadius: BorderRadius.circular(15));
+
+  Future<dynamic> getStatistics(
+      int empId, String startTime, String endTime) async {
     final token = await authController.getToken();
-
     var url = Uri.parse('$baseUrl/sale/viewstats');
-
     var headers = {
       'accept': 'application/json',
       'Cookie': '${token}',
       'Content-Type': 'application/json'
     };
-
     var request = http.Request('POST', url);
-
-    request.body = json.encode(
-        {"empid": 0, "starttime": "2021-09-15", "endtime": "2023-12-15"});
+    //"2021-09-15"
+    //"2023-12-15"
+    request.body = json
+        .encode({"empid": empId, "starttime": startTime, "endtime": endTime});
 
     request.headers.addAll(headers);
 
@@ -38,6 +62,122 @@ class ReportsScreen extends StatelessWidget {
     }
   }
 
+  Future<List<String>> getEmployeeNames() async {
+    final token = await authController.getToken();
+    print(token);
+    var url = Uri.parse('$baseUrl/emp/allemployee');
+    final client = http.Client();
+    try {
+      final response = await client.post(
+        url,
+        headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData =
+            jsonDecode(response.body)!['data'];
+        final List<String> sortedKeys1 = responseData.keys.toList();
+        List<int> sortedKeys =
+            sortedKeys1.map((str) => int.parse(str!)).toList()..sort();
+        // print(sortedKeys);
+        final List<EmployeeModel> employees = sortedKeys
+            .map((key) => EmployeeModel.fromJson(responseData[key.toString()]))
+            .toList();
+        print('response data: $responseData');
+        print("keys $sortedKeys");
+        print(employees);
+        employeesList = employees;
+        List<String> names = [];
+        for (EmployeeModel employee in employeesList) {
+          String name = employee.firstName! + " " + employee.lastName!;
+          names.add(name);
+        }
+        names.add("all");
+        // setState(() {});
+        return names;
+        // if(mounted) {
+        //   setState(() {
+        //
+        // });
+        // }
+      } else {
+        throw Exception('Failed to load employees');
+      }
+
+      // return employees;
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> viewAllSale() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    empId = prefs.getInt('empId').toString();
+    var url = Uri.parse('$baseUrl/sale/viewallsale');
+    final token = await authController.getToken();
+
+    print("token $token");
+    DateTime today = DateTime.now();
+    DateTime tomorrow = today.add(Duration(days: 2));
+    final String endtime = DateFormat('yyyy-MM-dd').format(tomorrow);
+
+    try {
+      final response = await http.post(
+        url,
+        body: jsonEncode({
+          "starttime": "2021-10-12",
+          "endtime": endtime,
+          "status": "*all*",
+          "empid": empId,
+          "saletype": "*all*"
+        }),
+        headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> viewSalesData =
+            jsonDecode(response.body)!['data'];
+        // print("veiw sal $viewSalesData");
+        List<Map<String, dynamic>> salesList =
+            List<Map<String, dynamic>>.from(viewSalesData.values);
+
+        saleIds = List<String>.from(viewSalesData.keys);
+
+        return salesList;
+      } else {
+        print("failed to load viewSalesData");
+      }
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+    return [];
+  }
+
+  String formatTimestamp(String timestamp) {
+    final inputFormat = DateFormat("yyyy-MM-ddTHH:mm:ss.SSSSSS");
+    final outputFormat = DateFormat("dd/MM/yyyy");
+
+    final parsedDate = inputFormat.parse(timestamp, true);
+    return outputFormat.format(parsedDate);
+  }
+
+  String startDate(String value) {
+    print("Heyyyyyyyyyyyyyy");
+    print(value);
+    return value;
+  }
+
+  String endDate(String value) {
+    print(value);
+    return value;
+  }
+
+  TextEditingController startDateController = TextEditingController(
+      text:
+          '${DateTime.now().year}-${DateTime.now().month - 1}-${DateTime.now().day}');
+  TextEditingController endDateController = TextEditingController(
+      text:
+          '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}');
+  // List<String> list = <String>['One', 'Two', 'Three', 'Four'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +194,10 @@ class ReportsScreen extends StatelessWidget {
               height: 20,
             ),
             FutureBuilder(
-                future: getStatistics(),
+                future: getStatistics(
+                    widget.empId,
+                    startDate(startDateController.text),
+                    endDate(endDateController.text)),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator(); // Placeholder for loading state
@@ -62,7 +205,6 @@ class ReportsScreen extends StatelessWidget {
                     return Text('Error: ${snapshot.error}');
                   } else {
                     var stats = snapshot.data['data'];
-
                     return Column(
                       children: [
                         Padding(
@@ -75,6 +217,128 @@ class ReportsScreen extends StatelessWidget {
                                 style: TextStyle(
                                     fontSize: 20, color: Color(0xffE96E2B)),
                               ),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    height: 60,
+                                    width: 80,
+                                    child: TextFormField(
+                                      onTap: () async {
+                                        DateTime? pickedDate =
+                                            await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(1800),
+                                          lastDate: DateTime.now(),
+                                        );
+                                        if (pickedDate != null) {
+                                          startDateController.text =
+                                              DateFormat("yyyy-MM-dd")
+                                                  .format(pickedDate)
+                                                  .toString();
+                                          setState(() {});
+                                        }
+                                      },
+                                      style: TextStyle(fontSize: 10),
+                                      validator: (value) => value!.isNotEmpty
+                                          ? null
+                                          : "Enter Valid Date",
+                                      readOnly: true,
+                                      controller: startDateController,
+                                      keyboardType: TextInputType.text,
+                                      autocorrect: false,
+                                      decoration: InputDecoration(
+                                        border: kEnabledTextFieldBorder,
+                                        enabledBorder: kEnabledTextFieldBorder,
+                                        focusedBorder: kFocusedTextFieldBorder,
+                                        contentPadding: EdgeInsets.all(10),
+                                        labelText: "Start Date",
+                                        labelStyle: TextStyle(fontSize: 10),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  SizedBox(
+                                    height: 60,
+                                    width: 80,
+                                    child: TextFormField(
+                                      onTap: () async {
+                                        DateTime? pickedDate =
+                                            await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(1800),
+                                          lastDate: DateTime.now(),
+                                        );
+                                        if (pickedDate != null) {
+                                          endDateController.text =
+                                              DateFormat("yyyy-MM-dd")
+                                                  .format(pickedDate)
+                                                  .toString();
+                                          setState(() {});
+                                        }
+                                      },
+                                      style: TextStyle(fontSize: 10),
+                                      validator: (value) => value!.isNotEmpty
+                                          ? null
+                                          : "Enter Valid Date",
+                                      readOnly: true,
+                                      controller: endDateController,
+                                      keyboardType: TextInputType.text,
+                                      autocorrect: false,
+                                      decoration: InputDecoration(
+                                        border: kEnabledTextFieldBorder,
+                                        enabledBorder: kEnabledTextFieldBorder,
+                                        focusedBorder: kFocusedTextFieldBorder,
+                                        contentPadding: EdgeInsets.all(10),
+                                        labelText: "End Date",
+                                        labelStyle: TextStyle(fontSize: 10),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  FutureBuilder(
+                                    future: getEmployeeNames(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return CircularProgressIndicator(); // Placeholder for loading state
+                                      } else if (snapshot.hasError) {
+                                        return Text('Error: ${snapshot.error}');
+                                      } else {
+                                        return DropdownMenu<String>(
+                                          initialSelection: widget.dropDown,
+                                          width: 130,
+                                          onSelected: (String? value) {
+                                            // This is called when the user selects an item.
+                                            int index;
+                                            value == "all"
+                                                ? index = 0
+                                                : index = snapshot.data!
+                                                        .indexOf(value!) +
+                                                    1;
+                                            print(index);
+                                            setState(() {
+                                              widget.dropDown = value!;
+                                              widget.empId = index;
+                                            });
+                                          },
+                                          dropdownMenuEntries: snapshot.data!
+                                              .map<DropdownMenuEntry<String>>(
+                                                  (String value) {
+                                            return DropdownMenuEntry<String>(
+                                                value: value, label: value);
+                                          }).toList(),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
+                              )
                             ],
                           ),
                         ),
@@ -587,6 +851,46 @@ class ReportsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
+                        FutureBuilder(
+                            future: viewAllSale(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return CircularProgressIndicator(); // Placeholder for loading state
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                List<Map<String, dynamic>> salesData =
+                                    snapshot.data!;
+                                print(salesData);
+                                return Container(
+                                  // Wrap the ListView with a Container to constrain its height
+                                  height: MediaQuery.of(context).size.height *
+                                      0.45, // Adjust the height as needed
+                                  child: ListView.builder(
+                                    itemCount: salesData.length,
+                                    itemBuilder: (BuildContext context, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: EmployeeDataCard(
+                                          saleId: int.parse(saleIds[index]),
+                                          cost: salesData[index]['totalsale'],
+                                          date: formatTimestamp(
+                                              salesData[index]['timestamp']),
+                                          name: salesData[index]
+                                                  ['customername'] ??
+                                              "",
+                                          cash: salesData[index]['saletype'] ==
+                                              "cash",
+                                          paid: salesData[index]['status'] ==
+                                              "paid",
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                              }
+                            }),
                       ],
                     );
                   }
