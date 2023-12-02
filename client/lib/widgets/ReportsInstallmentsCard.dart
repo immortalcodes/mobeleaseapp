@@ -16,6 +16,7 @@ class ReportsInstallmentsCard extends StatefulWidget {
   int amountpaid;
   String paymentdate = "";
   int saleId;
+  VoidCallback onUpdateEmi;
 
   ReportsInstallmentsCard(
       {required this.amountpaid,
@@ -24,7 +25,8 @@ class ReportsInstallmentsCard extends StatefulWidget {
       required this.status,
       required this.saleId,
       required this.installmentId,
-      required this.promiseamount});
+      required this.promiseamount,
+      required this.onUpdateEmi});
 
   @override
   State<ReportsInstallmentsCard> createState() =>
@@ -209,6 +211,7 @@ class _ReportsInstallmentsCardState extends State<ReportsInstallmentsCard> {
                             content: Text("update installment sucessfully"),
                             duration: Duration(seconds: 5),
                           ));
+                          widget.onUpdateEmi.call();
                           Navigator.pop(context);
                         } else {
                           print("failed to update installment");

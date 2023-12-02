@@ -81,8 +81,8 @@ class _AssignCardState extends State<AssignCard> {
                       setState(() {
                         localQuantity -= 1;
                       });
-                    // widget.myModel!
-                    //     .updateLocalQnt(widget.deviceId!, localQuantity);
+                    widget.myModel!
+                        .updateLocalQnt(widget.deviceId!, localQuantity);
                   },
                   child: Icon(
                     Icons.remove_circle,
@@ -107,8 +107,8 @@ class _AssignCardState extends State<AssignCard> {
                       setState(() {
                         localQuantity += 1;
                       });
-                    // widget.myModel!
-                    //     .updateLocalQnt(widget.deviceId!, localQuantity);
+                    widget.myModel!
+                        .updateLocalQnt(widget.deviceId!, localQuantity);
                   },
                   child: Icon(
                     Icons.add_circle,

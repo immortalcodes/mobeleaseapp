@@ -54,7 +54,7 @@ class _Emp_homeState extends State<Emp_home> {
             List<Map<String, dynamic>>.from(viewSalesData.values);
 
         saleIds = List<String>.from(viewSalesData.keys);
-
+        Constants.localsaleIds = saleIds;
         return salesList;
       } else {
         print("failed to load viewSalesData");

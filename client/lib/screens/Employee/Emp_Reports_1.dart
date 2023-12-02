@@ -410,6 +410,7 @@ class _Emp_Reports_1State extends State<Emp_Reports_1> {
                             name: statesList[index]['customername'] ?? "",
                             cash: statesList[index]['saletype'] == "cash",
                             paid: statesList[index]['status'] == "paid",
+                            saleId: int.parse(Constants.localsaleIds[index]),
                           )),
                     );
                   }),
