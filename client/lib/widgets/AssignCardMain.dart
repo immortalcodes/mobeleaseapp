@@ -30,13 +30,12 @@ class AssignCardMain extends StatefulWidget {
 
 class _AssignCardMainState extends State<AssignCardMain> {
   final AuthController authController = AuthController();
-  int localQuantity = 0;
+  // int widget.quantity = 0;
 
   @override
   void initState() {
     super.initState();
-
-    localQuantity = widget.quantity;
+    print("Quantity Recieved ${widget.quantity}");
   }
 
   @override
@@ -97,19 +96,19 @@ class _AssignCardMainState extends State<AssignCardMain> {
                     ),
                   ),
                   onTap: () async {
-                    if (localQuantity >= 1) {
+                    if (widget.quantity >= 1) {
                       setState(() {
-                        localQuantity = localQuantity - 1;
+                        widget.quantity = widget.quantity - 1;
                         widget.totalPrice -= int.parse(widget.cost);
                       });
                       widget.updateDeviceQuantity(
-                          widget.deviceId, localQuantity);
+                          widget.deviceId, widget.quantity);
                     }
                   },
                 ),
                 SizedBox(width: 5),
                 Text(
-                  localQuantity.toString(),
+                  widget.quantity.toString(),
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                 ),
                 SizedBox(width: 5),
@@ -126,12 +125,13 @@ class _AssignCardMainState extends State<AssignCardMain> {
                     print("%%% ${widget.deviceId}");
 
                     setState(() {
-                      localQuantity = localQuantity + 1;
+                      widget.quantity = widget.quantity + 1;
 
                       widget.totalPrice += int.parse(widget.cost);
                     });
-                    print("ddd $localQuantity");
-                    widget.updateDeviceQuantity(widget.deviceId, localQuantity);
+                    print("ddd $widget.quantity");
+                    widget.updateDeviceQuantity(
+                        widget.deviceId, widget.quantity);
                   },
                 ),
                 SizedBox(
