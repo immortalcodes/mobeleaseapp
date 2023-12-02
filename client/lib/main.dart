@@ -59,6 +59,7 @@ class MyApp extends StatelessWidget {
           '/report': (context) => ReportsScreen(
                 dropDown: 'all',
                 empId: 0,
+                empIdSale: 0,
               ),
           '/notifications': (context) => ProtectedPage(child: Notifications()),
           '/Employee': (context) => ProtectedPage(child: Employee()),

@@ -10,11 +10,17 @@ import 'package:mobelease/widgets/Appbar.dart';
 import 'package:mobelease/widgets/BottomAppBar.dart';
 import 'package:mobelease/widgets/EmployeeDataCard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class ReportsScreen extends StatefulWidget {
   String dropDown;
   int empId;
-  ReportsScreen({super.key, required this.dropDown, required this.empId});
+  int empIdSale;
+  ReportsScreen(
+      {super.key,
+      required this.dropDown,
+      required this.empId,
+      required this.empIdSale});
 
   @override
   State<ReportsScreen> createState() => _ReportsScreenState();
@@ -24,6 +30,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
   final AuthController authController = AuthController();
   List<String> saleIds = [];
   String? empId;
+  String? type;
+  String? status;
   List<EmployeeModel> employeesList = [];
 
   OutlineInputBorder kEnabledTextFieldBorder = OutlineInputBorder(
@@ -33,6 +41,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
   OutlineInputBorder kFocusedTextFieldBorder = OutlineInputBorder(
       borderSide: BorderSide(color: Color(0xffE96E2B), width: 2),
       borderRadius: BorderRadius.circular(15));
+
+  int? prevEmployeeIndex;
 
   Future<dynamic> getStatistics(
       int empId, String startTime, String endTime) async {
@@ -109,26 +119,23 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
   }
 
-  Future<List<Map<String, dynamic>>> viewAllSale() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    empId = prefs.getInt('empId').toString();
+  Future<List<Map<String, dynamic>>> viewAllSale(String starttime,
+      String endtime, String status, String empId, String saletype) async {
     var url = Uri.parse('$baseUrl/sale/viewallsale');
     final token = await authController.getToken();
-
     print("token $token");
-    DateTime today = DateTime.now();
-    DateTime tomorrow = today.add(Duration(days: 2));
-    final String endtime = DateFormat('yyyy-MM-dd').format(tomorrow);
-
+    // DateTime today = DateTime.now();
+    // DateTime tomorrow = today.add(Duration(days: 2));
+    // final String endtime = DateFormat('yyyy-MM-dd').format(tomorrow);
     try {
       final response = await http.post(
         url,
         body: jsonEncode({
-          "starttime": "2021-10-12",
+          "starttime": starttime,
           "endtime": endtime,
-          "status": "*all*",
+          "status": status,
           "empid": empId,
-          "saletype": "*all*"
+          "saletype": saletype
         }),
         headers: {'Cookie': token!, 'Content-Type': 'application/json'},
       );
@@ -171,12 +178,49 @@ class _ReportsScreenState extends State<ReportsScreen> {
     return value;
   }
 
+  TextEditingController startDateControllerSale = TextEditingController(
+      text:
+          '${DateTime.now().year}-${DateTime.now().month - 1}-${DateTime.now().day}');
+
+  TextEditingController endDateControllerSale = TextEditingController(
+      text:
+          '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}');
+
   TextEditingController startDateController = TextEditingController(
       text:
           '${DateTime.now().year}-${DateTime.now().month - 1}-${DateTime.now().day}');
   TextEditingController endDateController = TextEditingController(
       text:
           '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}');
+
+  String? prevStartDate;
+  String? prevEndDate;
+  String? prevStatus;
+  String? prevType;
+  int? indexStatus;
+  int? indexType;
+
+  String tester(String test) {
+    print("Yoooooooooooooooooooooooooooo");
+    print(test);
+    return test;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    prevStartDate = startDateControllerSale.text;
+    prevEndDate = endDateControllerSale.text;
+    prevStatus = "*all*";
+    status = "*all*";
+    type = "*all*";
+    indexStatus = 2;
+    indexType = 2;
+    prevType = "*all*";
+  }
+
   // List<String> list = <String>['One', 'Two', 'Three', 'Four'];
   @override
   Widget build(BuildContext context) {
@@ -293,7 +337,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                         enabledBorder: kEnabledTextFieldBorder,
                                         focusedBorder: kFocusedTextFieldBorder,
                                         contentPadding: EdgeInsets.all(10),
-                                        labelText: "End Date",
+                                        labelText: "Start Date",
                                         labelStyle: TextStyle(fontSize: 10),
                                       ),
                                     ),
@@ -848,11 +892,263 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 style: TextStyle(
                                     fontSize: 18, color: Color(0xffE96E2B)),
                               ),
+                              IconButton(
+                                  splashRadius: 20,
+                                  onPressed: () {
+                                    prevEmployeeIndex = widget.empIdSale;
+                                    prevStartDate =
+                                        startDateControllerSale.text;
+                                    prevEndDate = endDateControllerSale.text;
+                                    prevStatus = status;
+                                    prevType = type;
+                                    showAdaptiveDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          AlertDialog.adaptive(
+                                        title: const Text(
+                                            'Apply Filters on Sales'),
+                                        content: Column(
+                                          children: [
+                                            Text("Select Employee"),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            FutureBuilder(
+                                              future: getEmployeeNames(),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return CircularProgressIndicator(); // Placeholder for loading state
+                                                } else if (snapshot.hasError) {
+                                                  return Text(
+                                                      'Error: ${snapshot.error}');
+                                                } else {
+                                                  return DropdownMenu<String>(
+                                                    initialSelection:
+                                                        widget.dropDown,
+                                                    width: 130,
+                                                    onSelected:
+                                                        (String? value) {
+                                                      // This is called when the user selects an item.
+                                                      int index;
+                                                      value == "all"
+                                                          ? index = 0
+                                                          : index = snapshot
+                                                                  .data!
+                                                                  .indexOf(
+                                                                      value!) +
+                                                              1;
+                                                      print(index);
+                                                      setState(() {
+                                                        widget.dropDown =
+                                                            value!;
+                                                        widget.empIdSale =
+                                                            index;
+                                                      });
+                                                    },
+                                                    dropdownMenuEntries:
+                                                        snapshot.data!.map<
+                                                            DropdownMenuEntry<
+                                                                String>>((String
+                                                            value) {
+                                                      return DropdownMenuEntry<
+                                                              String>(
+                                                          value: value,
+                                                          label: value);
+                                                    }).toList(),
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                            SizedBox(
+                                              height: 40,
+                                            ),
+                                            Text("Select Payment Type"),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            // Here, default theme colors are used for activeBgColor, activeFgColor, inactiveBgColor and inactiveFgColor
+                                            ToggleSwitch(
+                                              initialLabelIndex: indexType,
+                                              totalSwitches: 3,
+                                              labels: ['Credit', 'Cash', 'All'],
+                                              onToggle: (index) {
+                                                print(index);
+                                                indexType = index;
+                                                index == 0
+                                                    ? type = "credit"
+                                                    : index == 1
+                                                        ? type = "cash"
+                                                        : type = "*all*";
+                                                print(status);
+                                                print('switched to: $index');
+                                              },
+                                            ),
+                                            SizedBox(
+                                              height: 40,
+                                            ),
+                                            Text("Select Payment Status"),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            ToggleSwitch(
+                                              initialLabelIndex: indexStatus,
+                                              totalSwitches: 3,
+                                              labels: ['Paid', 'Due', 'All'],
+                                              onToggle: (index) {
+                                                indexStatus = index;
+                                                index == 0
+                                                    ? status = "paid"
+                                                    : index == 1
+                                                        ? status = "due"
+                                                        : status = "*all*";
+                                                print(type);
+                                                print('switched to: $index');
+                                              },
+                                            ),
+                                            SizedBox(
+                                              height: 60,
+                                            ),
+                                            SizedBox(
+                                              width: 160,
+                                              child: TextFormField(
+                                                onTap: () async {
+                                                  DateTime? pickedDate =
+                                                      await showDatePicker(
+                                                    context: context,
+                                                    initialDate: DateTime.now(),
+                                                    firstDate: DateTime(1800),
+                                                    lastDate: DateTime.now(),
+                                                  );
+                                                  if (pickedDate != null) {
+                                                    startDateControllerSale
+                                                            .text =
+                                                        DateFormat("yyyy-MM-dd")
+                                                            .format(pickedDate)
+                                                            .toString();
+                                                    setState(() {});
+                                                  }
+                                                },
+                                                style: TextStyle(fontSize: 16),
+                                                validator: (value) =>
+                                                    value!.isNotEmpty
+                                                        ? null
+                                                        : "Enter Valid Date",
+                                                readOnly: true,
+                                                controller:
+                                                    startDateControllerSale,
+                                                keyboardType:
+                                                    TextInputType.text,
+                                                autocorrect: false,
+                                                decoration: InputDecoration(
+                                                  border:
+                                                      kEnabledTextFieldBorder,
+                                                  enabledBorder:
+                                                      kEnabledTextFieldBorder,
+                                                  focusedBorder:
+                                                      kFocusedTextFieldBorder,
+                                                  contentPadding:
+                                                      EdgeInsets.all(10),
+                                                  labelText: "Start Date",
+                                                  labelStyle:
+                                                      TextStyle(fontSize: 16),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 60,
+                                            ),
+                                            SizedBox(
+                                              width: 160,
+                                              child: TextFormField(
+                                                onTap: () async {
+                                                  DateTime? pickedDate =
+                                                      await showDatePicker(
+                                                    context: context,
+                                                    initialDate: DateTime.now(),
+                                                    firstDate: DateTime(1800),
+                                                    lastDate: DateTime.now(),
+                                                  );
+                                                  if (pickedDate != null) {
+                                                    endDateControllerSale.text =
+                                                        DateFormat("yyyy-MM-dd")
+                                                            .format(pickedDate)
+                                                            .toString();
+                                                    setState(() {});
+                                                  }
+                                                },
+                                                style: TextStyle(fontSize: 16),
+                                                validator: (value) =>
+                                                    value!.isNotEmpty
+                                                        ? null
+                                                        : "Enter Valid Date",
+                                                readOnly: true,
+                                                controller:
+                                                    endDateControllerSale,
+                                                keyboardType:
+                                                    TextInputType.text,
+                                                autocorrect: false,
+                                                decoration: InputDecoration(
+                                                  border:
+                                                      kEnabledTextFieldBorder,
+                                                  enabledBorder:
+                                                      kEnabledTextFieldBorder,
+                                                  focusedBorder:
+                                                      kFocusedTextFieldBorder,
+                                                  contentPadding:
+                                                      EdgeInsets.all(10),
+                                                  labelText: "End Date",
+                                                  labelStyle:
+                                                      TextStyle(fontSize: 16),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              print(prevStartDate);
+                                              startDateControllerSale.text =
+                                                  prevStartDate!;
+                                              print(prevEndDate);
+                                              endDateControllerSale.text =
+                                                  prevEndDate!;
+                                              print(prevEmployeeIndex);
+                                              widget.empIdSale =
+                                                  prevEmployeeIndex!;
+                                              status = prevStatus;
+                                              type = prevType;
+                                              Navigator.pop(context);
+                                              setState(() {});
+                                            },
+                                            child: const Text('Cancel'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              setState(() {});
+                                            },
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.filter_alt,
+                                    color: Color(0xffE96E2B),
+                                  ))
                             ],
                           ),
                         ),
                         FutureBuilder(
-                            future: viewAllSale(),
+                            future: viewAllSale(
+                                startDateControllerSale.text,
+                                endDateControllerSale.text,
+                                tester(status!),
+                                widget.empIdSale.toString(),
+                                tester(type!)),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
@@ -866,7 +1162,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 return Container(
                                   // Wrap the ListView with a Container to constrain its height
                                   height: MediaQuery.of(context).size.height *
-                                      0.45, // Adjust the height as needed
+                                      0.4, // Adjust the height as needed
                                   child: ListView.builder(
                                     itemCount: salesData.length,
                                     itemBuilder: (BuildContext context, index) {
