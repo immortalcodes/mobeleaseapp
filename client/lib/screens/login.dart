@@ -37,7 +37,6 @@ class _LoginState extends State<Login> {
   
     final loginSuccess = await _authController.login(
         email, password, widget.loginMember.toLowerCase());
-
     if (loginSuccess) {
       if (widget.loginMember == "ADMIN") {
         prefs.setBool('isAdmin', true);
