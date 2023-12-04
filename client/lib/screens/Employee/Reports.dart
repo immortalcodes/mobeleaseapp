@@ -6,7 +6,7 @@ import 'package:mobelease/globals.dart';
 import 'package:mobelease/widgets/Emp_bottomAppBar.dart';
 import 'package:intl/intl.dart';
 import 'package:mobelease/widgets/TextFieldWidget.dart';
-// import 'package:mobelease/widgets/saleDetailsCard.dart';
+import 'package:mobelease/widgets/saleDetailsCard.dart';
 import '../../widgets/Appbar.dart';
 import '../../widgets/PaymentTag.dart';
 import '../../widgets/ReportsInstallmentsCard.dart';
@@ -35,7 +35,8 @@ class _ReportsState extends State<Reports> {
     var url = Uri.parse('$baseUrl/sale/viewinstallment');
 
     final token = await authController.getToken();
-    print("kdkdkd ${widget.saleId}");
+    print(
+        "kdkdkd ${widget.saleId}, I am aarush and I like to play letsss goooooooooooo");
     try {
       final response = await http.post(
         url,
@@ -52,6 +53,7 @@ class _ReportsState extends State<Reports> {
         Map<String, dynamic> installments = viewinstallmentData['installments'];
         installmentsIDs = List<String>.from(installments.keys);
         installmentList = List<Map<String, dynamic>>.from(installments.values);
+        print("$installmentList");
         return installmentList;
       } else {
         print("failed to load viewSalesData");
@@ -64,8 +66,12 @@ class _ReportsState extends State<Reports> {
 
   @override
   Widget build(BuildContext context) {
+    print("Okayyyyyyy biyeeeeeee I ammmm heeerrrrreeee");
+    print("Meeeeeee Issssssssss Heeeeereeeeee lesss gooooooo");
     List<Map<String, dynamic>>? saleitemsList = List<Map<String, dynamic>>.from(
         widget.singlesalesList![0]['itemarray'].values);
+    print(
+        "POOPOPOPOPOPOPOPOPOPOPOPOPOPOPOOPOPOPOPOPOPOOOOOOPPPPPOOOOOOOPPPPPPPPPPPOOOOOOOOOPPPPPPOOOOOOOOOOOOOOOPPPPPPPPPPOOOOOOOOO");
 
     // List<Map<String, dynamic>>? installmentsList =
     //     List<Map<String, dynamic>>.from(
@@ -249,57 +255,57 @@ class _ReportsState extends State<Reports> {
                         //   quantity: item['quantity'],
                         //   sellprice: item['sellprice'],
                         // ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 16),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  PaymentTag(Tag: "Total Sale:"),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.06,
-                                  ),
-                                  Text(
-                                    '\$ ${widget.singlesalesList![0]['totalsale']}',
-                                    style: TextStyle(
-                                        color: Color(0xffE96E2B),
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600),
-                                  )
-                                ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0, horizontal: 16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    PaymentTag(Tag: "Total Sale:"),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.06,
+                                    ),
+                                    Text(
+                                      '\$ ${widget.singlesalesList![0]['totalsale']}',
+                                      style: TextStyle(
+                                          color: Color(0xffE96E2B),
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 16),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  PaymentTag(Tag: "Credit Left:"),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.06,
-                                  ),
-                                  Text(
-                                    '\$ ${widget.singlesalesList![0]['amountleft']}',
-                                    style: TextStyle(
-                                        color: Color(0xffE96E2B),
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0, horizontal: 16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    PaymentTag(Tag: "Credit Left:"),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.06,
+                                    ),
+                                    Text(
+                                      '\$ ${widget.singlesalesList![0]['amountleft']}',
+                                      style: TextStyle(
+                                          color: Color(0xffE96E2B),
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -324,7 +330,7 @@ class _ReportsState extends State<Reports> {
                       builder: (context, snapshot) {
                         List<Map<String, dynamic>>? installmentData =
                             snapshot.data;
-
+                        print("Brothaaaaa mee isss hereeeeeeeeeeee");
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return CircularProgressIndicator();

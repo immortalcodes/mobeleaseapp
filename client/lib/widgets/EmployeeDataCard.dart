@@ -34,7 +34,7 @@ class _EmployeeDataCardState extends State<EmployeeDataCard> {
     var url = Uri.parse('$baseUrl/sale/viewsinglesale');
 
     final token = await authController.getToken();
-    print("kdkdkd ${widget.saleId}");
+    // print("kdkdkd ${widget.saleId}");
     try {
       final response = await http.post(
         url,
@@ -123,7 +123,9 @@ class _EmployeeDataCardState extends State<EmployeeDataCard> {
                             borderRadius: BorderRadius.circular(5))),
                     onPressed: () async {
                       await viewSingleInstallment();
-
+                      print(
+                          "BOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOYYYYYYYYYYYYAAAAAAAAAAAAAAAAa");
+                      print(singlesalesList);
                       // ignore: use_build_context_synchronously
                       Navigator.push(
                           context,

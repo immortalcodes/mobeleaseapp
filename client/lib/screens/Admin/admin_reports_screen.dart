@@ -148,7 +148,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             List<Map<String, dynamic>>.from(viewSalesData.values);
 
         saleIds = List<String>.from(viewSalesData.keys);
-
+        print(salesList);
         return salesList;
       } else {
         print("failed to load viewSalesData");
@@ -1158,6 +1158,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               } else {
                                 List<Map<String, dynamic>> salesData =
                                     snapshot.data!;
+                                print(
+                                    "Heloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo");
                                 print(salesData);
                                 return Container(
                                   // Wrap the ListView with a Container to constrain its height
