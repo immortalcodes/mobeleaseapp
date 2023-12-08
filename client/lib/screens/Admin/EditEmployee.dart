@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobelease/ui_sizes.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
 import '../../models/Employee_Model.dart';
@@ -139,11 +141,16 @@ class _EmployeePersonalState extends State<EditEmployee> {
           child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 11.0, left: 11.0, right: 11.0),
+            padding: EdgeInsets.only(
+                top: UiSizes(context: context).height_11,
+                left: UiSizes(context: context).width_11,
+                right: UiSizes(context: context).width_11),
             child: Appbar(),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 12),
+            padding: EdgeInsets.symmetric(
+                horizontal: UiSizes(context: context).width_14,
+                vertical: UiSizes(context: context).height_12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,7 +174,7 @@ class _EmployeePersonalState extends State<EditEmployee> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: 25,
+                          height: UiSizes(context: context).height_25,
                         ),
                         Text(
                           "${widget.employeeData.firstName} ${widget.employeeData.lastName}",
@@ -184,7 +191,9 @@ class _EmployeePersonalState extends State<EditEmployee> {
                               size: 12,
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(6.0),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: UiSizes(context: context).width_6,
+                                  vertical: UiSizes(context: context).height_6),
                               child: Text(
                                 "${widget.employeeData.phoneNo}",
                                 style: TextStyle(
@@ -239,7 +248,7 @@ class _EmployeePersonalState extends State<EditEmployee> {
             ),
           ),
           SizedBox(
-            height: 15,
+            height: UiSizes(context: context).height_15,
           ),
           Expanded(
             child: Container(
@@ -248,12 +257,13 @@ class _EmployeePersonalState extends State<EditEmployee> {
                 color: Colors.white,
               ),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 17.0, vertical: 8),
+                padding: EdgeInsets.symmetric(
+                    horizontal: UiSizes(context: context).width_17,
+                    vertical: UiSizes(context: context).height_8),
                 child: Form(
                   key: _formKey,
                   child: ListView(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.symmetric(horizontal: UiSizes(context: context).width_8, vertical: UiSizes(context: context).height_8),
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -263,13 +273,13 @@ class _EmployeePersonalState extends State<EditEmployee> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("First Name"),
+                                AutoSizeText("First Name"),
                                 SizedBox(
-                                  height: 10,
+                                  height: UiSizes(context: context).height_10,
                                 ),
                                 // TextEditingController()
                                 SizedBox(
-                                  height: 44,
+                                  height: UiSizes(context: context).height_44,
                                   child: TextFieldWidget2(
                                     controller: _firstnameController,
                                     hint: widget.employeeData.firstName!,
@@ -283,12 +293,12 @@ class _EmployeePersonalState extends State<EditEmployee> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Last Name"),
+                                AutoSizeText("Last Name"),
                                 SizedBox(
-                                  height: 10,
+                                  height: UiSizes(context: context).height_10,
                                 ),
                                 SizedBox(
-                                  height: 44,
+                                  height: UiSizes(context: context).height_44,
                                   child: TextFieldWidget2(
                                     controller: _lastnameController,
                                     hint: widget.employeeData.lastName!,
@@ -300,17 +310,17 @@ class _EmployeePersonalState extends State<EditEmployee> {
                         ],
                       ),
                       SizedBox(
-                        height: 18,
+                        height: UiSizes(context: context).height_18,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Phone Number"),
+                          AutoSizeText("Phone Number"),
                           SizedBox(
-                            height: 10,
+                            height: UiSizes(context: context).height_10,
                           ),
                           SizedBox(
-                            height: 44,
+                            height: UiSizes(context: context).height_44,
                             child: TextFieldWidget2(
                               controller: _phoneController,
                               hint: widget.employeeData.phoneNo!,
@@ -319,17 +329,17 @@ class _EmployeePersonalState extends State<EditEmployee> {
                         ],
                       ),
                       SizedBox(
-                        height: 18,
+                        height: UiSizes(context: context).height_18,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Username or email address"),
+                          AutoSizeText("Username or email address"),
                           SizedBox(
-                            height: 10,
+                            height: UiSizes(context: context).height_10,
                           ),
                           SizedBox(
-                            height: 44,
+                            height: UiSizes(context: context).height_44,
                             child: TextFieldWidget2(
                               controller: _emailController,
                               hint: widget.employeeData.email!,
@@ -338,17 +348,17 @@ class _EmployeePersonalState extends State<EditEmployee> {
                         ],
                       ),
                       SizedBox(
-                        height: 18,
+                        height: UiSizes(context: context).height_18,
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Password (more than 8 letters)"),
+                          AutoSizeText("Password (more than 8 letters)"),
                           SizedBox(
-                            height: 10,
+                            height: UiSizes(context: context).height_10,
                           ),
                           SizedBox(
-                            height: 44,
+                            height: UiSizes(context: context).height_44,
                             child: TextFieldWidget2(
                               controller: _passwordController,
                               hint: "password",
@@ -357,10 +367,10 @@ class _EmployeePersonalState extends State<EditEmployee> {
                         ],
                       ),
                       SizedBox(
-                        height: 18,
+                        height: UiSizes(context: context).height_18,
                       ),
                       SizedBox(
-                        height: 10,
+                        height: UiSizes(context: context).height_10,
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -369,17 +379,17 @@ class _EmployeePersonalState extends State<EditEmployee> {
                             ),
                             backgroundColor: Color(0xffE96E2B)),
                         onPressed: _getImage,
-                        child: Text('Select Image'),
+                        child: AutoSizeText('Select Image'),
                       ),
                       _imageFile != null
                           ? Image.file(
                               File(_imageFile!.path),
-                              height: 150,
-                              width: 150,
+                              height: UiSizes(context: context).height_150,
+                              width: UiSizes(context: context).width_150,
                             )
                           : Container(),
                       SizedBox(
-                        height: 8,
+                        height: UiSizes(context: context).height_8,
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -388,7 +398,7 @@ class _EmployeePersonalState extends State<EditEmployee> {
                             ),
                             backgroundColor: Color(0xffE96E2B)),
                         onPressed: _submitForm,
-                        child: Text('Save'),
+                        child: AutoSizeText('Save'),
                       ),
                     ],
                   ),

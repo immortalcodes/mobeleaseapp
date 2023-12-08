@@ -1,5 +1,7 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mobelease/screens/Inventory/AddDevice.dart';
+import 'package:mobelease/ui_sizes.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
 import '../../models/Inventory_Model.dart';
@@ -90,7 +92,7 @@ class _AssigningPageState extends State<AssigningPage> {
       itemBuilder: (BuildContext context, int index) {
         return ListTile(
           // title: Text(devices[index].deviceDetail),
-          subtitle: Text('Cost: ${devices[index].cost}'),
+          subtitle: AutoSizeText('Cost: ${devices[index].cost}'),
           trailing: IconButton(
             icon: Icon(Icons.delete), // Add a delete icon
             onPressed: () {
@@ -132,25 +134,25 @@ class _AssigningPageState extends State<AssigningPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator(); // Placeholder for loading state
           } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return AutoSizeText('Error: ${snapshot.error}');
           } else {
             Map<String, List<ItemModel>> categorizedDevices =
                 snapshot.data as Map<String, List<ItemModel>>;
             return SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                padding:  EdgeInsets.symmetric(horizontal: UiSizes(context: context).width_18),
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 11.0),
+                      padding:  EdgeInsets.only(top: UiSizes(context: context).height_11),
                       child: Appbar(),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 23.0, bottom: 16.0),
+                      padding:  EdgeInsets.only(top: UiSizes(context: context).height_23, bottom: UiSizes(context: context).height_16),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Categories",
+                          AutoSizeText("Categories",
                               style: TextStyle(
                                   color: Color(0xffE96E2B),
                                   fontWeight: FontWeight.w600,
@@ -175,7 +177,7 @@ class _AssigningPageState extends State<AssigningPage> {
                                     size: 13,
                                   ),
                                 ),
-                                Text(
+                                AutoSizeText(
                                   "Add Device",
                                   style: TextStyle(color: Color(0xffE96E2B)),
                                 )
@@ -191,7 +193,7 @@ class _AssigningPageState extends State<AssigningPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: categorizedDevices.keys.map((category) {
                           return Padding(
-                            padding: const EdgeInsets.all(6.0),
+                            padding:  EdgeInsets.symmetric(horizontal: UiSizes(context: context).width_6,vertical: UiSizes(context: context).width_6),
                             child: Categories(
                               title: category,
                               svgpath: "assets/svgs/Mobile.svg",
@@ -220,7 +222,7 @@ class _AssigningPageState extends State<AssigningPage> {
                                 categorizedDevices[selectedCategory]![index];
                             print("devices $device");
                             return Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding:  EdgeInsets.symmetric(horizontal: UiSizes(context: context).width_8, vertical: UiSizes(context: context).height_8),
                               child: GestureDetector(
                                 onDoubleTap: () async {
                                   bool isPresent = widget.deviceItems!.any(
@@ -235,7 +237,7 @@ class _AssigningPageState extends State<AssigningPage> {
                                   } else {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
-                                      content: Text("Device already present"),
+                                      content: AutoSizeText("Device already present"),
                                       duration: Duration(seconds: 5),
                                     ));
                                   }

@@ -6,6 +6,7 @@ import 'package:mobelease/controllers/auth_controller.dart';
 import 'package:mobelease/globals.dart';
 import 'package:mobelease/models/Employee_Model.dart';
 import 'package:mobelease/screens/Admin/Employee.dart';
+import 'package:mobelease/ui_sizes.dart';
 import 'package:mobelease/widgets/Appbar.dart';
 import 'package:mobelease/widgets/BottomAppBar.dart';
 import 'package:mobelease/widgets/EmployeeDataCard.dart';
@@ -229,13 +230,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(
-                top: 11.0,
+              padding:  EdgeInsets.only(
+                top: UiSizes(context: context).height_11,
               ),
               child: Appbar(),
             ),
             SizedBox(
-              height: 20,
+              height: UiSizes(context: context).height_20,
             ),
             FutureBuilder(
                 future: getStatistics(
@@ -252,7 +253,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     return Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.symmetric(horizontal: UiSizes(context: context).width_10, vertical: UiSizes(context: context).height_10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -264,8 +265,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               Row(
                                 children: [
                                   SizedBox(
-                                    height: 60,
-                                    width: 80,
+                                    height: UiSizes(context: context).height_60,
+                                    width: UiSizes(context: context).width_80,
                                     child: TextFormField(
                                       onTap: () async {
                                         DateTime? pickedDate =
@@ -302,11 +303,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    width: UiSizes(context: context).width_10,
                                   ),
                                   SizedBox(
-                                    height: 60,
-                                    width: 80,
+                                    height: UiSizes(context: context).height_60,
+                                    width: UiSizes(context: context).width_80,
                                     child: TextFormField(
                                       onTap: () async {
                                         DateTime? pickedDate =
@@ -343,7 +344,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 10,
+                                    width: UiSizes(context: context).width_10,
                                   ),
                                   FutureBuilder(
                                     future: getEmployeeNames(),
@@ -391,7 +392,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                           child: Row(
                             children: [
                               SizedBox(
-                                width: 10,
+                                width: UiSizes(context: context).width_10,
                               ),
                               Column(
                                 children: [
@@ -400,11 +401,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                       borderRadius: BorderRadius.circular(10),
                                       color: Color.fromARGB(255, 219, 201, 243),
                                     ),
-                                    height: 60,
-                                    width: 125,
+                                    height: UiSizes(context: context).height_60,
+                                    width: UiSizes(context: context).width_125,
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 5),
+                                          horizontal: UiSizes(context: context).width_5, vertical: UiSizes(context: context).height_5),
                                       child: Column(
                                         children: [
                                           Row(
@@ -420,7 +421,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: 5,
+                                                width: UiSizes(context: context).width_5,
                                               ),
                                               Text(
                                                 "Total Sale Cash",
@@ -429,12 +430,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                             ],
                                           ),
                                           SizedBox(
-                                            height: 5,
+                                            height: UiSizes(context: context).height_5,
                                           ),
                                           Row(
                                             children: [
                                               SizedBox(
-                                                width: 30,
+                                                width:  UiSizes(context: context).width_30,
                                               ),
                                               Text(
                                                   '\$ ${stats['cash_totalsale']}'),
@@ -445,15 +446,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 10,
+                                    height: UiSizes(context: context).height_10,
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: Color.fromARGB(255, 186, 241, 227),
                                     ),
-                                    height: 60,
-                                    width: 125,
+                                    height: UiSizes(context: context).height_10,
+                                    width: UiSizes(context: context).width_125,
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 5, vertical: 5),
@@ -472,7 +473,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: 5,
+                                                width: UiSizes(context: context).width_5,
                                               ),
                                               Text(
                                                 "Profit Credit",
@@ -481,12 +482,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                             ],
                                           ),
                                           SizedBox(
-                                            height: 5,
+                                            height: UiSizes(context: context).height_5,
                                           ),
                                           Row(
                                             children: [
                                               SizedBox(
-                                                width: 30,
+                                                width: UiSizes(context: context).width_30,
                                               ),
                                               Text(
                                                   '\$ ${stats['profit_credit'] == null ? 0 : stats['profit_credit']}'),
@@ -499,7 +500,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 ],
                               ),
                               SizedBox(
-                                width: 10,
+                                width: UiSizes(context: context).width_10,
                               ),
                               Column(
                                 children: [
@@ -508,11 +509,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                       borderRadius: BorderRadius.circular(10),
                                       color: Color.fromARGB(255, 243, 201, 232),
                                     ),
-                                    height: 60,
-                                    width: 125,
+                                    height: UiSizes(context: context).height_60,
+                                    width: UiSizes(context: context).width_125,
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 5),
+                                          horizontal: UiSizes(context: context).width_5, vertical: UiSizes(context: context).height_5),
                                       child: Column(
                                         children: [
                                           Row(
@@ -528,7 +529,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: 5,
+                                                width: UiSizes(context: context).width_5,
                                               ),
                                               Text(
                                                 "Profit Cash",
@@ -537,12 +538,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                             ],
                                           ),
                                           SizedBox(
-                                            height: 5,
+                                            height: UiSizes(context: context).height_5,
                                           ),
                                           Row(
                                             children: [
                                               SizedBox(
-                                                width: 30,
+                                                width:  UiSizes(context: context).width_30,
                                               ),
                                               Text(
                                                   '\$ ${stats['profit_cash']}'),
@@ -553,18 +554,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 10,
+                                    height: UiSizes(context: context).height_10,
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: Color.fromARGB(255, 241, 232, 186),
                                     ),
-                                    height: 60,
-                                    width: 125,
+                                    height:  UiSizes(context: context).height_60,
+                                    width: UiSizes(context: context).width_125,
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 5),
+                                          horizontal: UiSizes(context: context).width_5, vertical: UiSizes(context: context).height_5),
                                       child: Column(
                                         children: [
                                           Row(
@@ -580,7 +581,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: 5,
+                                                width:  UiSizes(context: context).width_5,
                                               ),
                                               Text(
                                                 "Total Profit",
@@ -589,12 +590,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                             ],
                                           ),
                                           SizedBox(
-                                            height: 5,
+                                            height: UiSizes(context: context).height_5,
                                           ),
                                           Row(
                                             children: [
                                               SizedBox(
-                                                width: 30,
+                                                width:  UiSizes(context: context).width_30,
                                               ),
                                               Text(
                                                   '\$ ${stats['total_profit'] == null ? 0 : stats['total_profit']}'),
@@ -607,7 +608,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 ],
                               ),
                               SizedBox(
-                                width: 10,
+                                width: UiSizes(context: context).width_10,
                               ),
                               Column(
                                 children: [
@@ -616,11 +617,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                       borderRadius: BorderRadius.circular(10),
                                       color: Color.fromARGB(255, 247, 218, 194),
                                     ),
-                                    height: 60,
-                                    width: 125,
+                                    height: UiSizes(context: context).height_60,
+                                    width: UiSizes(context: context).width_125,
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 5),
+                                          horizontal: UiSizes(context: context).width_5, vertical: UiSizes(context: context).height_5),
                                       child: Column(
                                         children: [
                                           Row(
@@ -636,7 +637,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: 5,
+                                                width: UiSizes(context: context).width_5,
                                               ),
                                               Text(
                                                 "Total Sale Credit",
@@ -645,12 +646,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                             ],
                                           ),
                                           SizedBox(
-                                            height: 5,
+                                            height: UiSizes(context: context).height_5,
                                           ),
                                           Row(
                                             children: [
                                               SizedBox(
-                                                width: 30,
+                                                width:  UiSizes(context: context).width_30,
                                               ),
                                               Text(
                                                   '\$ ${stats['credit_totalsale']}'),
@@ -661,18 +662,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 10,
+                                    height: UiSizes(context: context).height_10,
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         color:
                                             Color.fromARGB(255, 217, 241, 218)),
-                                    height: 60,
-                                    width: 125,
+                                    height: UiSizes(context: context).height_60,
+                                    width: UiSizes(context: context).width_125,
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 5),
+                                          horizontal: UiSizes(context: context).width_5, vertical: UiSizes(context: context).height_5),
                                       child: Column(
                                         children: [
                                           Row(
@@ -688,7 +689,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: 5,
+                                                width: UiSizes(context: context).width_5,
                                               ),
                                               Text(
                                                 "Credit COGS",
@@ -697,12 +698,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                             ],
                                           ),
                                           SizedBox(
-                                            height: 5,
+                                            height: UiSizes(context: context).height_5,
                                           ),
                                           Row(
                                             children: [
                                               SizedBox(
-                                                width: 30,
+                                                width: UiSizes(context: context).width_30,
                                               ),
                                               Text(
                                                   '\$ ${stats['credit_cogs']}'),
@@ -715,7 +716,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 ],
                               ),
                               SizedBox(
-                                width: 10,
+                                width: UiSizes(context: context).width_10,
                               ),
                               Column(
                                 children: [
@@ -724,11 +725,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                       borderRadius: BorderRadius.circular(10),
                                       color: Color.fromARGB(255, 201, 229, 243),
                                     ),
-                                    height: 60,
-                                    width: 120,
+                                    height: UiSizes(context: context).height_60,
+                                    width: UiSizes(context: context).width_120,
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 5),
+                                          horizontal: UiSizes(context: context).width_5, vertical: UiSizes(context: context).height_5),
                                       child: Column(
                                         children: [
                                           Row(
@@ -744,7 +745,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: 5,
+                                                width: UiSizes(context: context).width_5,
                                               ),
                                               Text(
                                                 "Total credit left",
@@ -753,12 +754,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                             ],
                                           ),
                                           SizedBox(
-                                            height: 5,
+                                            height: UiSizes(context: context).height_5,
                                           ),
                                           Row(
                                             children: [
                                               SizedBox(
-                                                width: 30,
+                                                width: UiSizes(context: context).width_30,
                                               ),
                                               Text('\$ ${stats['creditleft']}'),
                                             ],
@@ -768,18 +769,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 10,
+                                    height: UiSizes(context: context).height_10,
                                   ),
                                   Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: Color.fromARGB(255, 233, 241, 186),
                                     ),
-                                    height: 60,
-                                    width: 120,
+                                    height: UiSizes(context: context).height_60,
+                                    width: UiSizes(context: context).width_120,
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 5),
+                                          horizontal: UiSizes(context: context).width_5, vertical: UiSizes(context: context).height_5),
                                       child: Column(
                                         children: [
                                           Row(
@@ -795,7 +796,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: 5,
+                                                width: UiSizes(context: context).width_5,
                                               ),
                                               Text(
                                                 "Stolen loss",
@@ -804,12 +805,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                             ],
                                           ),
                                           SizedBox(
-                                            height: 5,
+                                            height: UiSizes(context: context).height_5,
                                           ),
                                           Row(
                                             children: [
                                               SizedBox(
-                                                width: 30,
+                                                width: UiSizes(context: context).width_30,
                                               ),
                                               Text(
                                                   '\$ ${stats['stolen_loss'] == null ? 0 : stats['stolen_loss']}'),

@@ -1,5 +1,7 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mobelease/screens/Admin/EmployeePersonal.dart';
+import 'package:mobelease/ui_sizes.dart';
 import '../../controllers/auth_controller.dart';
 import '../../models/Employee_Model.dart';
 import '../../widgets/Appbar.dart';
@@ -25,17 +27,22 @@ class _EmployeeAllState extends State<EmployeeAll> {
         child: Column(
           children: [
             Padding(
-              padding:
-                  const EdgeInsets.only(top: 11.0, left: 11.0, right: 11.0),
+              padding: EdgeInsets.only(
+                  top: UiSizes(context: context).height_11,
+                  left: UiSizes(context: context).width_11,
+                  right: UiSizes(context: context).width_11),
               child: Appbar(),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  top: 23.0, bottom: 16.0, left: 18.0, right: 18.0),
+              padding: EdgeInsets.only(
+                  top: UiSizes(context: context).height_23,
+                  bottom: UiSizes(context: context).height_23,
+                  left: UiSizes(context: context).width_18,
+                  right: UiSizes(context: context).width_18),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("List of all Employees",
+                  AutoSizeText("List of all Employees",
                       style: TextStyle(
                           color: Color(0xffE96E2B),
                           fontWeight: FontWeight.w600,
@@ -58,7 +65,7 @@ class _EmployeeAllState extends State<EmployeeAll> {
             ),
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 18.0, vertical: 7.0),
+                   EdgeInsets.symmetric(horizontal: UiSizes(context: context).width_18, vertical: UiSizes(context: context).height_7),
               child: TextField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(
@@ -82,8 +89,8 @@ class _EmployeeAllState extends State<EmployeeAll> {
                     final employee = widget.employeeList![index];
 
                     return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 18.0, vertical: 5.0),
+                      padding:  EdgeInsets.symmetric(
+                          horizontal: UiSizes(context: context).width_18, vertical: UiSizes(context: context).height_4),
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -97,7 +104,7 @@ class _EmployeeAllState extends State<EmployeeAll> {
                         child: ListTile(
                           leading:
                               Employee_icon(imagePath: employee.empPhoto ?? ""),
-                          title: Text(
+                          title: AutoSizeText(
                             employee.firstName ?? 'No First Name Available',
                           ),
                           trailing: Icon(

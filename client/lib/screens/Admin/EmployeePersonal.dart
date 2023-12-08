@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mobelease/screens/Admin/EditEmployee.dart';
+import 'package:mobelease/ui_sizes.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
 import '../../models/Employee_Model.dart';
@@ -76,19 +78,22 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator(); // Placeholder for loading state
           } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return AutoSizeText('Error: ${snapshot.error}');
           } else {
             EmployeeModel employee = snapshot.data!;
             return Column(
               children: [
                 Padding(
-                  padding:
-                      const EdgeInsets.only(top: 11.0, left: 11.0, right: 11.0),
+                  padding: EdgeInsets.only(
+                      top: UiSizes(context: context).height_11,
+                      left: UiSizes(context: context).width_11,
+                      right: UiSizes(context: context).width_11),
                   child: Appbar(),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14.0, vertical: 18),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: UiSizes(context: context).width_14,
+                      vertical: UiSizes(context: context).height_18),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,9 +120,9 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
-                                    height: 25,
+                                    height: UiSizes(context: context).height_25,
                                   ),
-                                  Text(
+                                  AutoSizeText(
                                     employee.firstName ?? " ",
                                     style: TextStyle(
                                         color: Color(0xffE96E2B),
@@ -133,7 +138,7 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(6.0),
-                                        child: Text(
+                                        child: AutoSizeText(
                                           employee.phoneNo ?? " ",
                                           style: TextStyle(
                                               color: Color(0xffE96E2B),
@@ -159,7 +164,7 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                                 },
                                 child: Row(
                                   children: [
-                                    Text(
+                                    AutoSizeText(
                                       "Assign Inventory",
                                       style: TextStyle(
                                           color: Color(0xffE96E2B),
@@ -206,25 +211,28 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                       color: Colors.white,
                     ),
                     child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 17.0, vertical: 8),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: UiSizes(context: context).width_17,
+                            vertical: UiSizes(context: context).height_8),
                         child: Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  top: 10.0, left: 17, bottom: 15),
+                              padding: EdgeInsets.only(
+                                  top: UiSizes(context: context).height_10,
+                                  left: UiSizes(context: context).width_17,
+                                  bottom: UiSizes(context: context).height_15),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Details",
+                                  AutoSizeText("Details",
                                       style: TextStyle(
                                           color: Color(0xffE96E2B),
                                           fontWeight: FontWeight.w600,
                                           fontSize: 14)),
                                   SizedBox(
-                                    width: 56,
-                                    height: 23,
+                                    width: UiSizes(context: context).width_56,
+                                    height: UiSizes(context: context).height_23,
                                     child: ElevatedButton(
                                       onPressed: () {
                                         Navigator.push(
@@ -246,7 +254,7 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(6))),
-                                      child: Text(
+                                      child: AutoSizeText(
                                         "Edit",
                                         style: TextStyle(
                                             color: Color(0xffE96E2B),
@@ -264,11 +272,14 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("First Name"),
+                                    AutoSizeText("First Name"),
                                     Container(
                                         alignment: Alignment.centerLeft,
-                                        height: 44,
-                                        margin: EdgeInsets.only(top: 8),
+                                        height:
+                                            UiSizes(context: context).height_44,
+                                        margin: EdgeInsets.only(
+                                            top: UiSizes(context: context)
+                                                .height_8),
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.43,
@@ -288,11 +299,14 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("Last Name"),
+                                    AutoSizeText("Last Name"),
                                     Container(
                                         alignment: Alignment.centerLeft,
-                                        height: 44,
-                                        margin: EdgeInsets.only(top: 8),
+                                        height:
+                                            UiSizes(context: context).height_44,
+                                        margin: EdgeInsets.only(
+                                            top: UiSizes(context: context)
+                                                .height_8),
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.43,
@@ -304,23 +318,26 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                                             )),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Text(employee.lastName ?? " "),
+                                          child: AutoSizeText(
+                                              employee.lastName ?? " "),
                                         ))
                                   ],
                                 )
                               ],
                             ),
                             SizedBox(
-                              height: 15,
+                              height: UiSizes(context: context).height_15,
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Phone Number"),
+                                AutoSizeText("Phone Number"),
                                 Container(
                                     alignment: Alignment.centerLeft,
-                                    height: 44,
-                                    margin: EdgeInsets.only(top: 8),
+                                    height: UiSizes(context: context).height_44,
+                                    margin: EdgeInsets.only(
+                                        top:
+                                            UiSizes(context: context).height_8),
                                     width: MediaQuery.of(context).size.width,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(9),
@@ -329,21 +346,24 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                                         )),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Text(employee.phoneNo ?? " "),
+                                      child:
+                                          AutoSizeText(employee.phoneNo ?? " "),
                                     ))
                               ],
                             ),
                             SizedBox(
-                              height: 15,
+                              height: UiSizes(context: context).height_15,
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Username or email address"),
+                                AutoSizeText("Username or email address"),
                                 Container(
                                     alignment: Alignment.centerLeft,
-                                    height: 44,
-                                    margin: EdgeInsets.only(top: 8),
+                                    height: UiSizes(context: context).height_44,
+                                    margin: EdgeInsets.only(
+                                        top:
+                                            UiSizes(context: context).height_8),
                                     width: MediaQuery.of(context).size.width,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(9),
@@ -352,21 +372,24 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                                         )),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Text(employee.email ?? " "),
+                                      child:
+                                          AutoSizeText(employee.email ?? " "),
                                     ))
                               ],
                             ),
                             SizedBox(
-                              height: 15,
+                              height: UiSizes(context: context).height_15,
                             ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Password (more than 8 letters)"),
+                                AutoSizeText("Password (more than 8 letters)"),
                                 Container(
                                     alignment: Alignment.centerLeft,
-                                    height: 44,
-                                    margin: EdgeInsets.only(top: 8),
+                                    height: UiSizes(context: context).height_44,
+                                    margin: EdgeInsets.only(
+                                        top:
+                                            UiSizes(context: context).height_8),
                                     width: MediaQuery.of(context).size.width,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(9),
@@ -374,8 +397,12 @@ class _EmployeePersonalState extends State<EmployeePersonal> {
                                           color: Color(0xffE96E2B),
                                         )),
                                     child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text("Password"),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: UiSizes(context: context)
+                                              .height_8,
+                                          horizontal: UiSizes(context: context)
+                                              .width_8),
+                                      child: AutoSizeText("Password"),
                                     ))
                               ],
                             ),

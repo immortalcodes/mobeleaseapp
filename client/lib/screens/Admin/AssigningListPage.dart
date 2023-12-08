@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobelease/ui_sizes.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
 import '../../models/Inventory_Model.dart';
@@ -48,14 +50,14 @@ class SecondPage extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return AutoSizeText('Error: ${snapshot.error}');
         } else {
           Map<String, List<ItemModel>> categorizedDevices = snapshot.data!;
           print(snapshot.data!);
           return StatefulBuilder(
             builder: (context, setState) {
               return AlertDialog(
-                title: Text(
+                title: AutoSizeText(
                   "Select a device",
                   style: TextStyle(color: Color(0xffE96E2B)),
                 ),
@@ -67,7 +69,7 @@ class SecondPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: categorizedDevices.keys.map((category) {
                           return Padding(
-                            padding: const EdgeInsets.all(6.0),
+                            padding:  EdgeInsets.symmetric(horizontal: UiSizes(context: context).width_6, vertical: UiSizes(context: context).height_6),
                             child: Categories(
                               title: category,
                               svgpath: "assets/svgs/Mobile.svg",
@@ -94,7 +96,7 @@ class SecondPage extends StatelessWidget {
                                 categorizedDevices[selectedCategory]![index];
                             return Padding(
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 4.0),
+                                   EdgeInsets.symmetric(vertical: UiSizes(context: context).height_4),
                               child: AssigningPageCard(
                                 model: device.deviceDetail ?? "",
                                 cost: device.cost ?? "0",

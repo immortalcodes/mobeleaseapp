@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:mobelease/screens/Admin/EmployeePersonal.dart';
+import 'package:mobelease/ui_sizes.dart';
 import '../../controllers/auth_controller.dart';
 import '../../globals.dart';
 import '../../models/Employee_Model.dart';
@@ -111,13 +113,16 @@ class _EmployeeState extends State<Employee> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding:
-                  const EdgeInsets.only(top: 11.0, left: 11.0, right: 11.0),
+              padding: EdgeInsets.only(
+                  top: UiSizes(context: context).height_11,
+                  left: UiSizes(context: context).width_11,
+                  right: UiSizes(context: context).width_11),
               child: Appbar(),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 18.0, vertical: 15.0),
+              padding: EdgeInsets.symmetric(
+                  horizontal: UiSizes(context: context).height_18,
+                  vertical: UiSizes(context: context).height_15),
               child: TextField(
                 controller: searchController, // Assign the controller
                 onChanged: filterEmployees,
@@ -137,10 +142,11 @@ class _EmployeeState extends State<Employee> {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 18, vertical: 4.0),
+              padding: EdgeInsets.symmetric(
+                  horizontal: UiSizes(context: context).width_18,
+                  vertical: UiSizes(context: context).height_4),
               child: !hasSearchResults
-                  ? Text(
+                  ? AutoSizeText(
                       "No employee with this name is present",
                       style: TextStyle(
                         color: Colors.red,
@@ -152,7 +158,7 @@ class _EmployeeState extends State<Employee> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
+                            AutoSizeText(
                               "Employees",
                               style: TextStyle(
                                   color: Color(0xffE96E2B),
@@ -161,8 +167,9 @@ class _EmployeeState extends State<Employee> {
                                   fontSize: 14.0),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              padding: EdgeInsets.symmetric(
+                                  vertical:
+                                      UiSizes(context: context).height_10),
                               child: GestureDetector(
                                 onTap: () {
                                   // Navigate to the desired page when clicked
@@ -175,7 +182,7 @@ class _EmployeeState extends State<Employee> {
                                     ),
                                   );
                                 },
-                                child: Text(
+                                child: AutoSizeText(
                                   "See all",
                                   style: TextStyle(
                                     color: Color(0xffE96E2B),
@@ -195,7 +202,7 @@ class _EmployeeState extends State<Employee> {
                                 ConnectionState.waiting) {
                               return CircularProgressIndicator(); // Placeholder for loading state
                             } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
+                              return AutoSizeText('Error: ${snapshot.error}');
                             } else {
                               List<EmployeeModel> employeesList =
                                   snapshot.data!;
@@ -210,7 +217,8 @@ class _EmployeeState extends State<Employee> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(30),
                                     child: SizedBox(
-                                      height: 90,
+                                      height:
+                                          UiSizes(context: context).height_90,
                                       width: employeeNo != 0
                                           ? MediaQuery.sizeOf(context).width -
                                               100
@@ -227,8 +235,13 @@ class _EmployeeState extends State<Employee> {
                                             print(
                                                 'Employee Id:, ${employee.id}');
                                             return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(4.0),
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical:
+                                                      UiSizes(context: context)
+                                                          .height_4,
+                                                  horizontal:
+                                                      UiSizes(context: context)
+                                                          .width_4),
                                               child: Column(
                                                 children: [
                                                   GestureDetector(
@@ -252,9 +265,13 @@ class _EmployeeState extends State<Employee> {
                                                                 ""),
                                                   ),
                                                   SizedBox(
-                                                    height: 28.0,
-                                                    width: 35.0,
-                                                    child: Text(
+                                                    height: UiSizes(
+                                                            context: context)
+                                                        .height_28,
+                                                    width: UiSizes(
+                                                            context: context)
+                                                        .width_35,
+                                                    child: AutoSizeText(
                                                       employee.firstName ??
                                                           'No First Name Available',
                                                       textAlign:
@@ -271,8 +288,9 @@ class _EmployeeState extends State<Employee> {
                                   ),
                                   if (employeeNo != 0) ...[
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 3.0),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: UiSizes(context: context)
+                                              .height_3),
                                       child: GestureDetector(
                                         onTap: () {
                                           // Navigate to the desired page when clicked
@@ -289,7 +307,7 @@ class _EmployeeState extends State<Employee> {
                                           backgroundColor: Color(0xffE96E2B)
                                               .withOpacity(0.15),
                                           foregroundColor: Color(0xffE96E2B),
-                                          child: Text(
+                                          child: AutoSizeText(
                                             '+$employeeNo',
                                             textAlign: TextAlign.center,
                                           ),
@@ -314,12 +332,13 @@ class _EmployeeState extends State<Employee> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 18.0, vertical: 7.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: UiSizes(context: context).width_18,
+                          vertical: UiSizes(context: context).height_7),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          AutoSizeText(
                             "Quick Actions",
                             style: TextStyle(
                                 color: Color(0xffE96E2B),
@@ -328,14 +347,15 @@ class _EmployeeState extends State<Employee> {
                                 fontSize: 14.0),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            padding: EdgeInsets.symmetric(
+                                vertical: UiSizes(context: context).height_4),
                             child: GestureDetector(
                               onTap: () {
                                 Navigator.pushNamed(context, '');
                               },
                               child: Row(
                                 children: [
-                                  Text(
+                                  AutoSizeText(
                                     "View all",
                                     style: TextStyle(
                                         color: Color(0xffE96E2B),
@@ -346,7 +366,7 @@ class _EmployeeState extends State<Employee> {
                                   Icon(
                                     Icons.arrow_right_alt,
                                     color: Color(0xffE96E2B),
-                                    weight: 10.0,
+                                    weight: UiSizes(context: context).width_10,
                                   )
                                 ],
                               ),
@@ -389,12 +409,13 @@ class _EmployeeState extends State<Employee> {
                     //     paid: true,
                     //     dues: false),
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 18.0, vertical: 18.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: UiSizes(context: context).width_18,
+                          vertical: UiSizes(context: context).height_18),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
+                          AutoSizeText(
                             "Recent Selling",
                             style: TextStyle(
                                 color: Color(0xffE96E2B),

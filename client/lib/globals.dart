@@ -1,3 +1,4 @@
 library globals;
 
-String baseUrl = "http://10.0.2.2:8000";
+String baseUrl =
+    "https://app-3b23cf90-eb71-439c-b0e0-ffd8b5f40c7e.cleverapps.io";

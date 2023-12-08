@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:mobelease/ui_sizes.dart';
 import 'package:mobelease/widgets/Appbar.dart';
 import 'package:mobelease/widgets/BottomAppBar.dart';
 import 'package:mobelease/widgets/Employee_Icon.dart';
@@ -21,7 +23,6 @@ List<EmployeeModel> employeesList = [];
 
 class _EmployeeSelectState extends State<EmployeeSelect> {
   final AuthController authController = AuthController();
-
   Future<List<EmployeeModel>> getEmployee() async {
     final token = await authController.getToken();
     var url = Uri.parse('$baseUrl/emp/allemployee');
@@ -73,17 +74,22 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
         child: Column(
           children: [
             Padding(
-              padding:
-                  const EdgeInsets.only(top: 11.0, left: 11.0, right: 11.0),
+              padding: EdgeInsets.only(
+                  top: UiSizes(context: context).height_11,
+                  left: UiSizes(context: context).width_11,
+                  right: UiSizes(context: context).width_11),
               child: Appbar(),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  top: 23.0, bottom: 16.0, left: 18.0, right: 18.0),
+              padding: EdgeInsets.only(
+                  top: UiSizes(context: context).height_23,
+                  bottom: UiSizes(context: context).height_16,
+                  left: UiSizes(context: context).width_18,
+                  right: UiSizes(context: context).width_18),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Select a employee to assign",
+                  AutoSizeText("Select a employee to assign",
                       style: TextStyle(
                           color: Color(0xffE96E2B),
                           fontWeight: FontWeight.w600,
@@ -105,8 +111,9 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 18.0, vertical: 7.0),
+              padding: EdgeInsets.symmetric(
+                  horizontal: UiSizes(context: context).width_18,
+                  vertical: UiSizes(context: context).height_7),
               child: TextField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(
@@ -129,7 +136,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator(); // Placeholder for loading state
                 } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
+                  return AutoSizeText('Error: ${snapshot.error}');
                 } else {
                   List<EmployeeModel> employeesList = snapshot.data!;
                   return Expanded(
@@ -138,8 +145,9 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                         itemBuilder: (BuildContext context, int index) {
                           final employee = employeesList[index];
                           return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 18.0, vertical: 5.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: UiSizes(context: context).width_18,
+                                vertical: UiSizes(context: context).height_5),
                             child: GestureDetector(
                               onTap: () {
                                 // Navigator.pushNamed(context, '/Assign');
@@ -156,7 +164,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                               child: ListTile(
                                 leading: Employee_icon(
                                     imagePath: employee.empPhoto ?? ""),
-                                title: Text(employee.firstName ?? " "),
+                                title: AutoSizeText(employee.firstName ?? " "),
                                 trailing: Icon(
                                   Icons.phone,
                                   color: Color(0xffE96E2B),
