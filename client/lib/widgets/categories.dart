@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../models/Inventory_Model.dart';
-
 class Categories {
   late String title;
   late String svgpath;
@@ -57,10 +55,10 @@ class Categories {
         children: [
           svgpath.isEmpty
               ? Text("")
-              : SvgPicture.asset(
-                  svgpath,
-                  color: Color(0xffE96E2B),
-                ),
+              : SvgPicture.asset(svgpath,
+                  color: title == selectedCategory
+                      ? Colors.white
+                      : Color(0xffE96E2B)),
           SizedBox(width: 5),
           Text(
             title,

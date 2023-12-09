@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:mobelease/screens/Admin/AssigningPage.dart';
 import 'package:mobelease/widgets/buttons.dart';
 import '../../controllers/auth_controller.dart';
@@ -74,7 +75,9 @@ class _AssignState extends State<Assign> {
 
       print("DSU $deviceQuantities");
       // Store the device IDs with quantities in local storage
-
+      print("modeled data: ${devicesFuture}");
+      print(
+          "HAhahahahahahahahahahahahahahahahahahahahahhahahahahahahahahahahahahahahahahahahahahahahahahahahahhahahaha");
       return devicesFuture;
     } else {
       throw Exception('Failed to load items');
@@ -132,16 +135,23 @@ class _AssignState extends State<Assign> {
     } else {
       deviceQuantities.add({'deviceid': deviceId, 'quantity': newQuantity});
     }
+    print("devicee IDDD:  ${deviceId} ");
     print(deviceQuantities);
   }
+
+  late Map<String, dynamic> categorizedDevices;
+
+  bool hasDataArrived = false;
 
   @override
   void initState() {
     super.initState();
-    fetchItemsFromApi().then((_) {
+    fetchItemsFromApi().then((value) {
       print(categoryKeys);
 
+      categorizedDevices = value;
       setState(() {
+        hasDataArrived = true;
         selectedCategory = categoryKeys.isNotEmpty ? categoryKeys[0] : 'phone';
       });
     });
@@ -151,176 +161,166 @@ class _AssignState extends State<Assign> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: FutureBuilder(
-            future: fetchItemsFromApi(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator(); // Placeholder for loading state
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                Map<String, dynamic> categorizedDevices = snapshot.data!;
-                return SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 11.0),
-                          child: Appbar(),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(top: 23.0, bottom: 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  "Assign to ${widget.employee!.firstName ?? " "} ",
-                                  style: TextStyle(
-                                      color: Color(0xffE96E2B),
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 20.0)),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AssigningPage(
-                                            empId: widget.id,
-                                            addorremoveFunction:
-                                                addDevicetoAssign,
-                                            deviceItems: items)),
-                                  );
-                                },
-                                child: CircleAvatar(
-                                  radius: 12.0,
-                                  backgroundColor: Colors.white,
-                                  child: Icon(
-                                    Icons.add_circle,
+      body: hasDataArrived
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 11.0),
+                        child: Appbar(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 23.0, bottom: 16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                                "Assign to ${widget.employee!.firstName ?? " "} ",
+                                style: TextStyle(
                                     color: Color(0xffE96E2B),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: categorizedDevices.keys.map((category) {
-                              return Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Categories(
-                                  title: category,
-                                  svgpath: "assets/svgs/Mobile.svg",
-                                  onpress: () {
-                                    setState(() {
-                                      selectedCategory =
-                                          category; // Update the selected category
-                                    });
-                                  },
-                                  selectedCategory:
-                                      selectedCategory, // Pass selected category
-                                ).buildCategories(),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: categorizedDevices[selectedCategory]
-                                      ?.length ??
-                                  0,
-                              itemBuilder: (BuildContext context, int index) {
-                                final device = categorizedDevices[
-                                    selectedCategory]![index];
-
-                                quantity = device['quantity'];
-
-                                print("quantyr  $quantity");
-
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: AssignCardMain(
-                                      company: device['company'],
-                                      cost: device['cost'],
-                                      totalPrice: totalPrice,
-                                      empId: widget.id,
-                                      model: device['Name'],
-                                      updateDeviceQuantity:
-                                          updateDeviceQuantity,
-                                      deviceId: device['deviceid'],
-                                      quantity: quantity),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 20.0)),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AssigningPage(
+                                          empId: widget.id,
+                                          addorremoveFunction:
+                                              addDevicetoAssign,
+                                          deviceItems: items)),
                                 );
                               },
-                            ),
-                          ),
-                        ),
-                        Stack(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                    left: 10, bottom: 10, top: 10),
-                                height:
-                                    MediaQuery.of(context).size.height * 0.1,
-                                width: double.infinity,
-                                color: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 11.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text("Total Price",
-                                              style: TextStyle(
-                                                  color: Color(0xff474747),
-                                                  fontSize: 15.0)),
-                                          Text("\$ $totalPrice",
-                                              style: TextStyle(
-                                                  color: Color(0xffE96E2B),
-                                                  fontSize: 20.0,
-                                                  fontWeight: FontWeight.w600)),
-                                        ],
-                                      ),
-                                      BlackButton(
-                                          buttonText: "Assign",
-                                          Width: 106,
-                                          Height: 29,
-                                          Radius: 13,
-                                          onpress: () async {
-                                            await addOrremoveDevice(
-                                                deviceQuantities);
-                                            setState(() {});
-                                          }).buildBlackButton()
-                                    ],
-                                  ),
+                              child: CircleAvatar(
+                                radius: 12.0,
+                                backgroundColor: Colors.white,
+                                child: Icon(
+                                  Icons.add_circle,
+                                  color: Color(0xffE96E2B),
                                 ),
                               ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: categorizedDevices.keys.map((category) {
+                            return Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: Categories(
+                                title: category,
+                                svgpath: "assets/svgs/Mobile.svg",
+                                onpress: () {
+                                  setState(() {
+                                    selectedCategory =
+                                        category; // Update the selected category
+                                  });
+                                },
+                                selectedCategory:
+                                    selectedCategory, // Pass selected category
+                              ).buildCategories(),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount:
+                                categorizedDevices[selectedCategory]?.length ??
+                                    0,
+                            itemBuilder: (BuildContext context, int index) {
+                              final device =
+                                  categorizedDevices[selectedCategory]![index];
+
+                              quantity = device['quantity'];
+                              print('device ID: ${device["deviceid"]}');
+                              print("quantyr  $quantity");
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4.0),
+                                child: AssignCardMain(
+                                    company: device['company'],
+                                    cost: device['cost'],
+                                    totalPrice: totalPrice,
+                                    empId: widget.id,
+                                    model: device['Name'],
+                                    updateDeviceQuantity: updateDeviceQuantity,
+                                    deviceId: device['deviceid'],
+                                    quantity: device['quantity']),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      Stack(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  left: 10, bottom: 10, top: 10),
+                              height: MediaQuery.of(context).size.height * 0.1,
+                              width: double.infinity,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 11.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text("Total Price",
+                                            style: TextStyle(
+                                                color: Color(0xff474747),
+                                                fontSize: 15.0)),
+                                        Text("\$ $totalPrice",
+                                            style: TextStyle(
+                                                color: Color(0xffE96E2B),
+                                                fontSize: 20.0,
+                                                fontWeight: FontWeight.w600)),
+                                      ],
+                                    ),
+                                    BlackButton(
+                                        buttonText: "Assign",
+                                        Width: 106,
+                                        Height: 29,
+                                        Radius: 13,
+                                        onpress: () async {
+                                          await addOrremoveDevice(
+                                              deviceQuantities);
+                                          categorizedDevices =
+                                              await fetchItemsFromApi();
+                                          setState(() {});
+                                        }).buildBlackButton()
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                );
-              }
-            }),
-      ),
+                ),
+              ))
+          : Center(
+              child: LoadingAnimationWidget.threeRotatingDots(
+                  color: Color(0xffE96E2B), size: 50)),
       bottomNavigationBar: bottomAppBar(index: 1),
     );
   }

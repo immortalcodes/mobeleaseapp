@@ -7,7 +7,6 @@ import '../../globals.dart';
 import '../../models/Employee_Model.dart';
 import '../../widgets/Appbar.dart';
 import '../../widgets/BottomAppBar.dart';
-import '../../widgets/TextFieldWidget.dart';
 import '../../widgets/TextFieldWidget2.dart';
 import 'package:http/http.dart' as http;
 
@@ -55,7 +54,7 @@ class _EmployeePersonalState extends State<EditEmployee> {
       final String phoneno = _phoneController.text;
       final String email = _emailController.text;
       final String password = _passwordController.text;
-      print(password);
+      print(password + 'NONE');
       print(lastname);
 
       if (_imageFile != null) {
@@ -68,15 +67,24 @@ class _EmployeePersonalState extends State<EditEmployee> {
       try {
         final response = await client.post(
           url,
-          body: jsonEncode({
-            "empid": empid,
-            "firstname": firstname,
-            "lastname": lastname,
-            "phoneno": phoneno,
-            "email": email,
-            "password": password,
-            "employeephoto": encodedImage
-          }),
+          body: password == ''
+              ? jsonEncode({
+                  "empid": empid,
+                  "firstname": firstname,
+                  "lastname": lastname,
+                  "phoneno": phoneno,
+                  "email": email,
+                  "employeephoto": encodedImage
+                })
+              : jsonEncode({
+                  "empid": empid,
+                  "firstname": firstname,
+                  "lastname": lastname,
+                  "phoneno": phoneno,
+                  "email": email,
+                  "password": password,
+                  "employeephoto": encodedImage
+                }),
           headers: {'Cookie': token!, 'Content-Type': 'application/json'},
         );
 

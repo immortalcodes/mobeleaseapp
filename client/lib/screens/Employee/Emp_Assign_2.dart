@@ -1,50 +1,61 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:mobelease/screens/Employee/PaymentCash.dart';
+import 'package:mobelease/screens/Employee/PaymentCredit.dart';
 import 'package:mobelease/screens/Employee/Emp_Dropdown_Unit.dart';
-
 import 'package:mobelease/widgets/categories.dart';
 import '../../widgets/Appbar.dart';
-
 import '../../widgets/Emp_Dropdown_Farm.dart';
 import '../../widgets/Emp_Dropdown_Language.dart';
-import '../../widgets/TextFieldWidget.dart';
-import '../../widgets/TextFieldWidget2.dart';
-import 'package:toggle_switch/toggle_switch.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Emp_Assign_2 extends StatefulWidget {
-  const Emp_Assign_2({super.key});
+  final Set<Map<String, dynamic>> isSelectedItems;
+  const Emp_Assign_2({super.key, required this.isSelectedItems});
 
   @override
   State<Emp_Assign_2> createState() => _Emp_Assign_2State();
 }
 
-String? firstName = " ";
-String? lastName = " ";
-String? phoneNo = " ";
-String? unit = " ";
-String selectedValue_Language = 'English';
-String selectedValue_Farm = 'Rosa Park';
-
-final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-TextEditingController _firstnameController = TextEditingController(text: '');
-TextEditingController _lastnameController = TextEditingController();
-TextEditingController _phoneController = TextEditingController();
-TextEditingController _unitController = TextEditingController();
-
 class _Emp_Assign_2State extends State<Emp_Assign_2> {
+  String? firstName = " ";
+  String? lastName = " ";
+  String? phoneNo = " ";
+  String? unit = " ";
+  String selectedValue_Language = 'English';
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _firstnameController = TextEditingController(text: '');
+  TextEditingController _lastnameController = TextEditingController();
+  TextEditingController _phoneController = TextEditingController();
+
   void updateSelectedValue_Language(String value) {
     setState(() {
       selectedValue_Language = value;
     });
   }
 
-  void updateSelectedValue_Farm(String value) {
+  XFile? _imageFile;
+
+  Future<void> _getImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
-      selectedValue_Farm = value;
+      _imageFile = image;
     });
   }
 
   List<String> farmUnitList = [];
   String farmName = "";
+  String selectedFarmunit = "";
+
+  void updateSelectedValue_farmunit(String value) {
+    setState(() {
+      selectedFarmunit = value;
+    });
+  }
+
   void onSelectFarmtoFarrmUnit(
       List<String> selectedFarmList, String selectedFarmName) {
     setState(() {
@@ -55,6 +66,54 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
   }
 
   String selectedCategory = 'Credit';
+  var encodedImage;
+  void _submitForm() async {
+    print("jdkdkd ${widget.isSelectedItems}");
+    if (_formKey.currentState!.validate()) {
+      final String firstname = _firstnameController.text;
+      final String lastname = _lastnameController.text;
+      final String phoneno = _phoneController.text;
+      if (_imageFile != null) {
+        final imageBytes = await _imageFile!.readAsBytes();
+        encodedImage = base64Encode(imageBytes);
+        print(encodedImage);
+      }
+      if (firstname.isNotEmpty &&
+          lastname.isNotEmpty &&
+          phoneno.isNotEmpty &&
+          farmName.isNotEmpty &&
+          _imageFile.toString().isNotEmpty) {
+        if (selectedCategory == 'Credit') {
+          String name = "$firstname $lastname";
+          // ignore: use_build_context_synchronously
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PaymentCredit(
+                isSelectedItems: widget.isSelectedItems,
+                cName: name,
+                cPhoneno: phoneno,
+                cAlert: forAlert,
+                cImage: encodedImage,
+                cUnit: selectedFarmunit,
+                cFarm: farmName,
+                clangauge: selectedValue_Language,
+              ),
+            ),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Please fill all details!"),
+            duration: Duration(seconds: 5),
+          ),
+        );
+      }
+    }
+  }
+
+  bool forAlert = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,6 +188,15 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                             title: 'Cash',
                             svgpath: "",
                             onpress: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PaymentCash(
+                                    isSelectedItems: widget.isSelectedItems,
+                                  ),
+                                ),
+                              );
+
                               setState(() {
                                 selectedCategory =
                                     'Cash'; // Update the selected category
@@ -335,8 +403,11 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Emp_Dropdown_Unit(
-                                      farmunitList: farmUnitList,
-                                      farmName: farmName),
+                                    farmunitList: farmUnitList,
+                                    farmName: farmName,
+                                    onSelectFarmUnit:
+                                        updateSelectedValue_farmunit,
+                                  ),
                                 ),
                               ),
                             ),
@@ -358,7 +429,7 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                                   decoration: InputDecoration(
                                     suffixIcon: IconButton(
                                       icon: Icon(Icons.camera_alt),
-                                      onPressed: () {},
+                                      onPressed: _getImage,
                                     ),
                                     enabledBorder: OutlineInputBorder(
                                       borderSide:
@@ -374,6 +445,13 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                                     hintText: "docs.pdf",
                                   ),
                                 )),
+                            _imageFile != null
+                                ? Image.file(
+                                    File(_imageFile!.path),
+                                    height: 150,
+                                    width: 150,
+                                  )
+                                : Container(),
                           ],
                         ),
                         Container(
@@ -385,18 +463,21 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                                 style: TextStyle(color: Color(0xffE96E2B)),
                               ),
                               SizedBox(width: 20),
-                              ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                    primary: const Color(0xffE96E2B),
-                                    onPrimary: Colors.white,
-                                    minimumSize: Size(65, 26),
-                                    padding: EdgeInsets.zero,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                  child: Text("Alert"))
+                              Switch(
+                                // thumb color (round icon)
+                                activeColor: Colors.blueGrey.shade600,
+                                activeTrackColor: Colors.grey.shade400,
+                                inactiveThumbColor: Colors.blueGrey.shade600,
+                                inactiveTrackColor: Colors.grey.shade400,
+                                splashRadius: 50.0,
+
+                                value: forAlert,
+                                // changes the state of the switch
+                                onChanged: (value) {
+                                  setState(() => forAlert = value);
+                                  print(value);
+                                },
+                              ),
                             ],
                           ),
                         )
@@ -423,7 +504,8 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                           Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text("5 items Selected",
+                                Text(
+                                    "${widget.isSelectedItems.length} items Selected",
                                     style: TextStyle(
                                         color: Color(0xff474747),
                                         fontSize: 13.0)),
@@ -437,13 +519,7 @@ class _Emp_Assign_2State extends State<Emp_Assign_2> {
                                     fontSize: 18, fontWeight: FontWeight.bold),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8.0))),
-                            onPressed: () {
-                              if (selectedCategory == 'Credit') {
-                                Navigator.pushNamed(context, '/PaymentCredit');
-                              } else {
-                                Navigator.pushNamed(context, '/PaymentCash');
-                              }
-                            },
+                            onPressed: _submitForm,
                             child: Text(
                               "Proceed to pay",
                               style: TextStyle(

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mobelease/controllers/auth_controller.dart';
 import 'package:mobelease/screens/Employee/Emp_home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/buttons.dart';
 import '../widgets/Background.dart';
 import '../widgets/TextFieldWidget.dart';
 import 'Admin/Employee.dart';
-import 'init_screen.dart';
 
 class Login extends StatefulWidget {
   final String loginMember;
@@ -24,6 +24,7 @@ class _LoginState extends State<Login> {
   bool passwordVisible = false;
 
   void _login() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final email = _emailController.text;
     final password = _passwordController.text;
 
@@ -33,12 +34,12 @@ class _LoginState extends State<Login> {
       });
       return;
     }
-
+  
     final loginSuccess = await _authController.login(
         email, password, widget.loginMember.toLowerCase());
-
     if (loginSuccess) {
       if (widget.loginMember == "ADMIN") {
+        prefs.setBool('isAdmin', true);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Admin Login successfully"),
           duration: Duration(seconds: 5),
@@ -50,6 +51,7 @@ class _LoginState extends State<Login> {
             MaterialPageRoute(builder: (context) => Employee()),
             (Route<dynamic> route) => false);
       } else {
+        prefs.setBool('isAdmin', false);
         print("Employee Login success");
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Employee Login successfully"),

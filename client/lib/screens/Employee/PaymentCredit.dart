@@ -1,22 +1,45 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:mobelease/controllers/auth_controller.dart';
+import 'package:mobelease/globals.dart';
+import 'package:mobelease/screens/Employee/Emp_Reports_1.dart';
 import 'package:mobelease/widgets/InstallmentsCard.dart';
 import 'package:mobelease/widgets/TextFieldWidget.dart';
-
 import '../../widgets/Appbar.dart';
 import '../../widgets/PaymentCard.dart';
 import '../../widgets/PaymentTag.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class PaymentCredit extends StatefulWidget {
-  const PaymentCredit({super.key});
+  final Set<Map<String, dynamic>> isSelectedItems;
+  final String cName;
+  final String cPhoneno;
+  final String cImage;
+  final String cFarm;
+  final String cUnit;
+  final bool cAlert;
+  final String clangauge;
+
+  const PaymentCredit(
+      {super.key,
+      required this.isSelectedItems,
+      required this.cName,
+      required this.cPhoneno,
+      required this.cImage,
+      required this.cFarm,
+      required this.cUnit,
+      required this.cAlert,
+      required this.clangauge});
 
   @override
   State<PaymentCredit> createState() => _PaymentCreditState();
 }
 
-String? EMIVal = " ";
-TextEditingController _EMIValController = TextEditingController(text: EMIVal);
+TextEditingController _dueValController = TextEditingController();
 TextEditingController _dateController = TextEditingController();
+String? dueval;
+String? dateofDown;
 
 class _PaymentCreditState extends State<PaymentCredit> {
   Future<void> _showAddEmiDialog(BuildContext context) async {
@@ -26,7 +49,7 @@ class _PaymentCreditState extends State<PaymentCredit> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Add EMI',
+            'Add Down Payment',
             style: TextStyle(color: Color(0xffE96E2B)),
           ),
           content: SingleChildScrollView(
@@ -35,13 +58,13 @@ class _PaymentCreditState extends State<PaymentCredit> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Amount of EMI",
+                    Text("Due Amount",
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 12)),
                     TextFieldWidget(
                         profileField: false,
                         hint: '\$980',
-                        controller: _EMIValController),
+                        controller: _dueValController),
                   ],
                 ),
                 SizedBox(
@@ -90,8 +113,13 @@ class _PaymentCreditState extends State<PaymentCredit> {
                           //You can format date as per your need
 
                           setState(() {
-                            _dateController.text =
-                                formattedDate; //set foratted date to TextField value.
+                            _dateController.text = formattedDate;
+
+                            dateofDown = formattedDate;
+
+                            dueval = _dueValController.text;
+
+                            //set foratted date to TextField value.
                           });
                         } else {
                           print("Date is not selected");
@@ -116,7 +144,15 @@ class _PaymentCreditState extends State<PaymentCredit> {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0))),
-                  onPressed: () {},
+                  onPressed: () {
+                    print("### ${_dateController.text}");
+                    print("### ${_dueValController.text}");
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Installment added successfully"),
+                      duration: Duration(seconds: 5),
+                    ));
+                  },
                   child: Text(
                     "ADD",
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
@@ -128,6 +164,87 @@ class _PaymentCreditState extends State<PaymentCredit> {
         );
       },
     );
+  }
+
+  double totalPrice = 0.0;
+  int salePrice = 0;
+  Map<int, int> updatedPrices = {};
+  void onUpdatetotalprice(int deviceId, int newsalePrice) {
+    updatedPrices[deviceId] = newsalePrice;
+    setState(() {
+      salePrice = newsalePrice;
+      convertedSelectedItems = widget.isSelectedItems.map((item) {
+        return {
+          'deviceid': item['deviceId'],
+          'quantity': item['quantity'],
+          'sellprice': updatedPrices[item['deviceId']] ?? 0
+        };
+      }).toList();
+
+      totalPrice = convertedSelectedItems.fold(0, (total, item) {
+        final quantity = int.parse(item['quantity'].toString());
+        final sellPrice = double.parse(item['sellprice'].toString());
+        return total + (quantity * sellPrice);
+      });
+    });
+
+    print("djjd $convertedSelectedItems");
+  }
+
+  final AuthController authController = AuthController();
+  List<Map<String, dynamic>> convertedSelectedItems = [];
+
+  Future<void> onPayment() async {
+    final token = await authController.getToken();
+    var url = Uri.parse('$baseUrl/sale/makesale');
+    print("############### ${widget.cName}");
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        "type": "credit",
+        "customername": widget.cName,
+        "customeridimage": widget.cImage,
+        "phoneno": widget.cPhoneno,
+        "language": widget.clangauge,
+        "unit": widget.cUnit,
+        "farm": widget.cFarm,
+        "itemarray": convertedSelectedItems,
+        "paymentalert": widget.cAlert
+      }),
+      headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+    );
+    Map<String, dynamic> jsonResponse = json.decode(response.body);
+    int saleId = jsonResponse['data']['saleid'];
+
+    if (response.statusCode == 200) {
+      print("sale is make sucessful");
+
+      var url2 = Uri.parse('$baseUrl/sale/addinstallment');
+      print("kskssks $dateofDown $dueval");
+      final responseDownPayment = await http.post(
+        url2,
+        body: jsonEncode({
+          "saleid": saleId,
+          "status": "down",
+          "paymentdate": dateofDown,
+          "amountpaid": int.parse(dueval!)
+        }),
+        headers: {'Cookie': token!, 'Content-Type': 'application/json'},
+      );
+
+      if (responseDownPayment.statusCode == 200) {
+        print("%%%%% $responseDownPayment.body");
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("sale is make sucessful"),
+          duration: Duration(seconds: 5),
+        ));
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Emp_Reports_1()));
+      } else {
+        print("error: ");
+      }
+    }
   }
 
   @override
@@ -158,7 +275,7 @@ class _PaymentCreditState extends State<PaymentCredit> {
                                   color: Color(0xffE96E2B),
                                   fontWeight: FontWeight.w600,
                                   fontSize: 20.0)),
-                          Text("(Cash)",
+                          Text("(Credit)",
                               style: TextStyle(
                                   color: Color(0xffE96E2B),
                                   fontWeight: FontWeight.w400,
@@ -228,11 +345,13 @@ class _PaymentCreditState extends State<PaymentCredit> {
                             ],
                           ),
                         ),
-                        PaymentCard(
-                            item: 'iPhone13',
-                            quantity: 1,
-                            price: 5300,
-                            total: 5300),
+                        for (var item in widget.isSelectedItems)
+                          PaymentCard(
+                            id: item['deviceId'],
+                            item: item['model'],
+                            onUpdateprice: onUpdatetotalprice,
+                            quantity: item['quantity'],
+                          ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 16),
@@ -244,7 +363,7 @@ class _PaymentCreditState extends State<PaymentCredit> {
                                 width: MediaQuery.of(context).size.width * 0.1,
                               ),
                               Text(
-                                '\$5300',
+                                '\$ $totalPrice',
                                 style: TextStyle(
                                     color: Color(0xffE96E2B),
                                     fontSize: 12,
@@ -253,26 +372,6 @@ class _PaymentCreditState extends State<PaymentCredit> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              PaymentTag(Tag: "Credit Left"),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.1,
-                              ),
-                              Text(
-                                '\$2500',
-                                style: TextStyle(
-                                    color: Color(0xffE96E2B),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600),
-                              )
-                            ],
-                          ),
-                        )
                       ],
                     ),
                   ),
@@ -320,12 +419,8 @@ class _PaymentCreditState extends State<PaymentCredit> {
                         ),
                         InstallmentsCard(
                             installments: 'Down Payment',
-                            date: '03/04/22',
-                            price: 5300),
-                        InstallmentsCard(
-                            installments: '1st EMI',
-                            date: '03/04/22',
-                            price: 1000),
+                            date: _dateController.text ?? "",
+                            price: _dueValController.text ?? "0.0"),
                         Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 8.0, horizontal: 16),
@@ -343,7 +438,7 @@ class _PaymentCreditState extends State<PaymentCredit> {
                                 _showAddEmiDialog(context);
                               },
                               child: Text(
-                                "Add EMI",
+                                "Add Down Payment",
                                 style: TextStyle(
                                     color: Color(0xffE96E2B),
                                     fontSize: 12,
@@ -374,7 +469,8 @@ class _PaymentCreditState extends State<PaymentCredit> {
                                 Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("5 items Selected",
+                                      Text(
+                                          "${widget.isSelectedItems.length} items Selected",
                                           style: TextStyle(
                                               color: Color(0xff474747),
                                               fontSize: 13.0)),
@@ -389,7 +485,7 @@ class _PaymentCreditState extends State<PaymentCredit> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(8.0))),
-                                  onPressed: () {},
+                                  onPressed: onPayment,
                                   child: Text(
                                     "Complete Payment",
                                     style: TextStyle(

@@ -6,7 +6,6 @@ import '../globals.dart' as globals;
 class AuthController {
   final String cookieKey = 'auth_cookie';
   final String baseUrl = globals.baseUrl;
-
   Future<bool> login(String email, String password, String role) async {
     var url = Uri.parse('$baseUrl/auth/login');
 

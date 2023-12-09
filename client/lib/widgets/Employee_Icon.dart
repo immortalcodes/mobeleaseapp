@@ -13,18 +13,18 @@ class Employee_icon extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(3.0),
       child: SizedBox(
-        width: 49.0,
+        width: 50,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             imagePath.isEmpty
                 ? CircleAvatar(
-                    radius: 24.5,
+                    radius: 24,
                     backgroundImage:
                         AssetImage("assets/svgs/no-profile-picture.png"),
                   )
                 : CircleAvatar(
-                    radius: 24.5,
+                    radius: 24,
                     backgroundImage: MemoryImage(
                       base64Decode(imagePath),
                     ),

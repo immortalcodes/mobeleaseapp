@@ -159,3 +159,5 @@ cython_debug/
 #.idea/
 
 backend/photo.jpg
+.DS_Store
+

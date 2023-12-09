@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobelease/controllers/auth_controller.dart';
@@ -22,13 +21,11 @@ class Emp_home extends StatefulWidget {
 class _Emp_homeState extends State<Emp_home> {
   final AuthController authController = AuthController();
   String? empId;
-
+  List<String> saleIds = [];
   Future<List<Map<String, dynamic>>> viewAllSale() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     empId = prefs.getInt('empId').toString();
-
     var url = Uri.parse('$baseUrl/sale/viewallsale');
-
     final token = await authController.getToken();
 
     print("token $token");
@@ -52,9 +49,12 @@ class _Emp_homeState extends State<Emp_home> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> viewSalesData =
             jsonDecode(response.body)!['data'];
-        print("veiw sal $viewSalesData");
+        // print("veiw sal $viewSalesData");
         List<Map<String, dynamic>> salesList =
             List<Map<String, dynamic>>.from(viewSalesData.values);
+
+        saleIds = List<String>.from(viewSalesData.keys);
+        Constants.localsaleIds = saleIds;
         return salesList;
       } else {
         print("failed to load viewSalesData");
@@ -79,7 +79,7 @@ class _Emp_homeState extends State<Emp_home> {
 
     viewAllSale();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -179,11 +179,12 @@ class _Emp_homeState extends State<Emp_home> {
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: EmployeeDataCard(
-                                    cost: double.parse(
-                                        salesData[index]['totalsale']),
+                                    saleId: int.parse(saleIds[index]),
+                                    cost: salesData[index]['totalsale'],
                                     date: formatTimestamp(
                                         salesData[index]['timestamp']),
-                                    name: salesData[index]['customername'],
+                                    name:
+                                        salesData[index]['customername'] ?? "",
                                     cash:
                                         salesData[index]['saletype'] == "cash",
                                     paid: salesData[index]['status'] == "paid",

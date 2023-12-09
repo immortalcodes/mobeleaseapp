@@ -36,7 +36,7 @@ class QuickStyle extends StatelessWidget {
             ),
             SizedBox(
               width: 54,
-              height: 27,
+              height: 30,
               child: Text(
                 title,
                 textAlign: TextAlign.center,

@@ -1,17 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-
-import 'package:http/http.dart' as http;
-
 import 'package:mobelease/screens/Admin/EmployeePersonal.dart';
-
 import '../../controllers/auth_controller.dart';
-
 import '../../models/Employee_Model.dart';
 import '../../widgets/Appbar.dart';
 import '../../widgets/BottomAppBar.dart';
 import '../../widgets/Employee_Icon.dart';
-import 'package:mobelease/globals.dart';
 
 class EmployeeAll extends StatefulWidget {
   List<EmployeeModel>? employeeList;
@@ -87,7 +80,6 @@ class _EmployeeAllState extends State<EmployeeAll> {
                   itemCount: widget.employeeList!.length,
                   itemBuilder: (BuildContext context, int index) {
                     final employee = widget.employeeList![index];
-                    final image;
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(

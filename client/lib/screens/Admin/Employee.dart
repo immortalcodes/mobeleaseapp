@@ -1,7 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:mobelease/screens/Admin/EmployeePersonal.dart';
 import '../../controllers/auth_controller.dart';
@@ -31,7 +28,7 @@ class _EmployeeState extends State<Employee> {
 
   Future<List<EmployeeModel>> getEmployee() async {
     final token = await authController.getToken();
-
+    print(token);
     var url = Uri.parse('$baseUrl/emp/allemployee');
     final client = http.Client();
     try {
@@ -45,7 +42,6 @@ class _EmployeeState extends State<Employee> {
         final List<String> sortedKeys1 = responseData.keys.toList();
         List<int> sortedKeys =
             sortedKeys1.map((str) => int.parse(str!)).toList()..sort();
-        // print(sortedKeys);
         final List<EmployeeModel> employees = sortedKeys
             .map((key) => EmployeeModel.fromJson(responseData[key.toString()]))
             .toList();
@@ -211,56 +207,67 @@ class _EmployeeState extends State<Employee> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  SizedBox(
-                                    height: 100,
-                                    width: 275,
-                                    child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: employeesList.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          print('asdf $context, $index');
-                                          final employee = employeesList[index];
-                                          print('Employee Id:, ${employee.id}');
-                                          return Padding(
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: Column(
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    // Navigate to the desired page when clicked
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (
-                                                          context,
-                                                        ) =>
-                                                            EmployeePersonal(
-                                                                empid:
-                                                                    index + 1),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: Employee_icon(
-                                                      imagePath:
-                                                          employee.empPhoto ??
-                                                              ""),
-                                                ),
-                                                SizedBox(
-                                                  height: 10.0,
-                                                  width: 30.0,
-                                                  child: Text(
-                                                    employee.firstName ??
-                                                        'No First Name Available',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontSize: 9.0),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(30),
+                                    child: SizedBox(
+                                      height: 90,
+                                      width: employeeNo != 0
+                                          ? MediaQuery.sizeOf(context).width -
+                                              100
+                                          : MediaQuery.sizeOf(context).width -
+                                              36,
+                                      child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: employeesList.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            print('asdf $context, $index');
+                                            final employee =
+                                                employeesList[index];
+                                            print(
+                                                'Employee Id:, ${employee.id}');
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: Column(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      // Navigate to the desired page when clicked
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (
+                                                            context,
+                                                          ) =>
+                                                              EmployeePersonal(
+                                                                  empid: index +
+                                                                      1),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: Employee_icon(
+                                                        imagePath:
+                                                            employee.empPhoto ??
+                                                                ""),
                                                   ),
-                                                )
-                                              ],
-                                            ),
-                                          );
-                                        }),
+                                                  SizedBox(
+                                                    height: 28.0,
+                                                    width: 35.0,
+                                                    child: Text(
+                                                      employee.firstName ??
+                                                          'No First Name Available',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontSize: 10.0),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          }),
+                                    ),
                                   ),
                                   if (employeeNo != 0) ...[
                                     Padding(
@@ -374,7 +381,6 @@ class _EmployeeState extends State<Employee> {
                             colorhex: 0xffEFF6FF),
                       ],
                     ),
-
                     // EmployeeDataCard(
                     //     cost: 4500,
                     //     date: '03/03/20232',
@@ -382,7 +388,6 @@ class _EmployeeState extends State<Employee> {
                     //     cash: true,
                     //     paid: true,
                     //     dues: false),
-
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 18.0, vertical: 18.0),
